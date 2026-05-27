@@ -216,6 +216,10 @@ def home_screen():
 
     for image_asset in image_assets:
 
+        if pd.isna(image_asset) or not image_asset:
+            st.warning("No image available for this instance.")
+            continue
+
         st.image(image_asset, use_container_width=True)
 
         # Before the form:
