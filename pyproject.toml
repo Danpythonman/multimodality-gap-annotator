@@ -9,5 +9,6 @@ requires-python = ">=3.13"
 dependencies = [
     "streamlit",
     "streamlit-option-menu",
-    "pandas",
+    "streamlit-drawable-canvas-fix",
+    "pandas"
 ]

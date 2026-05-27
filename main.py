@@ -2,14 +2,20 @@ from __future__ import annotations
 
 import fcntl
 import os
+import json
+import requests
 import tempfile
 from dataclasses import dataclass, fields
+from pathlib import Path
+from io import BytesIO
 from typing import Optional
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
-
+from streamlit_drawable_canvas import st_canvas
+from PIL import Image, ImageDraw
 
 CSV_PATH = 'running_log.csv'
 FIELDNAMES = ['name', 'instance_id', 'issue_link', 'problem_statement', 'image_assets', 'key', 'value']
@@ -202,6 +208,14 @@ CAT2_OPTIONS = [
 ]
 
 
+def draw_box(img, box):
+    overlay = img.copy()
+    draw = ImageDraw.Draw(overlay)
+    x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+    draw.rectangle([x, y, x + w, y + h], outline="red", width=2)
+    return overlay
+
+
 def login_screen():
     st.title('Who are you?')
     name = st.text_input('Enter your name')
@@ -333,6 +347,47 @@ def home_screen():
             with st.form(f"image_quality-{i}"):
                 st.selectbox("Rating", ["Excellent", "Good", "Fair", "Poor"])
                 st.form_submit_button("Submit")
+
+            response = requests.get(image_asset)
+            img = Image.open(BytesIO(response.content))
+
+            display_width = 700
+            scale = display_width / img.width
+            display_height = int(img.height * scale)
+            img_resized = img.resize((display_width, display_height))
+
+            canvas_result = st_canvas(
+                background_image=img_resized,
+                drawing_mode="rect",
+                stroke_width=2,
+                stroke_color="#ff0000",
+                fill_color="rgba(255, 0, 0, 0.1)",
+                height=display_height,
+                width=display_width,
+                key=f"canvas-{i}",
+            )
+
+            if canvas_result.json_data:
+                rects = [o for o in canvas_result.json_data["objects"] if o["type"] == "rect"]
+                if rects:
+                    last = rects[-1]
+                    box = {
+                        "x": int(last["left"] / scale),
+                        "y": int(last["top"] / scale),
+                        "w": int(last["width"] / scale),
+                        "h": int(last["height"] / scale),
+                    }
+                    if st.button("Save bounding box", key=f"save_bbox_{i}"):
+                        append_annotation(AnnotationRow(
+                            name=session_state.user,
+                            instance_id=instance_id,
+                            issue_link=row['issue_link'],
+                            problem_statement=row['problem_statement'],
+                            image_assets=image_asset,
+                            key='bounding_box',
+                            value=json.dumps(box)  # e.g. '{"x": 10, "y": 20, "w": 100, "h": 50}'
+                        ))
+                        st.success(f"Saved: {box}")
 
         st.divider()
 
