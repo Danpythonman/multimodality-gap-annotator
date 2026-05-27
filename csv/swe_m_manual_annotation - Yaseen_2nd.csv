@@ -1,0 +1,1914 @@
+instance_id (PR_ID),issue_link (we need to find!),problem_statement,issue_cat,image_assets,img_cat_1,img_cat_2
+grommet__grommet-6282,https://github.com/grommet/grommet/issues/6281,"Data Table sort breaks if a property is null or undefined
+### Expected Behavior
+Undefined properties should be treated as empty string
+
+### Actual Behavior
+When sorting a column, items are not re-ordered as expected if an item in the table has the property set to null or undefined
+
+### URL, screen shot, or Codepen exhibiting the issue
+See [Codesandbox](https://codesandbox.io/s/grommet-v2-template-forked-0ytqfb?file=/index.js:1723-1727)
+
+<img width=""1047"" alt=""Screen Shot 2022-08-17 at 9 25 56 AM"" src=""https://user-images.githubusercontent.com/9042104/185192572-2e6dbfec-b56a-4a1a-9576-e65078681da4.png"">
+
+
+### Steps to Reproduce
+On Code sandbox - sort by Parent_id
+
+### Your Environment
+
+
+
+- Grommet version: 2.23.0, also reproducible w/ 2.25.1
+- Browser Name and version: Chrome Version 104.0.5112.79 (Official Build) (x86_64)
+- Operating System and version (desktop or mobile): NA
+
+",[1.2.3 Missing null check],['https://user-images.githubusercontent.com/9042104/185192572-2e6dbfec-b56a-4a1a-9576-e65078681da4.png'],Data Visualization,Program Output
+grommet__grommet-6307,https://github.com/grommet/grommet/issues/6278,"DataTable: sorting arrow icon doesn't change in header when using navigation
+
+We store sorting parameters in the URL (so that you can share the URL)
+
+### Expected Behavior
+
+1. Click on the table header to sort (different columns several times):
+ - The URL has changed, arrows in the header should be consistent with the new URL info
+2. Use browser navigation arrows (back/forward)
+ - The URL has changed, arrows in the header should be consistent with the new URL info
+
+
+
+
+### Actual Behavior
+1. Click on the table header to sort (different columns several times):
+ - The URL has changed, arrows in the header should be consistent with the new URL info
+2. Use browser navigation arrows (back/forward)
+ - The URL has changed, but there are no changes in the table headers, arrows icon state does not change
+
+
+
+
+### URL, screen shot, or Codepen exhibiting the issue
+
+  -- Here's a Codesandbox template that serves as a nice starting point
+  -- for demonstrating an issue: https://codesandbox.io/s/morning-glade-5c6s38?file=/src/App.js
+
+<img width=""469"" alt=""Screenshot 2022-08-14 at 21 44 25"" src=""https://user-images.githubusercontent.com/17574496/184552506-15664064-8455-4cf7-8241-07318442cc40.png"">
+
+
+- Grommet version: 2.25.1
+
+",[2.1 Incorrect data processing],['https://user-images.githubusercontent.com/17574496/184552506-15664064-8455-4cf7-8241-07318442cc40.png'],Web Interface (UI/UX Element),Program Output
+eslint__eslint-8120,https://github.com/eslint/eslint/issues/8119,"no-unused-vars ignoreRestSiblings flag doesn't work inside function arguments
+* **ESLint 3.15.0**
+* **Node 7.4.0**
+* **npm 4.0.5**
+
+**babel-eslint parser**
+
+**Full configuration:**
+
+```
+  {
+  ""env"": {
+    ""browser"": true,
+  },
+  ""globals"": {
+    ""require"": false,
+    ""process"": false,
+    ""ga"": false,
+    ""Promise"": false,
+    ""__SSR__"": false,
+  },
+  ""parser"": ""babel-eslint"",
+  ""parserOptions"": {
+    ""ecmaFeatures"": {
+      ""jsx"": true,
+    }
+  },
+  ""plugins"": [
+    ""react"",
+    ""import"",
+  ],
+  ""settings"": {
+    ""import/resolver"": {
+      ""webpack"": { ""config"": ""webpack-config/dev.js"" },
+    },
+  },
+  ""rules"": {
+    ""eol-last"": [""warn"", ""always""],
+    ""indent"": [""warn"", 2, { ""SwitchCase"": 1 }],
+    ""linebreak-style"": [""warn"", ""unix""],
+    ""default-case"": [""warn""],
+    ""no-console"": [""warn""],
+    ""no-alert"": [""warn""],
+    ""no-debugger"": [""warn""],
+    ""no-dupe-args"": [""warn""],
+    ""no-dupe-keys"": [""warn""],
+    ""no-duplicate-case"": [""warn""],
+    ""no-empty"": [""warn""],
+    ""no-extra-boolean-cast"": [""warn""],
+    ""no-extra-parens"": [""warn"", ""functions""],
+    ""no-extra-semi"": [""warn""],
+    ""no-irregular-whitespace"": [""warn""],
+    ""no-multiple-empty-lines"": [""warn"", { ""max"": 2, ""maxEOF"": 1 }],
+    ""no-sparse-arrays"": [""warn""],
+    ""no-undef"": [""warn""],
+    ""no-unexpected-multiline"": [""warn""],
+    ""no-unreachable"": [""warn""],
+    ""no-unused-vars"": [""warn"", { ""vars"": ""all"", ""args"": ""after-used"", ""ignoreRestSiblings"": true }],
+    ""semi"": [""warn"", ""always""],
+
+    ""comma-dangle"": [""warn"", {
+      ""arrays"": ""always-multiline"",
+      ""objects"": ""always-multiline"",
+      ""imports"": ""always-multiline"",
+      ""exports"": ""always-multiline"",
+      ""functions"": ""always-multiline"",
+    }],
+
+    ""react/no-unused-prop-types"": ""warn"",
+    ""react/prop-types"": ""warn"",
+
+    ""react/jsx-uses-react"": ""error"",
+    ""react/jsx-uses-vars"": ""error"",
+    ""react/jsx-space-before-closing"": ""warn"",
+    ""react/jsx-no-target-blank"": ""warn"",
+    ""react/jsx-no-undef"": ""warn"",
+
+    ""import/no-unresolved"": ""warn"",
+    ""import/named"": ""warn"",
+    ""import/default"": ""warn"",
+    ""import/no-commonjs"": ""warn"",
+    ""import/no-nodejs-modules"": ""warn"",
+
+  },
+}
+```
+
+
+![eslint](https://cloud.githubusercontent.com/assets/9456433/23164328/63752d16-f858-11e6-9ffe-5ac1b75f3379.png)
+
+`""no-unused-vars"": [""warn"", { ""vars"": ""all"", ""args"": ""after-used"", ""ignoreRestSiblings"": true }],` should disable `no-unused-vars` warn, but it doesn't
+
+no-unused-vars ignoreRestSiblings flag doesn't work inside function arguments
+* **ESLint 3.15.0**
+* **Node 7.4.0**
+* **npm 4.0.5**
+
+**babel-eslint parser**
+
+**Full configuration:**
+
+```
+  {
+  ""env"": {
+    ""browser"": true,
+  },
+  ""globals"": {
+    ""require"": false,
+    ""process"": false,
+    ""ga"": false,
+    ""Promise"": false,
+    ""__SSR__"": false,
+  },
+  ""parser"": ""babel-eslint"",
+  ""parserOptions"": {
+    ""ecmaFeatures"": {
+      ""jsx"": true,
+    }
+  },
+  ""plugins"": [
+    ""react"",
+    ""import"",
+  ],
+  ""settings"": {
+    ""import/resolver"": {
+      ""webpack"": { ""config"": ""webpack-config/dev.js"" },
+    },
+  },
+  ""rules"": {
+    ""eol-last"": [""warn"", ""always""],
+    ""indent"": [""warn"", 2, { ""SwitchCase"": 1 }],
+    ""linebreak-style"": [""warn"", ""unix""],
+    ""default-case"": [""warn""],
+    ""no-console"": [""warn""],
+    ""no-alert"": [""warn""],
+    ""no-debugger"": [""warn""],
+    ""no-dupe-args"": [""warn""],
+    ""no-dupe-keys"": [""warn""],
+    ""no-duplicate-case"": [""warn""],
+    ""no-empty"": [""warn""],
+    ""no-extra-boolean-cast"": [""warn""],
+    ""no-extra-parens"": [""warn"", ""functions""],
+    ""no-extra-semi"": [""warn""],
+    ""no-irregular-whitespace"": [""warn""],
+    ""no-multiple-empty-lines"": [""warn"", { ""max"": 2, ""maxEOF"": 1 }],
+    ""no-sparse-arrays"": [""warn""],
+    ""no-undef"": [""warn""],
+    ""no-unexpected-multiline"": [""warn""],
+    ""no-unreachable"": [""warn""],
+    ""no-unused-vars"": [""warn"", { ""vars"": ""all"", ""args"": ""after-used"", ""ignoreRestSiblings"": true }],
+    ""semi"": [""warn"", ""always""],
+
+    ""comma-dangle"": [""warn"", {
+      ""arrays"": ""always-multiline"",
+      ""objects"": ""always-multiline"",
+      ""imports"": ""always-multiline"",
+      ""exports"": ""always-multiline"",
+      ""functions"": ""always-multiline"",
+    }],
+
+    ""react/no-unused-prop-types"": ""warn"",
+    ""react/prop-types"": ""warn"",
+
+    ""react/jsx-uses-react"": ""error"",
+    ""react/jsx-uses-vars"": ""error"",
+    ""react/jsx-space-before-closing"": ""warn"",
+    ""react/jsx-no-target-blank"": ""warn"",
+    ""react/jsx-no-undef"": ""warn"",
+
+    ""import/no-unresolved"": ""warn"",
+    ""import/named"": ""warn"",
+    ""import/default"": ""warn"",
+    ""import/no-commonjs"": ""warn"",
+    ""import/no-nodejs-modules"": ""warn"",
+
+  },
+}
+```
+
+
+![eslint](https://cloud.githubusercontent.com/assets/9456433/23164328/63752d16-f858-11e6-9ffe-5ac1b75f3379.png)
+
+`""no-unused-vars"": [""warn"", { ""vars"": ""all"", ""args"": ""after-used"", ""ignoreRestSiblings"": true }],` should disable `no-unused-vars` warn, but it doesn't
+
+",[1.2 Incomplete input validation],"['https://cloud.githubusercontent.com/assets/9456433/23164328/63752d16-f858-11e6-9ffe-5ac1b75f3379.png', 'https://cloud.githubusercontent.com/assets/9456433/23164328/63752d16-f858-11e6-9ffe-5ac1b75f3379.png']","Code Snippet Screenshot, Error Message","Code, Run Time Error"
+eslint__eslint-9436,https://github.com/eslint/eslint/issues/9398,"no-constant-condition reported error range is too broad
+**Tell us about your environment**
+
+* **ESLint Version:** 4.8.0
+* **Node Version:** 8.3.0
+* **npm Version:** 5.3.0
+
+**What parser (default, Babel-ESLint, etc.) are you using?** default
+
+**Please show your full configuration:**
+
+<details>
+<summary>Configuration</summary>
+
+
+```js
+{
+  ""rules"": {
+    ""no-constant-condition"": ""error""
+  }
+}
+```
+
+</details>
+
+**What did you do? Please include the actual source code causing the issue.**
+
+
+```js
+if (true) {
+  something();
+}
+
+something(true ? 1 : 0);
+```
+
+**What did you expect to happen?**
+
+The reported error ranges should only include the constant conditions themselves. In the above cases, the words ""true"".
+
+**What actually happened? Please include the actual, raw output from ESLint.**
+
+The reported error ranges include the entire statement/expression that the constant condition is part of.
+
+```json
+$ eslint test.js --format json | jq
+[
+  {
+    ""filePath"": ""/home/lydell/bugs/eslint/test.js"",
+    ""messages"": [
+      {
+        ""ruleId"": ""no-constant-condition"",
+        ""severity"": 2,
+        ""message"": ""Unexpected constant condition."",
+        ""line"": 1,
+        ""column"": 1,
+        ""nodeType"": ""IfStatement"",
+        ""source"": ""if (true) {"",
+        ""endLine"": 3,
+        ""endColumn"": 2
+      },
+      {
+        ""ruleId"": ""no-constant-condition"",
+        ""severity"": 2,
+        ""message"": ""Unexpected constant condition."",
+        ""line"": 5,
+        ""column"": 11,
+        ""nodeType"": ""ConditionalExpression"",
+        ""source"": ""something(true ? 1 : 0);"",
+        ""endLine"": 5,
+        ""endColumn"": 23
+      }
+    ],
+    ""errorCount"": 2,
+    ""warningCount"": 0,
+    ""fixableErrorCount"": 0,
+    ""fixableWarningCount"": 0,
+    ""source"": ""if (true) {\n  something();\n}\n\nsomething(true ? 1 : 0);\n""
+  }
+]
+```
+
+Expected:
+
+```diff
+@@ -7,11 +7,11 @@
+         ""severity"": 2,
+         ""message"": ""Unexpected constant condition."",
+         ""line"": 1,
+-        ""column"": 1,
++        ""column"": 5,
+         ""nodeType"": ""IfStatement"",
+         ""source"": ""if (true) {"",
+-        ""endLine"": 3,
+-        ""endColumn"": 2
++        ""endLine"": 1,
++        ""endColumn"": 9
+       },
+       {
+         ""ruleId"": ""no-constant-condition"",
+@@ -22,7 +22,7 @@
+         ""nodeType"": ""ConditionalExpression"",
+         ""source"": ""something(true ? 1 : 0);"",
+         ""endLine"": 5,
+-        ""endColumn"": 23
++        ""endColumn"": 15
+       }
+     ],
+     ""errorCount"": 2,
+```
+
+**Note:** I don't know how the reported `""source""` properties are supposed to work, so I can't tell whether they are correct or not.
+
+Visual representation of the problem:
+
+![screenshot from 2017-10-07 14-53-15](https://user-images.githubusercontent.com/2142817/31308016-4e871674-ab6f-11e7-828b-e0f40ed697d5.png)
+
+Notice how much more than the constant conditions are underlined.
+
+See also: https://github.com/steelbrain/linter-ui-default/issues/398#issuecomment-331632791 and onwards.
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/2142817/31308016-4e871674-ab6f-11e7-828b-e0f40ed697d5.png'],Code Snippet Screenshot,"Code, Run Time Error"
+eslint__eslint-14242,https://github.com/eslint/eslint/issues/14202,"Using --max-warnings in combination with --quiet should error
+
+
+**The version of ESLint you are using.**
+v7.21.0
+
+**The problem you want to solve.**
+Using the `--max-warnings` cli option is useless in combination with `--quiet`. 
+I'm running this in 
+
+Note the following, first running without `--quiet`, then with.
+![image](https://user-images.githubusercontent.com/9407072/110871764-42790280-82cf-11eb-805a-7049261c3b62.png)
+
+**Your take on the correct solution to problem.**
+
+Ideally: The `--quiet` flag should be overriden when the amount of warnings exceeds `max-warnings`, logging the warnings.
+Also acceptable: The exit code should be 1 when `max-warnings` is exceeded.
+
+**Are you willing to submit a pull request to implement this change?**
+Not really 😇
+",[1.4 Incomplete Configuration Processing],['https://user-images.githubusercontent.com/9407072/110871764-42790280-82cf-11eb-805a-7049261c3b62.png'],Error Message,Program Output
+eslint__eslint-17618,https://github.com/eslint/eslint/issues/13614,"Code path analysis for (a && b) ?? c
+
+
+
+**Tell us about your environment**
+
+
+
+* **ESLint Version:** v7.7.0
+* **Node Version:** v12.14.0
+* **npm Version:** 6.13.4
+
+**What parser (default, `@babel/eslint-parser`, `@typescript-eslint/parser`, etc.) are you using?**
+
+default
+
+**Please show your full configuration:**
+
+<details>
+<summary>Configuration</summary>
+
+
+```js
+module.exports = {
+  parserOptions: {
+    ecmaVersion: 2020
+  }
+};
+```
+
+</details>
+
+**What did you do? Please include the actual source code causing the issue, as well as the command that you used to run ESLint.**
+
+
+```js
+(a && b) ?? c;
+```
+
+The rest of the bug report template isn't quite suitable for this issue.
+
+Code path analysis gives the following:
+
+<details>
+<summary>DOT</summary>
+
+```dot
+digraph {
+node[shape=box,style=""rounded,filled"",fillcolor=white];
+initial[label="""",shape=circle,style=filled,fillcolor=black,width=0.25,height=0.25];
+final[label="""",shape=doublecircle,style=filled,fillcolor=black,width=0.25,height=0.25];
+s1_1[label=""Program:enter\nExpressionStatement:enter\nLogicalExpression:enter\nLogicalExpression:enter\nIdentifier (a)""];
+s1_2[label=""Identifier (b)\nLogicalExpression:exit""];
+s1_3[label=""Identifier (c)""];
+s1_4[label=""LogicalExpression:exit\nExpressionStatement:exit\nProgram:exit""];
+initial->s1_1->s1_2->s1_3->s1_4;
+s1_1->s1_4;
+s1_2->s1_4->final;
+}
+```
+</details>
+
+<details>
+<summary>Image</summary>
+
+![image](https://user-images.githubusercontent.com/44349756/91108055-31d8a600-e677-11ea-89b8-801b95d2c6af.png)
+
+</details>
+
+This would be correct for `(a || b) ?? c`, but I think it isn't entirely correct for `(a && b) ?? c` since there should be a path from `a` to `c` that doesn't go through `b`:
+
+```js
+(null && console.log(""b"")) ?? console.log(""c""); // logs only ""c""
+```
+
+
+Code path analysis for (a && b) ?? c
+
+
+
+**Tell us about your environment**
+
+
+
+* **ESLint Version:** v7.7.0
+* **Node Version:** v12.14.0
+* **npm Version:** 6.13.4
+
+**What parser (default, `@babel/eslint-parser`, `@typescript-eslint/parser`, etc.) are you using?**
+
+default
+
+**Please show your full configuration:**
+
+<details>
+<summary>Configuration</summary>
+
+
+```js
+module.exports = {
+  parserOptions: {
+    ecmaVersion: 2020
+  }
+};
+```
+
+</details>
+
+**What did you do? Please include the actual source code causing the issue, as well as the command that you used to run ESLint.**
+
+
+```js
+(a && b) ?? c;
+```
+
+The rest of the bug report template isn't quite suitable for this issue.
+
+Code path analysis gives the following:
+
+<details>
+<summary>DOT</summary>
+
+```dot
+digraph {
+node[shape=box,style=""rounded,filled"",fillcolor=white];
+initial[label="""",shape=circle,style=filled,fillcolor=black,width=0.25,height=0.25];
+final[label="""",shape=doublecircle,style=filled,fillcolor=black,width=0.25,height=0.25];
+s1_1[label=""Program:enter\nExpressionStatement:enter\nLogicalExpression:enter\nLogicalExpression:enter\nIdentifier (a)""];
+s1_2[label=""Identifier (b)\nLogicalExpression:exit""];
+s1_3[label=""Identifier (c)""];
+s1_4[label=""LogicalExpression:exit\nExpressionStatement:exit\nProgram:exit""];
+initial->s1_1->s1_2->s1_3->s1_4;
+s1_1->s1_4;
+s1_2->s1_4->final;
+}
+```
+</details>
+
+<details>
+<summary>Image</summary>
+
+![image](https://user-images.githubusercontent.com/44349756/91108055-31d8a600-e677-11ea-89b8-801b95d2c6af.png)
+
+</details>
+
+This would be correct for `(a || b) ?? c`, but I think it isn't entirely correct for `(a && b) ?? c` since there should be a path from `a` to `c` that doesn't go through `b`:
+
+```js
+(null && console.log(""b"")) ?? console.log(""c""); // logs only ""c""
+```
+
+
+",[2.1 Incorrect data processing],"['https://user-images.githubusercontent.com/44349756/91108055-31d8a600-e677-11ea-89b8-801b95d2c6af.png', 'https://user-images.githubusercontent.com/44349756/91108055-31d8a600-e677-11ea-89b8-801b95d2c6af.png']",Diagram,"Steps and Processes, Algorithm/Concept Description"
+prettier__prettier-4153,https://github.com/prettier/prettier/issues/4150,"Detect fenced code block language when it is followed by attributes
+Some flavours of markdown allow for addition attributes in fenced code blocks. These go directly after ```` ```[LANGUAGE]```` and are used to either style the output (e.g. add line numbers) or to execute the code (this is called literate programming). For example, code block attributes are used in [`markdow-preview-enhanced`](https://shd101wyy.github.io/markdown-preview-enhanced/#/code-chunk), which is a plugin for Atom and VSCode. Even without this plugin, Atom and VSCode support adequate syntax highlighting within markdown code blocks even when attributes are present.
+
+<img width=""825"" alt=""screen shot 2018-03-15 at 09 41 11"" src=""https://user-images.githubusercontent.com/608862/37455474-133b946c-2835-11e8-8989-3ee8ee8ae58f.png"">
+
+
+At the moment Prettier fails to detect code block language if there are any non-whitespace characters following ```` ```[LANGUAGE] ````. It'd be great if this could be fixed – should be easy.
+
+**Prettier 1.11.1**
+[Playground link](https://prettier.io/playground/#N4Igxg9gdgLgprEAuEBiVACADgGwIYCWUGAVgM4YBGOEYA1gDpRMAGb5GnTkUZEOcAHQ0A5gApOkhiAAWcHDQwB3CACccAE2mSAlAG5WbJk3SkK1WnWUEYMjHlUiArgFsEMMsahsWHYGBcNAF4oCA04DGEiOABaKFdKOFUyAF9uaD4BYQhxSS5ZeUUVdS0QXQNvIygQABoQCCwYAgzkUAdVCCUABQcEMmQQPAA3CAINWsGyGGQAMzwcMjg6ylU8ejgYAGUsNaIRZBhVJyWQDVpZ+cW6okXVGC7VkRc8C4WT8gAPACFV9a28NwAGWiryu9ScMCwEIATKCTjtkkkBs9VHQzkpqnUsKoiDAAOpjWzIAAcAAYsR1FnjVlgBti4LchnAJqo4ABHJwEVkPPBPF5IOZvOqLFwEA5HE5kPYCACKTgg8DhdRgeEoBI0RKQ0OVqwIOD2AGEIC5ngNQlBmXUnIsACqq-oCy5wFIpIA)
+
+**Input:**
+````md
+## plain js block
+
+```js   
+console.log(     ""hello world""   );
+```
+
+## js block with arguments
+
+```js {cmd=node .line-numbers}
+console.log(     ""hello world""   );
+```
+````
+
+**Output:**
+````md
+## plain js block
+
+```js
+console.log(""hello world"");
+```
+
+## js block with arguments
+
+```js {cmd=node .line-numbers}
+console.log(     ""hello world""   );
+```
+````
+
+**Expected behavior:**
+
+A code block that starts with ```` ```js {cmd=node .line-numbers}```` gets formatted exactly the same as ```` ```js````. I.e. any text after ```` ```[a-zA-Z0-9_-]* ```` is ignored when a language is being detected.
+
+If you're wondering if a whitespace character must be present before the arguments, I'm not sure. In Atom, ```` ```js{cmd=true}```` keeps the correct syntax highlighting, while in VSCode it breaks.
+",[1.1 Incomplete data processing],['https://user-images.githubusercontent.com/608862/37455474-133b946c-2835-11e8-8989-3ee8ee8ae58f.png'],Code Snippet Screenshot,"Code, Program Output"
+prettier__prettier-8536,https://github.com/prettier/prettier/issues/2081,"Directive followed by comment has extra trailing hardline
+If your file is only a directive, followed by a new line, followed by a comment, prettier ends the file with two newlines, rather than a single one. This is reproducible with only the babylon parser.
+
+**Prettier 1.10.2**
+[Playground link](https://prettier.io/playground/#N4Igxg9gdgLgprEAuEByArgZzgAkzAJwEswZUBuAHSmoHpadIBbJhGakAGhAgAcYi0TMlC9isAOpEAJjAAWyABwAGbjACGAIymyFSAEzdMRKAHMANnACK6CPGQAzdeexqC6ouZOmAwhBbqyCBQ0HBcIJruYADWcDAAyrzqYN7IhOhw3ABWmAAeAEJRsQnqrAAyJmFITi6ZIEkE2ARBmloAnubQ4dhMRGkEGdxYcAAqWsLVzq4gJk0wAArupkyBk7XcBHAAjuhEm4vqy6s102IQ2BLuvEHh6gQEEADu83cIEyDh0hBgjlN16vhfuseOgYLxQfogdgAL7QoA)
+```sh
+--arrow-parens 
+--prose-wrap 
+```
+
+**Input:**
+```jsx
+'use strict';
+
+// comment
+
+```
+
+**Output:**
+```jsx
+""use strict"";
+
+// comment
+
+
+```
+
+**Expected behavior:**
+
+Code:
+```jsx
+'use strict';
+
+// comment
+```
+
+![image](https://user-images.githubusercontent.com/1612134/26990368-503f5214-4d24-11e7-8093-d4edabec9830.png)
+
+<details>
+<summary>Old details</summary>
+I believe the hardline is (in part) coming from 
+https://github.com/prettier/prettier/blob/master/src/printer.js#L199
+
+Though I partially wonder if `addAlignmentSize` [trim logic](https://github.com/prettier/prettier/blob/master/index.js#L85) could be expanded for the common case?
+</details>
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/1612134/26990368-503f5214-4d24-11e7-8093-d4edabec9830.png'],Code Snippet Screenshot,"Code, Program Input, Desired Output"
+prettier__prettier-16347,https://github.com/prettier/prettier/issues/16342,"Some empty lines is being removed in markdown YAML frontmatter
+**Prettier 3.3.0**
+[Playground link](https://prettier.io/playground/#N4Igxg9gdgLgprEAuEBadAdWBLGAbOJAAgCU4BDPIgBQCcIArOMGAZy20imNYAc8IMMAAssEWgBM4tYgEYsYcvADm4gJ5IsRIqiIAROAFsIWLBIhhWmqNt1RyhwkQDqlbFDhbtRKazDEAQSIAZWxDfjgAGhDyADM4IgBhCENHWBC1VnhDADovbQFVYmEYGF4rAHoKgHc3DxyGVhzxZQrCiBzeKGV8ogBXWjxi0vKkKtq8dzgGppaKhAre2jheCGGyyorlXGE+gCMcyEMaurhGk8mPXt5lgDdsOGriCvJWVjg2CrDyZTgLqYavB6UC8dgcTgAXgBrYJqKBgIgAUVo5F6vn8RCCMFofSyBDeRBuggsECoMGESn671YRDAtDUvBgEGUKN4wk4RFubgkuDUhPoEFiNKZ-Ig9ykRD8lHIewIRHIUAkRAE1VQkCyRGxCtY5BY2GgNOgSPJ0jgfUMvXa61GVXMlhy0NYcLAOX1FUdzoA+u1PbLdVCcqxbsDvP1BtbNnamh74a6IIsbN5lqsI2Mtjt9ocUhVDEp4LRUHgZax3VCnfDUNU4HtUNJyKgo9c7g8nkQXm8PiXvr9S+WXQwgaYoKtaDBYqT9VZQUR7I5iIlhAhlCEKd1egMhkQShs0yIl6hWKvlDlHE24PdHqmqnvugejye-iOxxOOuR7rElis1luRpttuTMyOCoAFlsCyaRUAACQgXg-hvZQ7wVBCn3HSYTBBRMwTnJJF26FckPXcMfx3a9cIQw8kIfM8L1bbcbQqeDEO6B8KhQl8cjfbAP0TbRk2-Oi-wzA4gNA8CC2g2CGLIpjkPEZ80KHWVmSnTCZ3BYhgNoHIJLgAByGkACFCjROA-GIZxF2WTVLISMDlWwZQSmiE0rLs4QYM8HjlWZfjfzTQwwPzVB3NgrNjnaQNg0IzcBP8wKIJC6Yjk-FNiPo-9dmE7NRKCnSQPi8SPJyDLM31aiW2eV53k+bs-kMWhEsBYFp1nJxgIgAB2fSiCM5kTLMkIUg+dk8OqaApFoWI+ioOyZQgPoYE1CAt3IXhYKgPIvKtNLNlibACBPTrDjACosiUTg2gAD2ET1tliK6bo62Riq46KrwqJTj2MDrjvmKAE1DPj3pKrLjm+sATt65Rgnm2gwGmf9ysvHa0z2g7vt+nlWChD7Ck9G5zxbT0EE6NcMNsNTsIAcT6CBuuoH5PNDdFiDoRhmEWu1zQQGBzqNBUlSyPoJD5KBBFMy0fOB2nLs4MiciZXg2h80mQ28DdpYgWX4IVmC-pS3ySPTADQYqGmIAADWwBcly2GW5aXF6TbjJHW3baqu1zHtlFpg9UF4Rnaw2rpgXQVAhxASIQBgmB9SgVhkFAchaHoaoGeWePkBAShakySOQD2FEwChD5gnBAAZKZkFiSh3ijwv-VLgOwHcZRkGxPoohAd4AvbnEu7gS7YNoMIecoAAVaR7BH0zq9rrvWFbggAEVafgOe8DrkBGku0JuhXte4A3reAEdD7Z8os9eVAPDgKQJHzrV9tb5JUnIK+8DwfPF-3uAAlKEeewFpwGoNISuHhj5dxKIYPAFlcCmWbnAYICBF6x3uDANQWdLAJyjrcTuABJRUPNgh0mwIyAIipggYIIJAqORJ3jOFZFnAm7xaC3CPlHdwrCYB0B+LmWhIAA60FYVnXMtAoTmGqFAfONx3AwGcNgCQ5JkAAA4AAMUdlhn2wMsXhyh+FIBrpvLuvM9gKKUcIZAAAmKOuI4Dj2LAIowew7733LkhPojMABi4hcylFblfBaEAQAAF8QlAA)
+
+```sh
+--parser markdown
+```
+
+**Input:**
+
+```markdown
+---
+title: Real Projects
+icon: splotch
+order: 1
+category:
+  - Demo
+
+docs:
+  - name: Waline
+    desc: A Simple, Safe Comment System.
+    logo: https://waline.js.org/logo.png
+    url: https://waline.js.org/en/
+    repo: https://github.com/walinejs/waline
+    preview: /assets/image/waline.jpg
+
+  - name: zkSync Era
+    desc: A trustless protocol that uses cryptographic validity proofs to provide scalable and low-cost transactions on Ethereum
+    logo: https://docs.zksync.io/zksync_logo_black.svg
+    url: https://docs.zksync.io/
+    repo: https://github.com/matter-labs/zksync-web-era-docs
+    preview: /assets/image/zksync.jpg
+
+portfolios:
+  - name: Cheng Shang
+    url: https://cheng-shang.me
+    preview: https://cheng-shang.me/portfolio.avif
+    repo: https://github.com/Mister-Hope/cheng-shang-portfolio
+
+  - name: Cheng Shang
+    url: https://cheng-shang.me
+    preview: https://cheng-shang.me/portfolio.avif
+    repo: https://github.com/Mister-Hope/cheng-shang-portfolio
+
+blogs:
+  - name: Mr.Hope's Blog
+    desc: Where there is light, there is hope
+    logo: https://mister-hope.com/logo.svg
+    url: https://mister-hope.com
+    repo: https://github.com/Mister-Hope/Mister-Hope.github.io
+    preview: /assets/image/mrhope.jpg
+
+  - name: Mo7's Blog
+    desc: Something wonderful is about to happen.
+    logo: https://file.mo7.cc/static/lxh_gif/lxh_71.gif
+    url: https://blog.mo7.cc/en/
+    repo: https://github.com/mo7cc/BlogSource.git
+    preview: https://file.mo7.cc/disk/blog_preview_en.png
+
+  - name: Guo's Page
+    desc: Project documentation and study notes
+    logo: https://guoxicheng.top/logo.png
+    url: https://guoxicheng.top/en
+    repo: https://github.com/GuoXiCheng/guoxicheng.github.io
+    preview: /assets/image/guo-s-page-en.png
+---
+
+
+```
+
+**Output:**
+
+```markdown
+---
+title: Real Projects
+icon: splotch
+order: 1
+category:
+  - Demo
+
+docs:
+  - name: Waline
+    desc: A Simple, Safe Comment System.
+    logo: https://waline.js.org/logo.png
+    url: https://waline.js.org/en/
+    repo: https://github.com/walinejs/waline
+    preview: /assets/image/waline.jpg
+
+  - name: zkSync Era
+    desc: A trustless protocol that uses cryptographic validity proofs to provide scalable and low-cost transactions on Ethereum
+    logo: https://docs.zksync.io/zksync_logo_black.svg
+    url: https://docs.zksync.io/
+    repo: https://github.com/matter-labs/zksync-web-era-docs
+    preview: /assets/image/zksync.jpg
+
+portfolios:
+  - name: Cheng Shang
+    url: https://cheng-shang.me
+    preview: https://cheng-shang.me/portfolio.avif
+    repo: https://github.com/Mister-Hope/cheng-shang-portfolio
+
+  - name: Cheng Shang
+    url: https://cheng-shang.me
+    preview: https://cheng-shang.me/portfolio.avif
+    repo: https://github.com/Mister-Hope/cheng-shang-portfolio
+
+blogs:
+  - name: Mr.Hope's Blog
+    desc: Where there is light, there is hope
+    logo: https://mister-hope.com/logo.svg
+    url: https://mister-hope.com
+    repo: https://github.com/Mister-Hope/Mister-Hope.github.io
+    preview: /assets/image/mrhope.jpg
+  - name: Mo7's Blog
+    desc: Something wonderful is about to happen.
+    logo: https://file.mo7.cc/static/lxh_gif/lxh_71.gif
+    url: https://blog.mo7.cc/en/
+    repo: https://github.com/mo7cc/BlogSource.git
+    preview: https://file.mo7.cc/disk/blog_preview_en.png
+  - name: Guo's Page
+    desc: Project documentation and study notes
+    logo: https://guoxicheng.top/logo.png
+    url: https://guoxicheng.top/en
+    repo: https://github.com/GuoXiCheng/guoxicheng.github.io
+    preview: /assets/image/guo-s-page-en.png
+---
+
+```
+
+**Expected output:**
+
+Empty lines in `blogs` not being removed
+
+
+**Why?**
+
+......
+",[2.4 Incorrect output],"['https://waline.js.org/logo.png', 'https://file.mo7.cc/static/lxh_gif/lxh_71.gif', 'https://file.mo7.cc/disk/blog_preview_en.png', 'https://guoxicheng.top/logo.png', 'https://waline.js.org/logo.png', 'https://file.mo7.cc/static/lxh_gif/lxh_71.gif', 'https://file.mo7.cc/disk/blog_preview_en.png', 'https://guoxicheng.top/logo.png']",Miscellaneous,None
+prettier__prettier-14262,https://github.com/prettier/prettier/issues/14227,"Allow parentheses when JSDoc to allow intellisense
+**Prettier 2.8.3**
+[Playground link](https://prettier.io/playground/#N4Igxg9gdgLgprEAuEBbCATArgGzgOjgA8AHCAJxgGcACAXhoHoAqZmgASoEMYBLKgGa84tYACU4kchgA8VGOV5QA5gBoa8xSoB8AXxrNGNABTAAOlBo0AFnBw4ISGgEYAzK4Dsqi7oCUAbhBVEAgSPmgqZFAucnIIAHcABRiESJQuHHiuAE9I4IAjci4wAGs4GABlLlQ4ABklOGQBDKo4AqLS8oqSYqVlZAUsNpA4VHy4DAwJ2q4VLC5lOAAxClQePhVkEC4sGAggkGsYVBwAdWteeCoesDgK1MveADdL7K2wKjyQJVbKRKLlGsmi1hgArKhECp9PAARSwEHgwJwrWCPXIvy2+S44xwBxIWhgp14GBg1mQAA4AAyouKtU5FEhbfEiODkJ6NYIAR3h8H+oTS2yoAFooHAJhMDuQ4NzeFL-gsgUhmsjhq1ULwBuQhsEqNC4ABBGAKXj5XZwRKs+qipEokC6lSwnmNJUg4IwbFEklkpAAJjdRV4OD6AGEIKhFSMqABWA5YVoAFWxaWVtqeQwAklAprAKmBFGF9VmKjBsngbXBdLogA)
+
+```sh
+--parser babel
+```
+
+**Input:**
+
+```jsx
+module.exports = /** @satisfies {Record<string, string>} */ ({
+  hello: 1337,
+});
+```
+
+**Output:**
+
+```jsx
+module.exports = /** @satisfies {Record<string, string>} */ {
+  hello: 1337,
+};
+
+```
+
+**Expected behavior:**
+Keep those parentheses to not break intellisense.
+
+```jsx
+module.exports = /** @satisfies {Record<string, string>} */ ({
+  hello: 1337,
+});
+```
+
+Here is an example of using `@satisfies` jsdoc. https://github.com/microsoft/TypeScript/pull/51753
+
+![prettier](https://user-images.githubusercontent.com/476567/214179620-3f27356b-9ce1-4dc3-96a8-db30a4441391.gif)
+
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/476567/214179620-3f27356b-9ce1-4dc3-96a8-db30a4441391.gif'],Code Snippet Screenshot,Code
+openlayers__openlayers-12393,https://github.com/openlayers/openlayers/issues/12391,"Rounding errors in ImageStatic image scaled to fit extent
+**Describe the bug**
+A perfectly square image should fit into a square (within JavaScript floating point tolerance) tile extent, but the floating point calculations result in rounding up and the image being stretched unnecessarily.  I suspect the use of `Math.ceil` might be to prevent zero width when the scaling is negative?  See comments in https://gis.stackexchange.com/questions/400922/imagestatic-in-openlayers-6-does-not-fit-a-given-extent-when-shown-on-the-map
+
+**To Reproduce**
+https://codesandbox.io/s/simple-forked-y4njr
+
+**Expected behavior**
+It would be better to always scale up whichever dimension needs it instead of losing detail by reducing width.  There would then be no need to use `.ceil()` and the result could simply be rounded to the nearest pixel https://codesandbox.io/s/simple-forked-4wnz4
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/07227868571f35585d664cf185311b94405b85c1/test/rendering/cases/image-stretched-disable-smoothing/expected.png],Miscellaneous,Desired Output
+openlayers__openlayers-13226,https://github.com/openlayers/openlayers/issues/13222,"Sources which use view projection with wrapX false do not work with WebGLTileLayer
+**Describe the bug**
+WebGL renderer incorrectly expects the source to have a tile grid.
+
+**To Reproduce**
+Change `ol/layer/Tile` to `ol/layer/WebGLTile` in https://codesandbox.io/s/wms-tiled-wrap-180-forked-883db?file=/main.js
+
+**Expected behavior**
+Same behavior as `ol/layer/Tile`.  It looks like #13212 might fix this, so maybe only a test is needed
+
+",[2.5 Incorrect configuration processing],[https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/cases/webgl-tile-multisource/expected.png],Map/Geospatial Visualization,Program Output
+openlayers__openlayers-14483,https://github.com/openlayers/openlayers/issues/14478,"Rotated vector layer text styles not displaying at correct location when context is clipped and translated
+**Describe the bug**
+We're working on a modified spyglass using the latest version of OL, but instead of showing hidden layers centered around the cursor, we display them in a translated area above and to the right of the cursor. 
+
+The issue is that when the context for vector layers containing _rotated_ text styles are clipped and translated, the location of these styles appear at the _original_ location on the map, not the _translated_ location. This does not occur for non-rotated text styles.
+
+**To Reproduce**
+1. Go to https://codesandbox.io/s/ol7-rotate-translate-issue-qzext2?file=/src/index.js
+2. Hover the mouse over Miami. The blue box shows the spyglass area. The red box shows the hidden layers revealed by the spyglass, which are clipped and translated via prerenders and postrenders. Note that both the blue ""1"" and _non-rotated_ red ""2"" vector layer text styles are properly displayed over Miami, Florida.
+
+![image](https://user-images.githubusercontent.com/42700439/216621447-8f905a89-4cb3-4970-88d8-8d1d516e8153.png)
+
+3. A third vector layer text style - a green ""3"" - has a non-zero rotation value. It's also being clipped and translated should display on top of the red ""2"". However, it incorrectly displays in the original non-translated location of Miami from the main map. Any rotation value != 0 causes the translation to fail. 
+
+![image](https://user-images.githubusercontent.com/42700439/216622459-c59a58e7-f3f2-418c-97e8-c81b690aa26f.png)
+
+**Expected behavior**
+The green ""3"" should be translated and superimposed on top of the red ""2"". I've only been able to accomplish this by removing the rotation option (~Line 106 of index.js) and/or setting the value to 0.
+
+![image](https://user-images.githubusercontent.com/42700439/216623973-d556937d-aec9-41e2-b1c8-bc57932f85b6.png)
+
+
+
+
+",[2.4 Incorrect output],"['https://user-images.githubusercontent.com/42700439/216621447-8f905a89-4cb3-4970-88d8-8d1d516e8153.png', 'https://user-images.githubusercontent.com/42700439/216622459-c59a58e7-f3f2-418c-97e8-c81b690aa26f.png', 'https://user-images.githubusercontent.com/42700439/216623973-d556937d-aec9-41e2-b1c8-bc57932f85b6.png']",Map/Geospatial Visualization,"Desired Output, Program Output"
+openlayers__openlayers-12141,https://github.com/openlayers/openlayers/issues/12138,"Failed to get the extent of VectorSource inside the featuresloadend callback function
+**Describe the bug**
+Try to get the extent of VectorSource but the result is [Infinity,Infinity,-Infinity,-Infinity] which is incorrect. 
+And I think we should add features before calling the success callback in the xhr function in src/ol/featureloader.js.
+
+![image](https://user-images.githubusercontent.com/23274684/112334526-76541f00-8cf6-11eb-8ce5-553c8846d286.png)
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/kml-pjrvw?file=/main.js
+
+**Expected behavior**
+VectorSource.getExtent() returns the correct extent when featuresloadend event is triggered.
+
+",[2.1 Incorrect data processing],['https://user-images.githubusercontent.com/23274684/112334526-76541f00-8cf6-11eb-8ce5-553c8846d286.png'],Code Snippet Screenshot,Code
+openlayers__openlayers-14619,https://github.com/openlayers/openlayers/issues/14575,"Wrong scale value in cloned icons
+**Description**
+When an Icons' scale is set as a number and you clone it, the scale of the clone got an array with different values as his scale.
+This happens because by calling setScale() an Icon receives an height and width. So by calling the constructor within clone() the scale is set to an array though it was set a number before. This results always in a wrong value for the scale value.
+Even the documentation states that height and width can't be used with scale. This seems to be a conflict.
+
+**Steps To Reproduce**
+Steps to reproduce the behavior:
+1. Create an Feature with an Icon without height and width
+2. Scale the icon with a number Value
+3. Clone the icon
+4. You will see there is an array as scale value in the cloned style
+
+**Expected behavior**
+The cloned icon keeps the same scale as its original especially the same datatype.
+
+",[2.1.2 Incorrect initialization],[https://raw.githubusercontent.com/ahocevar/openlayers/001f702ccd549e82f395291d71dec0f067228d0c/test/rendering/cases/icon-symbol-width-height/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-14414,https://github.com/openlayers/openlayers/issues/14409,"Region Growing using a GeoTIFF
+**Describe the bug**
+I'm trying to do a Region Growing using a GeoTIFF file, and the idea was to use the style of the WebGLTileLayer to mark all the pixels which are below the level, then use a RasterOperation to set a new rgb to all the pixels which are directly connected to a clicked one.
+When I increase the level on the slider, all the pixels which are below the level become white, but when I decrease the level the pixels stop changing. 
+Also, if I try to print the R value of a pixel, it is not correct, like in the image
+![bug](https://user-images.githubusercontent.com/46652311/209388190-7732c8b2-db84-454d-bbba-f1884af1edea.jpg)
+
+I don't know if it's a bug or I am missing something.
+
+**To Reproduce**
+HTML: 
+```
+<!DOCTYPE html>
+<html lang=""en"">
+
+<head>
+  <meta charset=""UTF-8"">
+  <title>Flooding tool</title>
+  <style>
+    @import ""node_modules/ol/ol.css"";
+
+    .map {
+      width: 100%;
+      height: 500px;
+      cursor: pointer;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div id=""map"" class=""map""></div>
+  <div>
+    <label>
+      Sea level
+      <input id=""level"" type=""range"" min=""0"" max=""20"" value="".00"" step=""0.05"" />
+      +<span id=""output""></span> m
+    </label>
+  </div>
+  
+  <script src=""https://unpkg.com/elm-pep@1.0.6/dist/elm-pep.js""></script>
+  <script type=""module"" src=""index.js""></script>
+</body>
+
+</html>
+```
+
+JS:
+```
+import { GeoTIFF } from 'ol/source';
+import RasterSource from 'ol/source/Raster';
+import Map from 'ol/Map';
+import { WebGLTile as TileLayer } from 'ol/layer';
+import ImageLayer from 'ol/layer/Image';
+import View from 'ol/View';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4';
+import OSM from 'ol/source/OSM';
+import filetif from './COPERNICUS_EUDEM_165252.tif'
+
+const control = document.getElementById('level');
+const FloodStyle = {
+        variables: {
+                level: parseFloat(control.value),
+        },
+        color: [
+                'case',
+                ['==', ['band', 2], 0],  //se la banda2 == 0 (indica i nodata)
+                '#00000000',             //allora pixel trasparente
+                [""case"", [""<="", [""band"", 1], [""var"", ""level""]], ""#ffffffff"", '#00000000']  //se la banda1 è <= livello è blu altrimenti trasparente
+        ],
+}
+
+// Register projection definition
+proj4.defs(
+        'EPSG:32633', '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
+);
+register(proj4);
+
+// Functions called inside this operation are visible only if they're provided in ""lib"" option
+function floodRegion(inputs, data) {
+        const image = inputs[0];
+        const inputData = image.data;
+        const width = image.width;
+        const height = image.height;
+        let seed = data.pixel;
+
+        if (seed) {
+                seed = seed.map(Math.round);
+                const seedIdx = (seed[1] * width + seed[0]) * 4;
+                console.log(""Value: "" + inputData[seedIdx]);
+        }
+
+        return { data: image.data, width: width, height: height };
+}
+
+const elevation = new GeoTIFF({
+        sources: [
+                {
+                        url: filetif,
+                        projection: 'EPSG:32633',
+                },
+        ],
+        normalize: false,   //importante
+        interpolate: false, //importante
+})
+
+const elevationTile = new TileLayer({
+        source: elevation,
+        style: FloodStyle
+})
+
+const raster = new RasterSource({
+        sources: [elevationTile],
+        operationType: ""image"",
+        operation: floodRegion
+});
+
+const dem = new ImageLayer({
+        source: raster,
+        opacity: 1.0,
+})
+
+const osm = new TileLayer({
+        visible: true,
+        preload: Infinity,
+        source: new OSM({ wrapX: true })
+})
+
+const map = new Map({
+        target: 'map',
+        layers: [
+                osm,
+                dem,
+        ],
+        view: new View({
+                projection: 'EPSG:32633',
+                center: [306821.2, 4879578.4],
+                zoom: 13,
+        }),
+})
+
+elevation.getView().then((options) => {
+        dem.setExtent(options.extent);
+})
+
+const outputLevel = document.getElementById('output');
+control.addEventListener('input', () => {
+        outputLevel.innerText = control.value;
+        elevationTile.updateStyleVariables({ level: parseFloat(control.value) });
+        //raster.changed();
+})
+outputLevel.innerText = control.value;
+
+let coordinate = null;
+
+map.on('click', (event) => {
+        coordinate = event.coordinate;
+        raster.changed();
+})
+
+raster.on('beforeoperations', function (event) {
+        // the event.data object will be passed to operations
+        const data = event.data;
+
+        if (coordinate) {
+                data.pixel = map.getPixelFromCoordinate(coordinate);
+        }
+});
+```
+
+Move the slider to increase the level, then decrease
+
+[COPERNICUS_EUDEM_165252.zip](https://github.com/openlayers/openlayers/files/10296729/COPERNICUS_EUDEM_165252.zip)
+
+",[2.1 Incorrect data processing],['https://user-images.githubusercontent.com/46652311/209388190-7732c8b2-db84-454d-bbba-f1884af1edea.jpg'],"Map/Geospatial Visualization, Error Message",Program Output
+openlayers__openlayers-13974,https://github.com/openlayers/openlayers/issues/13704,"Even bandsCount >= 5 in DataTileSource not working correctly
+**Describe the bug**
+Using even bandsCount >= 6 in DataTileSource generates incorrect output, when using last band as alpha channel.
+What we try to do
+1. Set layer style to show RGBA
+2. {color: [""color"",[""band"", 4],[""band"", 3],[""band"", 2],[""/"", [""band"", bands.length + 1], 255]]}
+3. Ask for 5 bands from titiler - you'll get 6bands (5bands + alpha) as output
+4. Set DataTileSource to work with 6 bands (5 + alpha)
+5. Alpha mask is not working correctly
+6. To fix this behavior we generated ol/DataTile with one more dimension, when working with even bandsCount:
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Change value of totalBandsCount (row: 24) directly to bandsCount (In this example it is 6).
+
+**Example**
+https://codesandbox.io/s/numpytile-forked-e279im
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/e6b4b08cac819a04db74a862c4e2501a9e5cafc5/test/rendering/cases/webgl-data-tile-6-band/expected.png],Diagram,Desired Output
+openlayers__openlayers-11226,https://github.com/openlayers/openlayers/issues/11222,"Modify interaction bug
+The interaction does not work correctly when editing geometry `GeometryCollection`.
+When the same geometries are assigned to features and aggregated in `FeatureCollection`, everything works fine.
+
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/openlayers-modify-interaction-bug-xgohm
+2. Drag the common vertex of both polygons
+
+![modify-interaction-bug](https://user-images.githubusercontent.com/5003/85848942-5c5acf80-b7aa-11ea-8b26-e3ab39f79227.gif)
+",[2.1 Incorrect data processing],['https://user-images.githubusercontent.com/5003/85848942-5c5acf80-b7aa-11ea-8b26-e3ab39f79227.gif'],Diagram,Program Output
+openlayers__openlayers-13020,https://github.com/openlayers/openlayers/issues/13019,"WebGLTile Layer missing `setStyle` method
+Currently, there is no way to replace the visualization of a `WebGLTile` Layer object, it is only possible to completely remove the layer and insert a new one. There are setters for other visualization properties (variables and source).
+
+One use-case for this is letting users define the visualization dynamically, without throwing away the already downloaded raster data (e.g: in case of GeoTIFFs).
+
+I'm aware that changing the style is more work (rebuilding shaders, re-binding buffers and textures, etc) but I think this function would be quite beneficial.
+
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/acea9dc8225dc8b7b38256dcd6eaef2e55513e52/test/rendering/cases/cog-style/expected.png],Diagram,Desired Output
+openlayers__openlayers-12683,https://github.com/openlayers/openlayers/issues/12682,"Using an Icon style with color makes the style's offset wrong  when the screen pixel ratio != 1
+**Describe the bug**
+
+When I have a vector source which I want to style using an image sprite, then the sprite offset is wrong in case the following is true:
+1. I provide an offset and size to my icon style
+2. My monitor has a pixel ratio > 1
+3. I give a custom color to my icon style
+
+**To Reproduce**
+I made a reproduction here:
+https://codepen.io/sebakerckhof/pen/zYzrzNO
+
+In case I visit with my screen ratio = 1, I see this:
+![image](https://user-images.githubusercontent.com/88471/131383210-f7507bb7-fa16-49f1-a4a6-2f6ac518f351.png)
+
+In case I visit with my screen ratio = 2, I see this:
+![image](https://user-images.githubusercontent.com/88471/131382965-8143c6dc-71a6-4cae-9ebf-6ff6139b35ab.png)
+
+In case I remove the custom color and keep my screen ratio = 2, I see this:
+![image](https://user-images.githubusercontent.com/88471/131383037-0df9d621-1687-4867-959d-f0a7c6d8e8e7.png)
+
+**Expected behavior**
+
+The offset should select the same region of the image sprite no matter the screen ratio or color provided.
+
+
+Update: This seems to have been introduced in 6.4.0, by this PR: https://github.com/openlayers/openlayers/pull/11277/files
+
+But I'm not sure what's the correct path to fixing this.
+",[2.4 Incorrect output],"['https://user-images.githubusercontent.com/88471/131383210-f7507bb7-fa16-49f1-a4a6-2f6ac518f351.png', 'https://user-images.githubusercontent.com/88471/131382965-8143c6dc-71a6-4cae-9ebf-6ff6139b35ab.png', 'https://user-images.githubusercontent.com/88471/131383037-0df9d621-1687-4867-959d-f0a7c6d8e8e7.png']",Map/Geospatial Visualization,Program Output
+openlayers__openlayers-10723,https://github.com/openlayers/openlayers/issues/10727,"Graticule does not display correctly when view projection crosses dateline
+**Describe the bug**
+If the projection crosses the date line most meridian do not appear and parallels begin at the dateline and/or extent too far.
+
+**To Reproduce**
+One example can be seen by selecting US National Atlas in https://codesandbox.io/s/reprojection-by-codegraticule-5ujx2
+![image](https://user-images.githubusercontent.com/49240900/75154427-84a3c600-5705-11ea-89ee-ba59e07a87e1.png)
+
+
+**Expected behavior**
+Ideally all meridians and parallels within the projection extent should appear.  It is relatively easy to fix the meridians and either start or end the parallels at the correct position by determining which side of the dateline the majority of the projection is situated.  However because proj4 always returns normalised longitudes extending parallels across the dateline would require more effort.
+![image](https://user-images.githubusercontent.com/49240900/75153759-16123880-5704-11ea-99c8-b742b2f9d27c.png)
+
+
+",[2.1 Incorrect data processing],"['https://user-images.githubusercontent.com/49240900/75154427-84a3c600-5705-11ea-89ee-ba59e07a87e1.png', 'https://user-images.githubusercontent.com/49240900/75153759-16123880-5704-11ea-99c8-b742b2f9d27c.png']",Map/Geospatial Visualization,Program Output
+openlayers__openlayers-7554,https://github.com/openlayers/openlayers/issues/7553,"draw interaction low performance
+i'm  try to upgrade imagevector layer from 4.4.2 to 4.6.2
+about openlayer 4.6.0 upgrade notes **deprecation of ol.source.ImageVector**
+draw interaction is very slow in 4.6.2 renderMode: 'image' compare with 4.4.2 image vector
+
+bad performancein 4.6.2 **renderMode: 'image'** 
+https://codepen.io/anon/pen/mqZxqq?editors=0010
+
+good performancein 4.4.2 **image vector** 
+https://codepen.io/anon/pen/xPoWPV?editors=0010
+
+test condition draw triangle in this resolution
+![image](https://user-images.githubusercontent.com/8294943/33749706-33dc2ca8-dc0a-11e7-835b-e99fabbe6b89.png)
+
+",[2.7 Performance],['https://user-images.githubusercontent.com/8294943/33749706-33dc2ca8-dc0a-11e7-835b-e99fabbe6b89.png'],Map/Geospatial Visualization,Program Input
+openlayers__openlayers-13823,https://github.com/openlayers/openlayers/issues/9578,"Image layer renderer uses more memory than necessary
+For image sources that load data from e.g. a WMS with a pixel ratio of 1, we create a canvas with the size for the display pixel ratio instead of the image ratio of the source. So for HiDPI devices, the resulting canvas is twice as big as it needs to be, using 4 times the memory.
+",[2.7 Performance],[https://user-images.githubusercontent.com/12731463/138239012-3e80525c-7a52-416d-914b-32565cb9fa63.png],Miscellaneous,Program Input
+openlayers__openlayers-13198,https://github.com/openlayers/openlayers/issues/13199,"Vector layers that have a background cannot be rendered over other layers
+**Describe the bug**
+In the 6.10 release (since #13085), rendering a Mapbox vector layer over another layer fails (perhaps only if the Mapbox layer has a background).
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Start with the `mapbox-vector-layer.js` example
+2. Add an OSM layer under it
+3. See the trace below
+
+```
+Error: AssertionError: Assertion failed. See https://openlayers.org/en/latest/doc/errors/#14 for details.
+    at assert (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:8693:11)
+    at fromStringInternal_ (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:8992:56)
+    at http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:8919:17
+    at asArray (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:8939:12)
+    at CanvasVectorLayerRenderer.useContainer (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:42709:61)
+    at CanvasVectorLayerRenderer.renderFrame (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:43829:10)
+    at VectorLayer.render (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:33255:28)
+    at CompositeMapRenderer.renderFrame (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:42008:29)
+    at Map.renderFrame_ (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:5132:20)
+    at Map.<anonymous> (http://127.0.0.1:3000/cases/layer-vector-background-over/main.js:3866:12)
+```
+
+Here is an example (minus the Mapbox access token) that reproduces the issue:
+```js
+import ""ol/ol.css"";
+import Map from ""ol/Map"";
+import OSM from ""ol/source/OSM"";
+import MapboxVector from ""ol/layer/MapboxVector"";
+import TileLayer from ""ol/layer/Tile"";
+import View from ""ol/View"";
+
+new Map({
+  layers: [
+    new TileLayer({
+      source: new OSM()
+    }),
+    new MapboxVector({
+      styleUrl: ""mapbox://styles/mapbox/bright-v9"",
+      accessToken: ""<your token here>""
+    })
+  ],
+  target: ""map"",
+  view: new View({
+    center: [0, 0],
+    zoom: 1
+  })
+});
+```
+
+
+**Expected behavior**
+It should be possible to render vector layers (with a background) over other layers.  As of #13178, the same issue comes up with all vector layers (not just Mapbox vector layers).
+
+
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/a963ab7d1d8c90df930ba7857f51f1a4bf62f9d7/test/rendering/cases/layer-vector-background-over/expected.png],Map/Geospatial Visualization,Program Output
+openlayers__openlayers-12172,https://github.com/openlayers/openlayers/issues/12123,"Icon styles with displacement get clipped
+**Describe the bug**
+When using an icon style (`ol/style/Icon`) with `displacement` set, the icon gets clipped.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/regularshape-forked-7vzx5. This is a fork of your example [Regular Shapes](https://openlayers.org/en/latest/examples/regularshape.html)
+2. See that the green cross icon is clipped.
+3. Check lines 74-101. The only change I've made to the example is adding an image and replacing the displaced style with an icon style.
+
+**Expected behavior**
+I expect the green cross to not get clipped, just like the regular shape in the original example.
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/1cb89ab9912fa9e6ba88a76904a6770679be5bcf/rendering/cases/regularshape-style/expected.png],Diagram,Program Output
+openlayers__openlayers-12695,"https://github.com/openlayers/openlayers/issues/12670
+replaces: https://github.com/openlayers/openlayers/pull/12674","KML Symbol Alignment/Placement/Size
+I believe there is a bug with the anchor point for some symbols when displaying a KML layer.
+
+I'm using the latest examples, specifically this one:
+https://openlayers.org/en/latest/examples/drag-and-drop-custom-kmz.html
+
+Dragging the attached kml file into that example, I can see that point symbols seem to be anchored at the center-bottom.
+This is mostly visible at the two star symbols that should be at the center point of the two red circles.
+
+![image](https://user-images.githubusercontent.com/43833528/131180120-202b13a4-5cad-4508-83d2-86b21f78eaff.png)
+
+I've attached a screen clipping from Google Earth to show how it is supposed to look. 
+![image](https://user-images.githubusercontent.com/43833528/131180163-d67c73f5-00fa-4dbd-b559-623c8b786b92.png)
+
+Further, the point symbols seem to be much larger in the example than how they are displayed in Google Earth.
+
+[20180910_Sonar-Pool27.zip](https://github.com/openlayers/openlayers/files/7069077/20180910_Sonar-Pool27.zip)
+
+
+
+",[2.4 Incorrect output],"['https://user-images.githubusercontent.com/43833528/131180120-202b13a4-5cad-4508-83d2-86b21f78eaff.png', 'https://user-images.githubusercontent.com/43833528/131180163-d67c73f5-00fa-4dbd-b559-623c8b786b92.png']",Map/Geospatial Visualization,"Program Output, Desired Output"
+openlayers__openlayers-15234,https://github.com/openlayers/openlayers/issues/15207,"WebGLPointsLayer does not work correctly with useGeographic
+**Describe the bug**
+
+As title. `WebGLPointsLayer` does not seem to respect the featureProjection specified at the Vector source (e.g. EPSG:4326) and creates features with geometry in the projection of EPSG:3857.
+
+**To Reproduce**
+1. Refer to: https://codesandbox.io/s/webgl-points-layer-forked-wc6p5d
+
+Above is adapted from the WebGLPointsLayer example (combined with Popup, Vector Layer examples)
+
+2. Enable `useGeographic()` and observe that the `WebGLPointsLayer` points are plotted at the wrong locations (somewhere near Africa).
+
+
+**Expected behavior**
+
+`WebGLPointsLayer` should work with `useGeographic()` in the same manner as regular `VectorLayer` (used with `WebGLVectorLayerRenderer`, or not)
+
+",[2.5 Incorrect configuration processing],[https://raw.githubusercontent.com/openlayers/openlayers/c9e4249b285278066377c7b258962f3c354a200f/test/rendering/cases/webgl-points-geographic/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-15484,https://github.com/openlayers/openlayers/issues/15417,"Option to crop GeoTIFF source tiles to tile grid extent not respected if reprojected
+**Describe the bug**
+This can be seen in the example for #15402 if non-zero nodata value is specified
+![image](https://github.com/openlayers/openlayers/assets/49240900/a4cd6239-76b7-418c-85a4-af35fbbf57d5)
+and possibly with other example sources if they are reprojected.
+
+**Expected behavior**
+Without reprojection the misleadingly named `wrapX` option in GeoTIFF is used to crop the output to the tile grid extent on both the x and y axes regardless of the source projection being global.  This is unrelated to what reprojection expects `wrapX` to mean - whether the output will be repeated on adjacent worlds on the x axis when reprojected to a global projection.  While it would be possible for ReprojDataTile to use this to crop the input to reprojection, with a major release pending can this be renamed to something more appropriate, as it should be possible to both crop to the original local extent and repeat in a global projection.
+
+",[2.5 Incorrect configuration processing],[https://private-user-images.githubusercontent.com/49240900/289278743-a4cd6239-76b7-418c-85a4-af35fbbf57d5.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM0NDAyMjEsIm5iZiI6MTc3MzQzOTkyMSwicGF0aCI6Ii80OTI0MDkwMC8yODkyNzg3NDMtYTRjZDYyMzktNzZiNy00MThjLTg1YTQtYWYzNWZiYmY1N2Q1LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAzMTMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMzEzVDIyMTIwMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTBhZDkwMzNjNzNhZmNlOTM1MzAyZmIxY2FiZjMwN2Q0MTg5YzA0ZTA3N2Y3M2NiYTJlNjVhOWI4OTIwZTU3OWYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.j-Z-RdMvB1-jfoEB0bamcP_q7ygn9ixuLj_OERGVnqI],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-13069,https://github.com/openlayers/openlayers/issues/13066,"Take into account STATISTICS_MAXIMUM and STATISTICS_MINIMUM for the process of normalization
+geotiff.js provides a way to extract metadata from rasters using [getGDALMetadata](https://github.com/geotiffjs/geotiff.js/blob/39179ef5865856d617b26c82e156f5b0c1aaa510/src/geotiffimage.js#L772) method:
+```
+> img.getGDALMetadata(0)
+{
+  STATISTICS_MAXIMUM: '255',
+  STATISTICS_MEAN: '161.13451304075',
+  STATISTICS_MINIMUM: '27',
+  STATISTICS_STDDEV: '47.78883943453',
+  STATISTICS_VALID_PERCENT: '98.67'
+}
+```
+It would be nice to use values of `STATISTICS_MAXIMUM` and `STATISTICS_MINIMUM` (in case of their presence) as default `max` and `min` for GeoTIFF source to perform normalization.
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/04ac30009b7a6e459b27792677159268509fa340/test/rendering/cases/cog-math/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-14066,https://github.com/openlayers/openlayers/issues/14065,"Support convertToRGB: 'auto' for GeoTIFF sources
+I think having a `convertToRGB: 'auto'` option would be handy for GeoTIFF sources.  If a source has 3 samples per pixel and the photometric interpretation is CMYK, YCbCr, CIELab, or ICCLab, the `auto` setting would use the `image.readRGB()` method.
+
+In a future breaking release, it could also make sense to have the default be `auto`.
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/bd3b1bb4345012b1852dfb747abbd4e23a95dad1/test/rendering/cases/cog-rgb-auto/expected.png],Artwork / Photography,Desired Output
+openlayers__openlayers-15796,https://github.com/openlayers/openlayers/issues/15793,"DEV: VectorLayer with `declutter` and `opacity` < 1 does not clear between renders
+**Describe the bug**
+I was testing out latest npm release `9.1.1-dev.1714573976514` in my application to try out some recent fixes.
+I noticed that `VectorLayer`s with `declutter` and `opacity` < 1 now do not clear between renders
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/p/sandbox/vector-layer-forked-2x8f83?file=%2Fmain.js%3A15%2C5
+The above is a modifed version of the Vector Layer example with `opacity: 0.8` and `declutter: true` added to layer 
+3. Pan the map, notice layer rerenders with no clearing of the previous frame.
+
+<img width=""784"" alt=""Screenshot 2024-05-03 at 09 57 57"" src=""https://github.com/openlayers/openlayers/assets/381932/53a78f52-9edf-421e-b289-623942977cfc"">
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/9d7208e87d98c3350c2e56d2241ac5b3d4030663/test/rendering/cases/layer-vector-extent-rotation-declutter/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-13333,https://github.com/openlayers/openlayers/issues/13268,"WebGLTile layer rendered error images outside original extent
+![BE06CCC5-14C6-4f59-AE1C-A41C49FF1199](https://user-images.githubusercontent.com/33643503/150269611-5ce2b3c1-6875-4d28-9496-5757e2845eb6.png)
+![Dingtalk_20220120114340](https://user-images.githubusercontent.com/33643503/150269629-0c04c806-af7c-4c83-9f7b-3056fa3dc7c8.jpg)
+![Dingtalk_20220120114154](https://user-images.githubusercontent.com/33643503/150269637-aa61aeb8-6ebe-4446-9005-ee107ed76abc.jpg)
+![Dingtalk_20220120114913](https://user-images.githubusercontent.com/33643503/150269952-528df1c0-6e4c-469f-9ba6-f3e7ff62c66e.jpg)
+
+
+",[2.4 Incorrect output],"['https://user-images.githubusercontent.com/33643503/150269611-5ce2b3c1-6875-4d28-9496-5757e2845eb6.png', 'https://user-images.githubusercontent.com/33643503/150269629-0c04c806-af7c-4c83-9f7b-3056fa3dc7c8.jpg', 'https://user-images.githubusercontent.com/33643503/150269637-aa61aeb8-6ebe-4446-9005-ee107ed76abc.jpg', 'https://user-images.githubusercontent.com/33643503/150269952-528df1c0-6e4c-469f-9ba6-f3e7ff62c66e.jpg']","Code Snippet Screenshot, Map/Geospatial Visualization","Code, Program Output"
+openlayers__openlayers-9389,https://github.com/openlayers/openlayers/issues/9330,"Unify rendering tests
+**Unify rendering tests**
+Currently there are two different approaches for testing the rendering output.
+A part of the rendering tests is in `rendering` and the other part is in `test/rendering`.
+
+IMHO it would be better to unify the split tests to use one method for both.
+
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/94edf325404ac51504a9038884c9c7d95e2c22a3/rendering/cases/layer-tile-render-listener/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-13150,https://github.com/openlayers/openlayers/issues/13145,"Heatmap layer opacity option is ignored
+**Describe the bug**
+Setting the opacity option in `ol/layer/Heatmap` has no effect.
+
+**To Reproduce**
+Open the example https://codesandbox.io/s/simple-forked-novjn?file=/main.js used in #13124 where there seemed to be no problem with the heatmap overlying the OSM layer in the shared context.  Add `opacity: 0.1` to the layer options.  It has no effect.  It appears be be unrelated to the `preserveDrawingBuffer` override as removing that and refreshing has no effect.  Then change to the latest dev version - it still no no effect,  But go back to version 6.9.0 and it was working, and the opacity setting does work for a WebGL Points layer in the latest version.
+
+**Expected behavior**
+Visually as in  version 6.9.0.
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/351ca5866b0eaac45103021f51b5b92f7eefd4d6/test/rendering/cases/heatmap-layer-opacity/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-12965,https://github.com/openlayers/openlayers/issues/12800,"Reduce the number of WebGL contexts required
+Each WebGL TileLayer uses one WebGL context. Browsers have hard limits to the number of contexts available (typically 16). This means that an application may only have 16 TileLayers at the same time. This becomes a limiting factor in cases where WebGL TileLayers are used to render multiple raster images. Since a single GeoTIFFSource can only combine GeoTIFFs that share dimension and position, combining multiple images covering different areas leads to OpenLayers requiring a WebGL context for each such distinct dimension and position.
+
+When the WebGL context limit has been reached, the browser will remove older WebGL contexts to keep within the hard limit. This will lead to the application using OpenLayers breaking down or misbehaving. 
+
+I propose that (if possible) WebGL TileLayers within one OpenLayers map share a single WebGL context.  While despite this someone might still run into the 16 context limit, it is far more unlikely than with the current implementation.
+
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/a2f3c02ac5cde8b0afa6598f951886254b8a1833/test/rendering/cases/webgl-mixed-layers/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-15365,https://github.com/openlayers/openlayers/issues/15362,"Layer group opacity not applied to vector tile labels
+**Describe the bug**
+When changing the opacity of a layer group using `setOpacity()`, it doesn't seem to affect labels rendered for vector tile layers within that group. Changing the opacity of the layer directly does indeed produce the expected outcome. Doing the same for vector layers works as expected. This only seems to be a problem for labels, since e.g. the `fill-color` behaves correctly.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to CodeSandbox https://slg36z.csb.app
+2. Change the opacity of `vector` and `vectortile` sliders, it should fade out/in the labels of the corresponding layers
+3. Change the `group` slider, it only changes opacity of the `vector` layer labels, while the `vectortile` labels stay unaffected
+
+**Expected behavior**
+Changing the group opacity should affect all child layers, including labels of vector tiles.
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/5d9e8cb04ed6e314af07a0983b841a9528d071e8/test/rendering/cases/layer-vectortile-opacity-layergroup-rendermode-vector/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-13013,https://github.com/openlayers/openlayers/issues/12995,"Black tiles with DataTileSource and WebGLTileLayer
+**Describe the bug**
+
+The`ol.layer.WebGLTile` doesn't render data that were loaded with `ol.source.DataTile` using a custom tile grid:
+
+Extent: `[0, -23828, 23903, 0]`
+Sizes: `[[1, 1], [7, 7], [ 25, 25 ], [100, 100]]`
+Tile sizes: `[[770, 768], [240, 240], [240, 240], [240, 240]]`
+
+![Screen Shot 2021-11-12 at 10 00 32 PM](https://user-images.githubusercontent.com/6855297/141603391-ded521d5-04e8-4a7c-9f11-27ae60dc5b90.png)
+
+The following warning message gets logged:
+
+```
+WebGL warning: texImage: Desired upload requires more data than is available: (767 rows plus 770 pixels needed, 767 rows plus 258 pixels available)
+```
+
+I didn't previously experience this issue and wonder whether it may be due to either https://github.com/openlayers/openlayers/pull/11532 or https://github.com/openlayers/openlayers/pull/12024.
+
+**Expected behavior**
+
+Not sure whether this is a bug or whether my understanding of the tile grid is wrong. 
+
+",[2.1 Incorrect data processing],['https://user-images.githubusercontent.com/6855297/141603391-ded521d5-04e8-4a7c-9f11-27ae60dc5b90.png'],"Code Snippet Screenshot, Data Visualization","Code, Program Input, Program Output"
+openlayers__openlayers-13269,https://github.com/openlayers/openlayers/issues/13265,"ol/source/TileWMS gutter option not compatible with ol/layer/WebGLTile
+**Describe the bug**
+The WebGLTile layer renderer does not clip the image gutter before creating textures, resulting in misplacement and duplication.
+
+**To Reproduce**
+https://codesandbox.io/s/wms-tiled-forked-l14v5
+
+**Expected behavior**
+Clip the gutter (adjusted for pixel ratio if necessary) to produce output similar to when used with ol/layer/Tile.
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/6a26e6a27406a7270e682a5fa481d7d80a754f55/test/rendering/cases/webgl-data-tile-tilepixelratio2/expected.png],Miscellaneous,Desired Output
+openlayers__openlayers-15787,https://github.com/openlayers/openlayers/issues/15786,"WebGLTileLayer with palette style stops working after map.removeLayer/map.addLayer
+**Describe the bug**
+WebGLTileLayers with a style that includes a palette seem to break when removed and added back to map.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/p/sandbox/cog-style-forked-2vg3p9?file=%2Findex.html%3A22%2C68 (A modified cog-style example w/ a button added to `addLayer()`/`removeLayer()` from map)
+2. Click 'Add / Remove layer' button multiple times and see there is no problem.
+3. Switch layer style to 'NDVI w/ palette 1'
+4. Click 'Add / Remove layer' button multiple times and see there is now a black layer
+5. Note in console warnings/errors (vary by browser) something along the lines of:
+`WebGL warning: bindTexture: `tex` is from a different (or lost) WebGL context.` or `WebGL: INVALID_OPERATION: bindTexture: object does not belong to this context`
+
+**Expected behavior**
+That the WebGLTileLayer shows with proper style when added back to map
+",[2.5 Incorrect configuration processing],[https://raw.githubusercontent.com/openlayers/openlayers/431914b46e9d63cf0e5bba6e0e89c45b596a76f6/test/rendering/cases/cog-palette-add-remove/expected.png],Miscellaneous,Desired Output
+openlayers__openlayers-11649,https://github.com/openlayers/openlayers/issues/11632,"Broken Projections when using proj4js definitions
+OpenLayers produces broken projections when using ol 6.4.3 and proj4js 2.6.2 for (at least) geographic CRS.
+Adding a new definition in proj via `defs` with the official strings (from epsg.io or spatialreference.org) works nicely in proj4js.
+But using the `register` function of `ol.proj.proj4` then creates an invalid projection.
+Invalid means that required parameters like `units` are undefined and `axisOrientation` is set to wrong default values.
+
+Example:
+
+```
+proj4.defs('EPSG:4258', '+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs');
+ol.proj.proj4.register(proj4);
+```
+![image](https://user-images.githubusercontent.com/1381363/95451713-7a6acb00-0968-11eb-973a-4b5d8e3cd12f.png)
+![image](https://user-images.githubusercontent.com/1381363/95451752-88205080-0968-11eb-8326-c0f51ef62e8d.png)
+
+The map display / projection is broken when using this ol.Projection.
+
+**Expected behavior**
+When having a proj4js definition which does not have a unit set, the default should be ""degrees"" instead of undefined.
+In fact, all EPSG definitions for proj4js are missing the unit for geographic projections and there are only ""m"", ""ft"" and ""us-ft"".
+
+Besides, the axisOrientation needs to be configured correctly in order to render a map correctly.
+The broken definition from above needs to have a 'neu' order, but the definition has no axis given and openlayers defaults to 'enu'.
+There are only 28 definitions for proj4js out of 3910 which have an axis given (""+axis=wsu"")
+
+Am i doing something totally wrong or is this somehow unusable for geographic projections in the current state?
+
+
+",[1.4 Incomplete configuration processing],"['https://user-images.githubusercontent.com/1381363/95451713-7a6acb00-0968-11eb-973a-4b5d8e3cd12f.png', 'https://user-images.githubusercontent.com/1381363/95451752-88205080-0968-11eb-8326-c0f51ef62e8d.png']",Code Snippet Screenshot,Code
+openlayers__openlayers-15614,https://github.com/openlayers/openlayers/issues/15611,"setOpacity on Vector Layer with 'declutter' set causes layer to disappear.
+**Describe the bug**
+This one has me a bit stumped!
+
+As of v9.0 calling setOpacity on a VectorLayer when `declutter` is enabled causes that layer to disappear.
+
+**To Reproduce**
+Steps to reproduce the behavior
+(Apologies for not linking directly to an example as CodeSandbox won't let users create their own drafts anymore without paying)
+
+1. Go to https://openlayers.org/en/latest/examples/vector-labels.html
+2. Edit codesandbox example to add `declutter: true` to vectorPoints layer definition (or seemingly to *any* vector layer defined also causes the issue). Then add the following at the end of the example code:
+```js
+ setTimeout(() => {
+  vectorPoints.setOpacity(0.5);
+}, 2000);
+```
+3. Run example, and watch vectorPoints layer disappear after 2 seconds when `setOpacity` is called
+
+**Expected behavior**
+The layer to correctly update it's opacity without vanishing
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/237286f9a7183750946fcb289c68072a93be4b9c/test/rendering/cases/layer-vector-declutter/expected.png],Diagram,Desired Output
+openlayers__openlayers-10340,https://github.com/openlayers/openlayers/issues/10339,"Issues with size and shapes in Draw interaction with useGeographic
+**Describe the bug**
+Drawn circles and other custom geometry do not have the expected shape/size in the view when useGeographic is specified.  As noted in the comment in #10328 a drawn circle does not always extend to the pointer position as it would in non-geographic mode.  This is very noticeable in higher latitudes.
+
+Additionally regular shapes produced by createRegularPolygon can be far from regular
+
+![image](https://user-images.githubusercontent.com/49240900/69544237-373d7e80-0f87-11ea-9303-b5be8a4c1ed4.png)
+
+and if the view projection is not parallel to WGS84 using createBox to draw a box such as this would not be possible
+
+![image](https://user-images.githubusercontent.com/49240900/69544386-85528200-0f87-11ea-9f83-02ed50f36724.png)
+
+**Expected behavior**
+useGeographic should not affect the drawn geometry (although createRegularPolygon and createBox could potentially have an option to produce a result which is regular in a different projection)
+
+",[2.4 Incorrect output],"['https://user-images.githubusercontent.com/49240900/69544237-373d7e80-0f87-11ea-9303-b5be8a4c1ed4.png', 'https://user-images.githubusercontent.com/49240900/69544386-85528200-0f87-11ea-9f83-02ed50f36724.png']",Map/Geospatial Visualization,Program Output
+openlayers__openlayers-13975,https://github.com/openlayers/openlayers/issues/13909,"ol.style.icon - Dependency between 'scale' and 'displacement'?
+Hi,
+
+is there any dependency between the options ""scale"" and ""displacement"" for ol.style.icon?
+I created an example at https://codepen.io/gott18/pen/poLpbex
+As you can see, the icons should have the same Y position for the bottom of the icons, however, they change their Y position when modifying their scale. Is this the expected behavior or is there an issue in the library?
+
+In case this behavior is expected, where is it documented? On https://openlayers.org/en/latest/apidoc/module-ol_style_Icon-Icon.html it seems to be not mentioned.
+
+Thanks,
+
+Thomas
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/c327740108c4904d3df3866aceef2fccc88871da/test/rendering/cases/regularshape-style/expected.png],Diagram,Desired Output
+openlayers__openlayers-9307,https://github.com/openlayers/openlayers/issues/7976,"ol.style.text - gap between two line text
+- [x] I am submitting a bug or feature request, not a usage question. Go to https://stackoverflow.com/questions/tagged/openlayers for questions.
+- [x] I have searched GitHub to see if a similar bug or feature request has already been reported.
+- [x] I have verified that the issue is present in the latest version of OpenLayers (see 'LATEST' on https://openlayers.org/).
+- [ ] If reporting a bug, I have created a [CodePen](https://codepen.io) or prepared a stack trace (using the latest version and unminified code, so e.g. `ol-debug.js`, not `ol.js`) that shows the issue.
+
+Is there any oportunity to remove space between two line text in label feature?
+In API I don't find any oportunity, maybe in library code?
+In OpenLayers v2.13 there wasn't any blank space in OL v4.6.4 (and lower) it is. Styling text in label look better for me in previous version OpenLayers. 
+Maybe is better option no space between two line and when I need it I just put it... ?
+![space_text_line](https://user-images.githubusercontent.com/8928341/37326353-15b7c08e-2692-11e8-8e66-81be5d94f3a3.jpg)
+
+
+```
+text: new ol.style.Text({ 
+            text: 3.5 +'\nbar' 
+        })
+```
+
+",[4 Perfective maintenance],['https://user-images.githubusercontent.com/8928341/37326353-15b7c08e-2692-11e8-8e66-81be5d94f3a3.jpg'],Map/Geospatial Visualization,"Program Output, Desired Output"
+openlayers__openlayers-13509,https://github.com/openlayers/openlayers/issues/13507,"WebGlTile in a group always visible 
+See https://codesandbox.io/s/wms-image-custom-proj-forked-dfc1vm?file=/main.js
+
+The map contains a single layer of type Group (ol/layer/Group).
+The group contains a single layer of type WebGlTile  (ol/layer/WebGlTile ).
+
+After 3 seconds the code change the visibility of the group (from true to  false)
+
+=> The WebGlTile layer is still visible !
+
+Note : If I change the type of the layer from WebGlTile  to Tile (ol/layer/Tile), the layer is hidden when the group visibility is set to false. The issue is only for WebGlTile 
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/b8c04ee7c57d4db2a31fe1aaac7a987079c0dfc9/test/rendering/cases/webgl-invisible-group/expected.png],Miscellaneous,Desired Output
+openlayers__openlayers-14659,https://github.com/openlayers/openlayers/issues/14657,"VectorContext drawFeature() not working with geographic coordinates unless Null Island is in view
+**Describe the bug**
+Incorrect extent comparison stops drawFeature() working correctly with geographic coordinates.
+
+**To Reproduce**
+Animate the marker on the polyline translated close the Null Island https://codesandbox.io/s/feature-move-animation-forked-5bvntu?file=/main.js  Pan the map so Null Island goes out of view.  The animation is not visible.  But if `drawFeature` is replaced by `setStyle`/`drawGeometry` it continues to be visible.
+
+**Expected behavior**
+The incorrect extent comparison could be corrected but it seems redundant as it is repeated in the subsequent `drawGeometry` call and could be removed.  The comparison in `drawCircle`  does need fixing.
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/6476ced785d8e441d0cccd0ace238d2c518f41f0/test/rendering/cases/immediate-geographic-feature/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-10694,https://github.com/openlayers/openlayers/issues/10655,"setOpacity of image of feature style not working in 6.2.0
+**Describe the bug**
+Function setOpacity of image of style has not effect on UI after update to 6.2.0.
+
+**To Reproduce**
+Check in 6.1.1 (the feature blinks):
+https://jsfiddle.net/o3k9yjqh/
+
+Check in 6.2.0 (the feature does not blink)
+https://jsfiddle.net/ob3sdq7h/1/
+
+**Expected behavior**
+Opacity should be applied on feature style.
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/341e482f309bd55bf37a13c959046bf058d0f8ce/rendering/cases/icon-opacity/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-14015,https://github.com/openlayers/openlayers/issues/14027,"WebGL tile layers use incorrect cached textures if source is replaced using `setSource()` or view projection is changed
+**Describe the bug**
+Calling `setSource()` or changing view projection invalidates the cached tile textures but they are not replaced.
+
+**To Reproduce**
+https://codesandbox.io/s/data-tiles-forked-uv8p1c?file=/main.js
+https://codesandbox.io/s/webgl-tiles-forked-jollu7?file=/main.js
+Pan or zoom in.  Tiles from the (correct) new source or projection will be seen, Pan back or zoom out and tiles from the (incorrect) old source or projection will be seen
+
+**Expected behavior**
+Cache which is no longer valid should be cleared.  There seems little point in maintaining layer cache for more than one projection as layers are not shared.
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/1424788f508cafe5626adcc6b608857edeb2795e/test/rendering/cases/webgl-data-tile-reset-source/expected.png],Diagram,Desired Output
+openlayers__openlayers-15466,"https://github.com/openlayers/openlayers/issues/15527
+https://github.com/openlayers/openlayers/issues/15429
+https://github.com/openlayers/openlayers/issues/12567
+https://github.com/openlayers/openlayers/issues/7475","Fix image+label combinations when declutterMode different than 'declutter'
+This will fix the issue reported in https://github.com/openlayers/ol-mapbox-style/issues/799.
+
+I'm not yet sure if it will be possible to keep all rendering tests regarding render order and declutterMode passing.
+Add boolean ignorePlacement option to ol.style.Image and ol.style.Text
+- [x] I am submitting a bug or feature request, not a usage question. Go to https://stackoverflow.com/questions/tagged/openlayers for questions.
+- [x] I have searched GitHub to see if a similar bug or feature request has already been reported.
+- [x] I have verified that the issue is present in the latest version of OpenLayers (see 'LATEST' on https://openlayers.org/).
+- [ ] If reporting a bug, I have created a [CodePen](https://codepen.io) or prepared a stack trace (using the latest version and unminified code, so e.g. `ol-debug.js`, not `ol.js`) that shows the issue.
+
+The new `declutter` option in 4.5.0 is a huge development. However, I would ask for one enhancement to be considered. If a layer's style function returns both imagery and text (eg point markers and labels), it would be great to have the option to declutter only text. To me, that seems like a more common requirement. I appreciate that this can be worked around, but changing `declutter` from a boolean to something like `none`, `text`, `geometry`, and `both` (or `all`) would work well.
+",[4 Perfective maintenance],[https://raw.githubusercontent.com/openlayers/openlayers/c15cf8b1d5b20a373e5324611a45338ff4e3425e/test/rendering/cases/layer-vector-decluttering-extended/expected.png],Diagram,Desired Output
+openlayers__openlayers-13648,https://github.com/openlayers/openlayers/issues/13573,"COG trouble with non-square pixels
+**Describe the bug**
+I'm loading a COG, but only the upper part is shown.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/cog-forked-x0mxoc?file=/main.js (this is the cog example from openlayers just with a different URL)
+
+**Expected behavior**
+It should show completely, like in e.g. geotiff.io or QGIS:
+![image](https://user-images.githubusercontent.com/8262166/163389009-97e39811-1233-437e-947c-065c1f997e6b.png)
+
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/8262166/163389009-97e39811-1233-437e-947c-065c1f997e6b.png'],"Map/Geospatial Visualization, Web Interface (UI/UX Element)",Desired Output
+openlayers__openlayers-14051,https://github.com/openlayers/openlayers/issues/14049,"Incorrect use of `layer.getMinZoom()`
+**Describe the bug**
+`layer.getMinZoom()` is used incorrectly and could prevent tiles loading.
+
+**To Reproduce**
+See https://github.com/openlayers/openlayers/blob/main/src/ol/renderer/webgl/TileLayer.js#L338
+`layer.getMinZoom()` is an alternative to `layer.getMaxResolution()` and returns a view zoom level which does not relate directly to tile grid zoom levels. It is used correctly in https://github.com/openlayers/openlayers/blob/main/src/ol/layer/Layer.js#L415-L423
+
+When used directly as a tile grid index this could result in tiles not being loaded (e.g. source with small tile grid which is part of a larger view).  It should either be removed, or to keep the intended purpose, replaced by calculating `tileGrid.getZForResolution()` from `layer.getMaxResolution()` or `view.getResolutionForZoom(layer.getMinZoom())`
+
+**Expected behavior**
+Incorrect code removed or replaced.
+
+",[2.1 Incorrect data processing],[https://raw.githubusercontent.com/openlayers/openlayers/aa61e850c0b333bb4d404bd6dfbfc1c59d777f30/test/rendering/cases/webgl-tile-preload/expected.png],Diagram,Desired Output
+openlayers__openlayers-11088,https://github.com/openlayers/openlayers/issues/11076,"OL + proj4js 2.6.1 and above issue
+OpenLayers does not work properly with proj4js version 2.6.1 (description of this release proj4js: Fixed interpretation of axis order).
+
+OL 6.3.2-dev.1589843798021 + proj4js 2.6.0 + View with Mercator projection - **works properly**
+![01---ol-6 3 2-dev_proj4js-2 6 0_view-mercator](https://user-images.githubusercontent.com/5003/82498531-72f97100-9af0-11ea-9f99-63a2bf7bdfb1.png)
+
+OL 6.3.2-dev.1589843798021 + proj4js 2.6.0 + View with WMTS layer projection (EPSG:2180) - **works properly**
+![02---ol-6 3 2-dev_proj4js-2 6 0_view-EPSG-2180](https://user-images.githubusercontent.com/5003/82498670-af2cd180-9af0-11ea-921b-d470055006a9.png)
+
+OL 6.3.2-dev.1589843798021 + proj4js **2.6.1** + View with Mercator projection - **works incorrectly** (the WMTS layer (EPSG:2180) is rotated)
+![03---ol-6 3 2-dev_proj4js-2 6 1_view-mercator](https://user-images.githubusercontent.com/5003/82498815-e26f6080-9af0-11ea-96b0-ba5d1b29cac9.png)
+
+OL 6.3.2-dev.1589843798021 + proj4js 2.6.1 + View with EPSG:2180 projection - **works incorrectly** (the OSM layer (Mercator) is rotated)
+![04---ol-6 3 2-dev_proj4js-2 6 1_view-EPSG-2180](https://user-images.githubusercontent.com/5003/82498855-f024e600-9af0-11ea-9118-eb779f040f7e.png)
+
+I used 6.3.2-dev.1589843798021 because versions from 6.2.2-dev.1585261480561 to 6.3.2-dev.1588437998514 contain another bug.
+
+Source of the above examples: https://codesandbox.io/s/openlayers-ortofotomapa-myhp7
+",[2.5 Incorrect configuration processing],"['https://user-images.githubusercontent.com/5003/82498531-72f97100-9af0-11ea-9f99-63a2bf7bdfb1.png', 'https://user-images.githubusercontent.com/5003/82498670-af2cd180-9af0-11ea-921b-d470055006a9.png', 'https://user-images.githubusercontent.com/5003/82498815-e26f6080-9af0-11ea-96b0-ba5d1b29cac9.png', 'https://user-images.githubusercontent.com/5003/82498855-f024e600-9af0-11ea-9118-eb779f040f7e.png']",Map/Geospatial Visualization,Program Output
+openlayers__openlayers-12373,https://github.com/openlayers/openlayers/issues/12361,"Tiledebug layer and TileImage layer with inverted y {-y}
+**Describe the bug**
+TileDebug do not represent the inverted -y coordinate for tileimage layer. 
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to 'https://geoegl.msp.gouv.qc.ca/igo2/mtq-test/?context=tile_debug&sidenav=1&tool=mapTools' 
+2. In the Network console (F12), the call made to the TileImage server do not correspond to the tile debug coordinates in Y. 
+3. here the layer definition
+````
+TileDebug
+       {
+            ""title"": ""tiledebug"",
+            ""visible"": true,
+            ""sourceOptions"": {
+                ""type"": ""tiledebug""
+            }
+        },
+TileImage
+        {
+            ""baselayer: ""baselayer"",
+            ""sourceOptions"": {
+                ""url"": ""/service@EPSG_3857/{z}/{x}/{-y}.png"",
+                ""type"": ""xyz""
+            }
+        }
+````
+
+**Expected behavior**
+How handle a tiledebug layer with an inverted Y coordinate ( {-y} ) without having to define a custom tilegrid?
+![image](https://user-images.githubusercontent.com/7397743/119842567-c9a04480-bed4-11eb-9aee-534c2827414a.png)
+
+
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/7397743/119842567-c9a04480-bed4-11eb-9aee-534c2827414a.png'],Miscellaneous,Desired Output
+openlayers__openlayers-11401,https://github.com/openlayers/openlayers/issues/11394,"Hit detection and rendering issue with negative icon scale
+**Describe the bug**
+When the scale is negative and the rotation is 0
+- Hit detection does not work
+- Icon is not rendered at the edge of the map
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/hitdetection-icon-scale-bd12q
+2. Click the penguin / pan the map
+3. See result message below map / watch the icon disappear instead of getting cut off at the edge
+
+**Expected behavior**
+The hit should register anywhere on the icon / Icon should be rendered in part when it is at the map edge.
+
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/1a356332f341e60ede7c07b1bc182e8826de8432/rendering/cases/icon-scale/expected.png],Artwork / Photography,Desired Output
+openlayers__openlayers-15114,https://github.com/openlayers/openlayers/issues/14949,"[WebGL] fill-color property also draws linear rings (clockwise?)
+**Describe the bug**
+A clear and concise description of what the bug is.
+I am trying to convert all of my vectorial layers with polygons to the WebGL layers.
+The issue, here, is that I use a world coordinate to draw a reversed zone (everything except hole).
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to [codesandbox](https://codesandbox.io/s/webgl-vector-layer-forked-98vtx9?file=/main.js)
+2. Zoom to Rennes in France
+3. See that 
+
+**Expected behavior**
+Before with vectorial style I had the similar behavior of geojson.io.
+Now this.
+
+![image](https://github.com/openlayers/openlayers/assets/113348625/642ad6a9-226d-4851-a4d9-04e9b4a9d17c)
+![image](https://github.com/openlayers/openlayers/assets/113348625/805fad3b-cdd0-424b-a4b2-8d3f19fe9253)
+
+The actual color I want in fill-color in actually good. But It looks like the color gets overlapped several times.
+
+My investigation is that comes from the clockwise but wrong.
+
+I used these two tools :
+- https://geojsonlint.com/ to check the rules.
+- https://github.com/mapbox/geojson-rewind to change the order.
+
+NB : If I am not wrong, the usage of geojson-rewind must set the second parameter to false, to follow the 3.1.6 rule?
+
+
+The result with WebGL
+- when the geojson is valid, I have the issue.
+- when the geosjon does not follow the rules, the issue disappears.
+
+The result with my previous VectorLayer implem :
+- when the geojson is valid, no issue.
+- when the geojson is invalid, no issue.
+
+I put comments inside the snippet to change the clockwise.
+
+So, to sum up, it looks like a valid geojson (according to geojsonlint) is not well displayed but an invalid one is well displayed using the WebGL layer.
+
+Let me know if I'm doing something wrong !
+
+Thank you !
+
+",[2.4 Incorrect output],[https://private-user-images.githubusercontent.com/41094/266094547-4be2d7b5-15ea-4cdd-a692-057c1e4dd2ed.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM2MTA3NDMsIm5iZiI6MTc3MzYxMDQ0MywicGF0aCI6Ii80MTA5NC8yNjYwOTQ1NDctNGJlMmQ3YjUtMTVlYS00Y2RkLWE2OTItMDU3YzFlNGRkMmVkLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAzMTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMzE1VDIxMzQwM1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTBjNzIyOTllYWEyMWZiNjBjY2E4N2FiNzAzODYzOTU3YmI1MGM4NmI2NGQyZDQ3OGFhNDI3M2Y4ODA5ZDAyNzMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.PQYJzw8uUUvDstQnZUejzSFmReDdoX91_7Jhg2K9iDw],Map/Geospatial Visualization,Program Output
+openlayers__openlayers-14599,https://github.com/openlayers/openlayers/issues/14595,"Displays attributions from a visible layer that is part of an invisible group layer.
+**Describe the bug**
+In info popup, when group-layer visibility is false [1] and sub-layer visibility is true [2], then I have text from attributions WMS layer [3] display into popup for ""i"" icon -> despite though it shouldn't be displayed.
+
+ol v 7.3.0 
+
+**To Reproduce**
+Sorry. Local app without connect into Internet.
+
+**Expected behavior**
+To check this. 
+(Or I need some tip to avoid display attributions [3] for invisible group layer [1] which has visible layer [2] with attributions)
+
+IMG from description
+![info](https://user-images.githubusercontent.com/8928341/226615918-d1d04359-0028-480b-9420-d937cf53a4d6.jpg)
+
+code snippet
+```
+const tSource = new TileWMS({
+  url: ""/wms_ant"",
+  params: { LAYERS: ""v_budynek_sezon_obszar"" },
+  serverType: ""geoserver"",
+  crossOrigin: ""anonymus"",
+  attributions: [ ""SEZON: Budynki <a href='"" + Legend + ""' alt='Legenda warstwy' /></a>"" ]
+});
+// ******************layer******************
+export const t_sezon_budynki = new TileLayer({
+  source: tSource,
+  visible: localStorage.getItem(""budynki sezon-vi"") ? JSON.parse(localStorage.getItem(""budynki sezon-vi"")) : true,
+  opacity: localStorage.getItem(""budynki sezon-op"") ? JSON.parse(localStorage.getItem(""budynki sezon-op"")) : 1,
+  title: ""budynki sezon""
+});
+```
+",[2.4 Incorrect output],['https://user-images.githubusercontent.com/8928341/226615918-d1d04359-0028-480b-9420-d937cf53a4d6.jpg'],Map/Geospatial Visualization,Program Output
+openlayers__openlayers-15825,https://github.com/openlayers/openlayers/issues/15804,"Missing tiles in WebGLTileLayer with a GeoTiff source
+**Describe the bug**
+After reprojecting GeoTiff tiles into a stereographic projection, tiles near the antimeridian are not rendered. 
+The sizes of the resulting black gaps (please see the picture below) depend on the sizes of source tiles and zoom.
+
+![image](https://github.com/openlayers/openlayers/assets/50118328/55d29e8f-0248-4492-b28f-2825f2f6803e)
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Download the geotiff sample image (zipped): 
+[202404152030.zip](https://github.com/openlayers/openlayers/files/15231597/202404152030.zip)
+
+2. Initialize WebGLTileLayer:
+```
+new WebGLTileLayer({
+     source: new GeoTIFF({sources: [{url: url}], crossOrigin: 'anonymous', transition: 0, normalize: true}),
+     name: 'segments',
+     zIndex: 2,
+     cacheSize: 2048,
+     preload: 0,
+     isActive: true
+})
+```
+3. Register a stereographic projection
+```
+proj4.defs('stereo-sib', '+proj=stere +lat_0=49 +lat_ts=-73 +lon_0=90 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
+register(proj4);
+```
+4. Initialize View
+```
+const view = new View({
+  projection: getProjection('stereo-sib'),
+  center: fromLonLat([-175.63918171041328, 54.36175564445709], defaultProj),
+  zoom: 5.370370380181835,
+  minZoom: 4
+});
+```
+5. Observe.
+
+**Expected behavior**
+There should be no missing tiles aroung the antimeridian.
+
+",[2.4 Incorrect output],[https://private-user-images.githubusercontent.com/50118328/328423436-55d29e8f-0248-4492-b28f-2825f2f6803e.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM2MTA4MjUsIm5iZiI6MTc3MzYxMDUyNSwicGF0aCI6Ii81MDExODMyOC8zMjg0MjM0MzYtNTVkMjllOGYtMDI0OC00NDkyLWIyOGYtMjgyNWYyZjY4MDNlLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAzMTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMzE1VDIxMzUyNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWRiY2QxN2MwMTQwYWIxMjZhYmUxODJhYTgxZGQ5Zjg0Nzc1OGIzMDAyODMzZjQ4OTIzODU0NDZjNWRmYzI1YzImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.285SQ2OL_l3WqUaY3h7knotPz2pdoa_DLvElLuh6Xz4],Map/Geospatial Visualization,Program Output
+openlayers__openlayers-15685,https://github.com/openlayers/openlayers/issues/15681,"Problem with setFill() for styling VectorTile
+In ol@9.1.0 when I am creating new ol.layer.VectorTile({}) and styling it, I am having issue with setFill() which makes additional semitransparent layer at the top of the other layers.
+
+Steps to reproduce the behavior:
+
+1. Use style 
+    ```js
+      let selectionStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          text: text,
+          overflow: true,
+          font: `12px sans-serif`,
+          padding: [5, 10, 5, 10],
+          textAlign: 'center',
+          justify: 'center',
+          textBaseline: 'middle',
+          fill: new ol.style.Fill({
+            color: '#fff',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: '#454545',
+          }),
+          backgroundStroke: new ol.style.Stroke({
+            color: '#fff',
+            width: 1,
+          }),
+        }),
+        stroke: new ol.style.Stroke({
+          color: '#000',
+          width: 2,
+        }),
+        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.5)' }),
+      });
+    ```
+2. Create layer
+    ```js
+      const myLayer = new ol.layer.VectorTile({
+        properties: { name:'Test' },
+        visible: true,
+        renderMode: 'vector',
+        source: new ol.source.VectorTile({
+          format: new ol.format.MVT({
+            idProperty: 'id',
+          }),
+          tileLoadFunction: ...,
+          url: `some_url`,
+        }),
+        style: selectionStyle,
+      });
+    ```
+3. **If I remove fill** from the style **it will be ok** and without that additional layer but I need Fill to style myLayer
+
+If I use
+```js
+        selectionStyle.setFill(
+          new ol.style.Fill({
+            color: 'rgba(252, 220, 215, 0.5)'
+          })
+        );
+```
+it will as well make that additional ghost layer on some VectorTiles. Additionally on the web side, on mouse hover will cause map to flicker when moving cursor around.
+
+**Expected behavior**
+Fill in Style should Fill VectorTile and should not create any additional layers above. Please check notes on attached image. 
+
+
+<img width=""413"" alt=""Screenshot 2024-03-28 at 12 09 07"" src=""https://github.com/openlayers/openlayers/assets/27783775/4fd8876d-86e2-4dae-a6cb-9d43ece7745d"">
+
+
+",[2.1 Incorrect data processing],[https://private-user-images.githubusercontent.com/27783775/317704406-4fd8876d-86e2-4dae-a6cb-9d43ece7745d.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM2MTA4NDksIm5iZiI6MTc3MzYxMDU0OSwicGF0aCI6Ii8yNzc4Mzc3NS8zMTc3MDQ0MDYtNGZkODg3NmQtODZlMi00ZGFlLWE2Y2ItOWQ0M2VjZTc3NDVkLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAzMTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMzE1VDIxMzU0OVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWU3YmYzNThjMjJhMmFhNTBmNzk1MmJmM2JhMTE1YmI4ZWM3ZThlY2Q4NWYwZTY1MjhlOWUzODQxOTVkYjM4NTEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.KrEbP93BKWNV2t9B6jLeZbsQ7KLYF3FAPeYnOigHKz0],Diagram,"Steps and Processes, Program Output"
+openlayers__openlayers-12467,https://github.com/openlayers/openlayers/issues/12461,"Circle's animation jitter
+Recently we have updated OpenLayers from version 4.6.5 to 6.5.
+
+In OpenLayers 4.6.5 we used `snapToPixel` option set to false for `ol.style.Circle` for ""accurate"" rendering mode during the animation to prevent noticable jitter. This phenomenon was also described in the documentation for the version 4.6.5:
+
+> Using true allows for ""sharp"" rendering (no blur), while using false allows for ""accurate"" rendering. Note that accuracy is important if the circle's position is animated. Without it, the circle may jitter noticeably. Default value is true.
+
+Unfortunately, this parameter has been removed in version 5.2.0, because it should be no longer needed according to the upgrade notes:
+
+> The renderer now snaps to integer pixels when no interaction or animation is running to get crisp rendering. During interaction or animation, it does not snap to integer pixels to avoid jitter.
+
+However, when we compare the same animation from version 4.6.5 to the animation from version 6.5 we can see the difference in rendering circle's animation which leads to the visible jitter (it is most visible at the end of the animation when the circle's diameter is the greatest). We prepared also a sample video with animation comparison:
+https://www.youtube.com/watch?v=XGZdVtwdHMA
+
+We are wondering if this change is related to some kind of a change in how snapping to pixels work right now? Is there anything we can do to make this animation smoother?
+",[2.4 Incorrect output],[https://raw.githubusercontent.com/openlayers/openlayers/7e33c416978354ba1de16f57278a76d0dc6c060d/test/rendering/cases/layer-vectortile-rendermode-vector/expected.png],Map/Geospatial Visualization,Desired Output
+openlayers__openlayers-15168,https://github.com/openlayers/openlayers/issues/15144,"Raster reprojection assumes that projected pixels are square
+**Describe the bug**
+
+It seems that raster reprojection always tries to display square target pixels, which can lead to mis-alignments in some cases.
+
+In the screenshot below I project a 5×5 pixels image where my intent is that each pixel of the source image covers an area of 3km by 2km. The blue circles show the expected centers of each pixels. The source projection is Lambert Conformal Conic and the target projection is Web Mercator.
+
+![image](https://github.com/openlayers/openlayers/assets/332812/3e63f872-2d44-42fb-b822-0cbf02ff69cf)
+
+We see that vertically the pixels are correctly aligned with their expected centers. However, horizontally we observe a mis-alignment. This is because OpenLayers tries to draw perfect squares only. On the left of the screenshot, we see that the first column of pixels of the  source image is repeated twice. The resulting projected column extends too far to the east. Ultimately, the 5×5 source image looks like a 7×5 image in the result.
+
+**Expected behavior**
+
+Instead, I would expect the pixels of the destination to be stretched so that the total number of “projected pixels” is exactly the same as the number of pixels of the source image.
+
+Note that in my real use case, my “pixels” are actually square … in their source projection. They cover a 2km by 2km area, but when they are projected, the result may not be perfectly square, leading to similar mis-alignments.
+
+It seems #4124 can not help for this use case, unless I missed something?
+
+Is there a way to preserve the amount of source pixels in the projection result? Would the situation be different if I was using GeoTiff files instead of projecting PNG images?
+",[2.1 Incorrect data processing],[https://private-user-images.githubusercontent.com/332812/268495975-3e63f872-2d44-42fb-b822-0cbf02ff69cf.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM2MTExMzYsIm5iZiI6MTc3MzYxMDgzNiwicGF0aCI6Ii8zMzI4MTIvMjY4NDk1OTc1LTNlNjNmODcyLTJkNDQtNDJmYi1iODIyLTBjYmYwMmZmNjljZi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzE1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMxNVQyMTQwMzZaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1hZmY0N2Y0NzM1YmQ4MDdhNGI0YWJmZTQ0Y2UwMzZkODc0MTUxZDlhM2E4NDJiNmYzY2JlODg3OTRlMjcwM2JjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.f_E1dkWMqoxIZYx9Ku3uGl4Deu71HGaJm1XgdRVZ_Ho],Map/Geospatial Visualization,Program Output

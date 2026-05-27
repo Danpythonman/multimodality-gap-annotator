@@ -1,0 +1,1683 @@
+instance_id (PR_ID),issue_link (we need to find!),problem_statement,issue_cat,image_assets,img_cat_1,img_cat_2,
+openlayers__openlayers-13669,https://github.com/openlayers/openlayers/issues/13666 ,"GeoTiff: Issue with alpha band and no-data value NaN
+**Describe the bug**
+I have a COG with a no-data value NaN (i.e. GDAL no-data values is set to the string ""nan"", but I also pass Number.NaN in the Source options as nodata value). It seems that NaN as no-data value is not correctly recognized although an alpha band is added. When I try to get the pixel value via the `getData` method, I get `[NaN, NaN, NaN, 255]` instead of `[NaN, NaN, NaN, 0]`. I also can't use the styling functionality due to that.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+Tried the example file with the cog and the cog-stretch examples. I can't provide on a host where you can directly access it, but here's the file for download: https://www.filehosting.at/file/details/3363216/nan.tiff
+The source has been initialized as follows:
+```js
+const source = new GeoTIFF({
+  normalize: false,
+  sources: [
+    {
+      url: 'http://localhost/nan.tiff',
+      nodata: NaN,
+    },
+  ],
+});
+```
+
+**Expected behavior**
+NaN as no-data value is handled correctly
+
+",1.1 Incomplete data processing,"[https://raw.githubusercontent.com/openlayers/openlayers/25b20076360a1b25cd092dcb2abc6da750ca663e/test/rendering/cases/cog-f32-nodata-explicit-nan/expected.png, https://raw.githubusercontent.com/openlayers/openlayers/25b20076360a1b25cd092dcb2abc6da750ca663e/test/rendering/cases/cog-f32-nodata/expected.png, https://raw.githubusercontent.com/openlayers/openlayers/25b20076360a1b25cd092dcb2abc6da750ca663e/test/rendering/cases/cog-i16-nodata/expected.png]",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13212,https://github.com/openlayers/openlayers/issues/12938,"WebGLTiles / GeoTIFF source pyramids
+The current example for pyramid of WebGLTileLayers works well, unfortunately it does not scale when there are bigger pyramids and thus more layers are required. Depending on the browser, setting, machine, environment, etc it will happen quite soon that WebGL-contexts are lost (as seen in the console), which results in not-rendered tiles and in general a very bad performance (2-5 FPS instead of fluent 30ish).
+
+I think this issue can be solved by providing a separate source, representing a pyramid of GeoTIFFs. This source will be very similar to the current one, but instead of a direct file reference it receives a template string and a [tile grid object](https://openlayers.org/en/latest/apidoc/module-ol_tilegrid_TileGrid-TileGrid.html) (very similar to the WMTS source, in fact).
+
+Each requested tile may now be composed of all overlapping tiles of the GeoTIFF pyramid, thus being very similar to the current GeoTIFF source.
+
+As there is now only a single canvas/WebGL context per layer/renderer the issue should be solved.
+
+Please let me know whether this is feasible and easy to implement!
+
+",4 Perfective Maintenance,"[https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/cases/webgl-tile-multisource/expected.png, https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/data/tiles/osm/1/0/0.png, https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/data/tiles/osm/1/0/1.png, https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/data/tiles/osm/1/1/0.png, https://raw.githubusercontent.com/ahocevar/openlayers/75f66757ef6a46be50513c40a3cc022026d8e5c2/test/rendering/data/tiles/osm/1/1/1.png]",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13981,https://github.com/openlayers/openlayers/issues/13980,"Offset and rotated text rendered inconsistently between vector layers and vector context
+**Describe the bug**
+The vector layer renderer rotates offset text around the feature from which it is offset.  The immediate renderer rotates it around its offset anchor point (as defined by the `textAlign` and `textBaseline` settings).
+
+**To Reproduce**
+I think an improved Icon Scale example is needed to demonstrate the interaction of displacement and anchor as well as scale and rotation (see https://codesandbox.io/s/icon-scale-new-ike5z1 which is patched with the #13975 fix).  With the vector layer renderer `textAlign` and `textBaseline` work in the same way as an icon anchor, and text `offsetX` and `offsetY` have the same effect as an icon's displacement (although positive `offsetY` results in downward movement while positive `displacement` is upward).
+
+When switching to vector context all aspects of image behaviour are unchanged.  However (in addition to the lack of support for linebreaks in text) when offset and rotation are applied together to text the difference in behaviour between vector layer and immediate renderers can be seen.
+
+**Expected behavior**
+Consistent rendering as patched in https://codesandbox.io/s/icon-scale-new-forked-33oc1l.  I presume the vector layer renderer is correct as that behaviour would be expected when the view is rotated.
+
+",2.4 Incorrect output,[https://raw.githubusercontent.com/openlayers/openlayers/3e0b942b150940d7caf2418e3073fcbb89402971/test/rendering/cases/text-style-offset/expected.png],Miscellaneous,Program Output,
+openlayers__openlayers-10545,https://github.com/openlayers/openlayers/issues/10546,"Character codes appearing in labels
+**Describe the bug**
+
+![image](https://user-images.githubusercontent.com/49240900/72671980-e3ad5580-3a4a-11ea-9e2e-a86c3929158a.png)
+
+Although the name is **Andy&amp;apos;s** in the data it should be decoded in the label.
+
+This is from a KML example but I presume it could happen in any XML based format.  Would it be acceptable if either `ol/style/Text` or the renderer routinely called `decodeURIComponent()` on the supplied text or should it be the responsibility of the parser?
+
+
+",1.1 Incomplete data processing,[https://user-images.githubusercontent.com/49240900/72671980-e3ad5580-3a4a-11ea-9e2e-a86c3929158a.png],Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-15271,https://github.com/openlayers/openlayers/issues/15251,"Expression reading operator for id
+Currently style expressions support fetching a feature property using `['get', 'attributeName']` similar to `feature.get('attributeName')`, this does however not cover the `feature.getId()` property.
+
+I'm working with GeoJSON and I'd prefer not to duplicate the `id` so that It exists both in the root and in the properties collection.
+
+",4 Perfective Maintenance,[https://raw.githubusercontent.com/openlayers/openlayers/1313916226a7bf40109d06dee33914cb1b9ff37d/test/rendering/cases/vector-id/expected.png],Miscellaneous,Program Output,
+openlayers__openlayers-12194,https://github.com/openlayers/openlayers/issues/12192,"pixelRatio not applied to lineDash in Canvas Immediate
+When setting pixelRatio in ol/render.toContext() to give a sharp image on high device pixel ratio displays when rendering to Canvas Immediate, although pixel coordinates are correctly scaled, lineDash is not scaled as it is when rendering to a map. Thus it renders very differently depending on the device pixel ratio, typically blurring dashed lines into continuous lines (especially if the default ""round"" lineCap is used).
+
+To demonstrate, the full code at the bottom of this post renders a dashed line on a map canvas and also (with exactly the same style) using canvas immediate rendering:
+```
+     var vectorContext = ol.render.toContext(ctx, {
+        size: [500, 250],
+        pixelRatio: ol.has.DEVICE_PIXEL_RATIO
+      });
+```
+If viewed on a device with pixelratio > 1.0, the dashes and gaps in the canvas immediate line become much shorter in proportion to the line width. If the values in the lineDash array are scaled by pixelRatio, the problem is solved for CanvasImmediate, though this would require making a copy of the style if it is to also be used in a map.
+
+Full code:
+```
+<!doctype html>
+<html lang=""en"">
+  <head>
+    <link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css"" type=""text/css"">
+    <style>
+      #immediate canvas {
+        border: solid 1px grey;
+      }
+      .map {
+        border: solid 1px grey;
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src=""https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js""></script>
+  </head>
+  <body>
+    <h4>Map rendering:</h4>
+    <div id=""map"" class=""map""></div>
+    <h4>CanvasImmediate rendering:</h4>
+    <div id=""immediate"">
+      <canvas id=""testCanvas"">
+    </div>
+    <script type=""text/javascript"">
+
+      // Common line style
+      var lineStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: 'red',
+          width: 40,
+          lineCap: ""butt"",
+          lineDash: [50, 50]
+        }),
+      });
+
+      // Map rendering
+      var wkt = 'LINESTRING(10.689 -25.092, 38.814 -35.639)';
+      var format = new ol.format.WKT();
+      var feature = format.readFeature(wkt, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857',
+      });
+      var vector = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature],
+        }),
+        style: lineStyle
+      });
+      var raster = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+      });
+      var map = new ol.Map({
+        layers: [raster, vector],
+        target: 'map',
+        view: new ol.View({
+          center: [2952104.0199, -3277504.823],
+          zoom: 4,
+        }),
+      });
+
+      // CanvasImmediate rendering
+      var testCanvas = document.getElementById('testCanvas');
+      var ctx = testCanvas.getContext('2d');
+      var lineGeom = new ol.geom.LineString([[120, 80], [450,200]]);
+      var vectorContext = ol.render.toContext(ctx, {
+        size: [500, 250],
+        pixelRatio: ol.has.DEVICE_PIXEL_RATIO
+      });
+      vectorContext.setStyle(lineStyle);
+      vectorContext.drawGeometry(lineGeom);
+
+    </script>
+  </body>
+</html>
+```
+",2.4 Incorrect output,[https://raw.githubusercontent.com/openlayers/openlayers/74db0e7d21d7ef8b4995f9a0fbaba083e40ec4ba/test/rendering/cases/immediate-pixel-ratio/expected.png],Miscellaneous,Program Output,
+openlayers__openlayers-12962,https://github.com/openlayers/openlayers/issues/12960,"Layer opacity stacking issues after 6.8.1 version
+**Describe the bug**
+After updating to OL 6.9.0, the layer opacity for independent layers (tiled ArcGIS REST layers at least) will now make the top-most layer opaque (but only in reference to other OL layers (tiled ArcGIS REST layers in this case). The layer opacity _does_ allow basemaps to display through.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to:
+https://codesandbox.io/s/layer-group-forked-mokjq?file=/package.json
+
+2. This is a screen capture using OL version 6.9.0
+![image](https://user-images.githubusercontent.com/7988400/140408422-57c01614-d893-48f7-9664-70271842de15.png)
+
+Compare the image output after changing to OL version 6.7.0.
+![image](https://user-images.githubusercontent.com/7988400/140408509-050a203f-ec05-4491-b10a-931f86d4cea0.png)
+
+3. This appears to only be an issue in version 6.8.1 and greater. 6.7.0 and below renders as I expect. I determined that version could be the issue with localhost testing, but the sandbox doesn't seem to be able to target 6.8.1...
+
+This may be related to how the layers are rendered in the canvas element?
+
+In the linked code sandbox, if you change the opacity values for individual layers to _NOT_ be identical then the image is rendered ""correctly"" with transparency for each Layer.
+For example if layers are not all set to opacity of ""0.5"", but with values of 0.49, 0.50, 0.51 (for three separate layers) then the layers rendered ""correctly"".
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/7988400/140408422-57c01614-d893-48f7-9664-70271842de15.png', 'https://user-images.githubusercontent.com/7988400/140408509-050a203f-ec05-4491-b10a-931f86d4cea0.png']",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13155,https://github.com/openlayers/openlayers/issues/13100,"Respect tile source's imageSmoothing setting when using WebGLTile renderer
+When zoomed in the Sea Level example shows a pixelated edge to the sea, corresponding to the pixels in the DEM.  Although, being an old example, this is implemented via a prerender event, where there is no reprojection this is equivalent to the `imageSmoothing: false` setting.  Without it image smoothing distorts the pixel values and thin lines of ""sea"" are visible along some contours, especially at 3107 meters.  Although such lines are not obvious in the WebGL Sea Level example, some distortion can be demonstrated with exaggerated sea level values - slightly south of the opening extent (in Chrome and Edge) a row of pixels (possibly at a tile boundary) can appear above the sea when the map is panned https://codesandbox.io/s/webgl-sea-level-forked-bn9dw  It would be easy to support the source's `imageSmoothing: false` setting if the renderer passed it to the `TileTexture` which could then use `gl.NEAREST` instead `gl.LINEAR` for its `gl.TEXTURE_MIN_FILTER` and `gl.TEXTURE_MAX_FILTER` configuration https://codesandbox.io/s/webgl-sea-level-smoothing-disabled-5vnj3  Currently only `TileImage` sources support the `imageSmoothing` option - are there any scenarios where it might be necessary to add support for `DataTile` and `GeoTIFF`?
+
+",4 Perfective Maintenance,[https://raw.githubusercontent.com/openlayers/openlayers/e2883fb658b08cdb1292e48e15579ebea286ef00/test/rendering/cases/webgl-mixed-layers/expected.png],Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-11047,https://github.com/openlayers/openlayers/issues/10856,"Raster webworkers not getting terminated
+**Describe the bug**
+The raster source creates webworkers using pixelworks but these are never terminated. This can cause high memory usage/ a memory leak.
+
+I think this is a duplicate of https://github.com/openlayers/openlayers/issues/8375 which has been closed due inactivity. 
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://codesandbox.io/s/react-openlayers-whlbv
+2. Change the number in the input a few times
+3. See chrome devtools memory tab for multiple workers (uuids)
+![image](https://user-images.githubusercontent.com/9197891/78063055-e18f3d80-738f-11ea-89b3-db862796a7e3.png)
+
+
+**Expected behavior**
+The workers are terminated/destroyed so the memory is freed.
+
+**Current hack**
+In version 4.6.5 I am working around it using these 2 snippets:
+```javascript
+// Hack for https://github.com/openlayers/openlayers/issues/8375
+// Warning: this will break when updating openlayers!
+// The webworkers created by the rasterSource weren't terminated thus leaked memory.
+this.rasterWorkers = rasterSource.B.we;
+```
+
+```javascript
+if (this.rasterWorkers) {
+    this.rasterWorkers.forEach((worker) => worker.terminate());
+}
+```
+
+",2.7 Performance,['https://user-images.githubusercontent.com/9197891/78063055-e18f3d80-738f-11ea-89b3-db862796a7e3.png'],Web Interface (UI/UX Element),CPU/GPU Performance,
+openlayers__openlayers-8515,https://github.com/openlayers/openlayers/issues/8064,"ol.select.Interaction feature always shown as top layer?
+So, I've seen the struggle that `ol.select.Interaction` already brought here. But it seems as though it also comes with another issue, or at least a feature that is unclear to me why it is as such.
+
+In [this pen](https://codepen.io/anon/pen/OvBexj) I've made a cluster layer that is selected, and for each of the underlying features, a red dot simulates a 'hover' effect. These red dots are in a separate layer, but always (no matter the zIndex) appear below the selected feature.
+
+To be clear, this is the behavior I'd like (when selecting the custom svg icon):
+![image](https://user-images.githubusercontent.com/16043528/38540260-b1ad4e0e-3c9b-11e8-83f9-b160438eb7ea.png)
+
+But this is as it is.
+![image](https://user-images.githubusercontent.com/16043528/38540253-ac1103dc-3c9b-11e8-9ae5-de02f3be491b.png)
+
+
+I was wondering if this is known behavior and as intended? Or if the select layer's zIndex could be changed?
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/16043528/38540260-b1ad4e0e-3c9b-11e8-83f9-b160438eb7ea.png', 'https://user-images.githubusercontent.com/16043528/38540253-ac1103dc-3c9b-11e8-9ae5-de02f3be491b.png']",Miscellaneous,Program Output,
+openlayers__openlayers-15683,https://github.com/openlayers/openlayers/issues/15680,"Vector layer canvas has a wrong size when the map is rotated
+**Describe the bug**
+Vector layer canvas is crop when the map is rotated. 
+It occurs ince 9.1.0.
+Probably introduced by https://github.com/openlayers/openlayers/pull/15652
+
+Map is not rotated OK:
+![image](https://github.com/openlayers/openlayers/assets/621420/656573d1-44a4-4611-b916-b89a39f9535d)
+
+
+Map is rotated NOT OK:
+![image](https://github.com/openlayers/openlayers/assets/621420/cdcd5277-bdf4-45d7-be0f-a50b434c2aee)
+
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://openlayers.org/en/v9.0.0/examples/modify-scale-and-rotate.html
+2. Crete a big polygon that takes all the width of the map 
+3. Rotate the map with shift+ALT+DRAG
+
+**Expected behavior**
+The polygon should not be cut
+
+",2.4 Incorrect output,"[https://private-user-images.githubusercontent.com/621420/317666383-656573d1-44a4-4611-b916-b89a39f9535d.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzMyODgwOTcsIm5iZiI6MTc3MzI4Nzc5NywicGF0aCI6Ii82MjE0MjAvMzE3NjY2MzgzLTY1NjU3M2QxLTQ0YTQtNDYxMS1iOTE2LWI4OWEzOWY5NTM1ZC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMxMlQwMzU2MzdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05YTFkNTUyMjQ4MzRjNzM0ZTJiMGUzOThhMjI3ZmU5YTk4ZjE4YzU4MjY2YmQwYTNjYmI1M2Y4MmZjNDE0YTAxJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.FYYr6XI1ZGmA2Oxe90fYG72FfbSwKLAQy349p2OjcMI, https://private-user-images.githubusercontent.com/621420/317666534-cdcd5277-bdf4-45d7-be0f-a50b434c2aee.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzMyODgwOTcsIm5iZiI6MTc3MzI4Nzc5NywicGF0aCI6Ii82MjE0MjAvMzE3NjY2NTM0LWNkY2Q1Mjc3LWJkZjQtNDVkNy1iZTBmLWE1MGI0MzRjMmFlZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMxMlQwMzU2MzdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1kZDlkOGJmYzNmM2JjNDk2NmIxNWUxM2FkZTQ1YzdjYzA1OTRlMGFhMWNiNjMzZDY1YjhmODBjMTNmNTdkYmVkJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.HF5WQov493-jc8umVjrrNhu6MPBCprIrJi6hedbb8XM]",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13654,https://github.com/openlayers/openlayers/issues/13197,"Reprojection for WebGlTile layer
+*I'm not sure I'm on the right track here and whether this is a bug or a feature or just my lack of knowledge:*
+
+I'm trying to show a UTM COG on an EPSG:3857 (or 4326) map, but I can't get it working. Nothing shows up for the COG, but OSM and fitting the view to the COG extent works. I assume it doesn't support automatic reprojection or is there a way to do that? A potential use case could be showing two COGs from different UTM zones on a map.
+
+Here's a repro based on the COG example:
+```html
+<!DOCTYPE html>
+<html lang=""en"">
+  <head>
+    <meta charset=""UTF-8"">
+    <title>Cloud Optimized GeoTIFF (COG)</title>    
+    <link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.10.0/css/ol.css"" type=""text/css"">
+    <script src=""https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.10.0/build/ol.js""></script>
+    <script src=""https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js""></script>
+  </head>
+  <body>
+    <div id=""map"" style=""height: 400px; width: 100%; border: 1px solid black""></div>
+    <script>
+    // Add CRS definition for COG
+    proj4.defs(""EPSG:32636"",""+proj=utm +zone=36 +datum=WGS84 +units=m +no_defs"");
+    ol.proj.proj4.register(proj4);
+    let cogProj = ol.proj.get(""EPSG:32636"");
+  
+    // COG source
+    const source = new ol.source.GeoTIFF({
+      sources: [
+        {
+          url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif',
+        }
+      ],
+//    projection: cogProj
+    });
+    
+    // Create map
+    const map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        }),
+        new ol.layer.WebGLTile({
+          source: source
+        })
+      ],
+      view: new ol.View({
+        projection: ""EPSG:4326"" // CRS for map
+      })
+    });
+    
+    // Fit to bounds of COG
+    source.getView().then(view => {
+      // Fit to COG extent
+      let fromLonLat = ol.proj.getTransform(view.projection, map.getView().getProjection());
+      let extent = ol.extent.applyTransform(view.extent, fromLonLat);
+      map.getView().fit(extent);
+    });
+    </script>
+  </body>
+</html>
+```
+",1.4 Incomplete configuration processing,[https://raw.githubusercontent.com/mike-000/openlayers/36be9248369357a069573ec48b15308d25434db1/test/rendering/cases/webgl-reproj-float/expected.png],Map/Geospatial Visualization,Desired Output,
+openlayers__openlayers-11377,https://github.com/openlayers/openlayers/issues/11333,"6.4.0 pointermove performance
+Performance of pointermove event is much slower than in 6.3.1.
+
+Example with 1000 features with non cached styles:
+6.4.0.
+https://codesandbox.io/s/prod-fast-hh1zd?file=/main.js:1438-1449
+![640](https://user-images.githubusercontent.com/3100059/88535094-a6cda700-d009-11ea-826b-093126e3438a.gif)
+
+6.3.1.
+https://codesandbox.io/s/dazzling-varahamihira-fmzkd?file=/main.js
+![631](https://user-images.githubusercontent.com/3100059/88535101-aa612e00-d009-11ea-9c84-2cc95cb310c5.gif)
+
+It affects many operations like zoom, panning etc in my app. It's not so visible in examples above but you can see it on cursor. The cursor change in 6.3.1 is super fast but the change in 6.4.0 is much slower.
+
+",2.7 Performance,"['https://user-images.githubusercontent.com/3100059/88535094-a6cda700-d009-11ea-826b-093126e3438a.gif', 'https://user-images.githubusercontent.com/3100059/88535101-aa612e00-d009-11ea-9c84-2cc95cb310c5.gif']",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-14945,https://github.com/openlayers/openlayers/issues/14788,"ImageArcGISRest Default Ratio Bug: Layer-Map Mismatch in OpenLayers 7.4
+In OpenLayers version 7.4, an issue has been discovered related to the ImageArcGISRest source. The problem lies with the default value of the ratio parameter in ImageArcGISRest, which is set to 1.5. When the computer's zoom or scaling ratio is not 100% (e.g., 150%), the following issues may occur:
+
+Layer-Map Mismatch: Loading ArcGIS MapServer layers with a ratio value other than 1 or 1.5 (e.g., 2) can result in a mismatch between the layer and the map. This can cause misalignment or incorrect rendering of the layer.
+
+Layer-Map Mismatch after Map Rotation: Even when the ratio is set to 1.5 or any other value other than 1, a layer-map mismatch issue can occur after map rotation. The rotated layer may not align correctly with the rotated map.
+
+Currently, the workaround solution is to forcibly set the ratio to 1 to address these issues.
+",2.4 Incorrect output,[https://github.com/openlayers/openlayers/issues/14788],Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13119,https://github.com/openlayers/openlayers/pull/12985,"Flag for WebGLTile Layers for blending with gl.ONE
+**Context**:
+
+A digital slide microscopy images viewer based on OpenLayer ([link](https://github.com/MGHComputationalPathology/dicom-microscopy-viewer) used by this App [Slim](https://github.com/MGHComputationalPathology/slim)). The images are pyramidal multi resolution layers. Data shared in the context of Image Data Commons of the National Cancer Institute ([IDC](https://imaging.datacommons.cancer.gov/)).
+
+**Why**: 
+
+we need to blend with as gl.blendFunc(gl.ONE, gl.ONE) only for a subset of Tile Layers (WebGL).
+
+**What**:
+
+have a flag in the TileLayer (WebGL) style to change the webgl blendfunction. 
+
+**Long explanation**:
+
+we use OpenLayer to visualize microscopy images.  In our use case, we need to color and blend images from different TileLayers (https://www.youtube.com/watch?v=9VfrP6CM3nA).
+
+We were performing the rendering with an webgl offscreen render.  With the new introduction of WebGL Tile Layers, we are switching from the offscreen render to a fully OpenLayer implementation (we have already tested that we get a major boost in performances, which is great!).
+
+One thing that we miss in the new API, it is a parameter to set different blending options for the webgl rendering in OpenLayer (i.e. in https://github.com/openlayers/openlayers/blob/main/src/ol/webgl/Helper.js#L485-L488)
+
+------------------------------------------------------------------------------------------
+
+This PR is a draft and just to point out what we would like to have, and we would like to agree (and then contribute) on some  general API interface.
+
+
+
+
+
+",4 Perfective Maintenance,[https://raw.githubusercontent.com/openlayers/openlayers/1313916226a7bf40109d06dee33914cb1b9ff37d/test/rendering/cases/webgl-precompose-event/expected.png],Diagram,Desired Output,example
+openlayers__openlayers-11545,https://github.com/openlayers/openlayers/issues/11542,"The className setting in ol.layer.HeatMap does not work
+
+
+When I customize the className of the heatmap, it does not work, and the default className is not displayed on the page
+![heatMap](https://user-images.githubusercontent.com/31643589/92585825-0a651880-f2c8-11ea-9adf-55d90ee18ede.png)
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/31643589/92585825-0a651880-f2c8-11ea-9adf-55d90ee18ede.png'],"Code Snippet Screenshot, Map/Geospatial Visualization, Web Interface (UI/UX Element)","Code, Menus and Preference, Program Output",
+openlayers__openlayers-14332,https://github.com/openlayers/openlayers/issues/14308,"Incorrect rendering in vector context of rotated tile layers
+**Describe the bug**
+As described in https://github.com/openlayers/openlayers/issues/14168#issuecomment-1318248557  rendering to the vector context of tile layers breaks down close to view rotations of 90 and 270 degrees, affecting stroke width, text scale and precision of geometry.
+
+**To Reproduce**
+Compare vector context rendering on a tile layer https://codesandbox.io/s/scalerings-forked-srro95 at close to 90 degrees rotation with the expected behavior seen if using the vector context of a vector layer https://codesandbox.io/s/scalerings-forked-iub5kx
+
+It can also be seen in the Flight Animation example which has both a tile layer and a vector layer used for completed flights, but uses the vector context of the tile layer for animating flights in progress.  The Marker Animation example which uses the vector context of its vector layer is not affected.
+
+**Expected behavior**
+Consistency in the vector contexts of tile and vector layers.
+
+",2.4 Incorrect output,[https://raw.githubusercontent.com/openlayers/openlayers/84b226d93f6a4ec1270ebd7a57b527f34f933ae6/test/rendering/cases/postrender-immediate/expected.png],Map/Geospatial Visualization,Desired Output,
+openlayers__openlayers-14719,https://github.com/openlayers/openlayers/issues/14718,"With version 7, the WMS image gets blurry in many cases
+**Describe the bug**
+If the ratio is not a round int, or map width or map height is not even, the image is blurry...
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to 'https://sbrunner.github.io/ngeo/ol7b.html'
+3. See that the map is a little blurry
+
+**Expected behavior**
+The map is pixel perfect
+
+",2.4 Incorrect output,"[https://raw.githubusercontent.com/openlayers/openlayers/78e9e22244c5c9c5f6d44fc01411f19e84fa747c/test/rendering/data/tiles/wms/epsg2056.png, https://raw.githubusercontent.com/openlayers/openlayers/78e9e22244c5c9c5f6d44fc01411f19e84fa747c/test/rendering/cases/source-imagewms-blurry/expected.png]",Map/Geospatial Visualization,Desired Output,
+openlayers__openlayers-15229,https://github.com/openlayers/openlayers/issues/15228,"Icon distortion on `WebGLPoints` layer
+**Describe the bug**
+Icons are distorted on `WebGLPoints` layer when `icon-rotate-with-view: true` is used with non-square viewport.
+
+**To Reproduce**
+Something like
+```js
+const vector = new WebGLPointsLayer({
+  source: new VectorSource({
+    url: '/data/2012_Earthquakes_Mag5.kml',
+    format: new KML({
+      extractStyles: false,
+    }),
+  }),
+  style: {
+    'icon-src': '/data/icon.png',
+    'icon-rotate-with-view': true,
+  },
+});
+
+const raster = new TileLayer({
+  source: new XYZ({
+    url: '/data/tiles/satellite/{z}/{x}/{y}.jpg',
+    transition: 0,
+  }),
+});
+
+new Map({
+  layers: [raster, vector],
+  target: 'map',
+  view: new View({
+    center: [15180597.9736, 2700366.3807],
+    zoom: 2,
+    rotation: Math.PI / 2,
+  }),
+});
+```
+![actual](https://github.com/openlayers/openlayers/assets/445223/ec886b5c-df7f-48e2-a00f-942582e6558f)
+
+**Expected behavior**
+The icons should be displayed without distortion.
+
+**Note**
+I tried to implement it as a test code, but I realized it cannot be expressed as a test code because the current test framework uses a square viewport. It only happens when with non-square viewport.
+
+",2.4 Incorrect output,[[https://private-user-images.githubusercontent.com/445223/273617053-ec886b5c-df7f-48e2-a00f-942582e6558f.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzMyODkzODMsIm5iZiI6MTc3MzI4OTA4MywicGF0aCI6Ii80NDUyMjMvMjczNjE3MDUzLWVjODg2YjVjLWRmN2YtNDhlMi1hMDBmLTk0MjU4MmU2NTU4Zi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMxMlQwNDE4MDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iMDExOWY3NzRiYTA2OWYyNzE5OWJkNjdlMGMzZDYwYmU3M2ViMDI0MTZhYjE0ZjI0ZWMxNzM4ODExMGU3NjBjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.2zNHqU0y72-lAw37egUjXk_jW-X8h4uQ_VSk1BSIZOg]],Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-9333,https://github.com/openlayers/openlayers/issues/9330,"Unify rendering tests
+**Unify rendering tests**
+Currently there are two different approaches for testing the rendering output.
+A part of the rendering tests is in `rendering` and the other part is in `test/rendering`.
+
+IMHO it would be better to unify the split tests to use one method for both.
+
+",4 Perfective Maintenance,[https://raw.githubusercontent.com/openlayers/openlayers/7510a19c739c644f15f76333114b64d431b10555/rendering/cases/layer-image/expected.png],Map/Geospatial Visualization,Desired Output,
+openlayers__openlayers-14932,https://github.com/openlayers/openlayers/issues/14930,"textAlign start/end regression
+It looks like we had an unnoticed regression regarding the `'start'` and `'end'` values of the `Text` style's `textAlign` property.
+
+When I updated the reference images of the rendering tests in #14928, I noticed a difference in `test/rendering/cases/text-style-linestring-nice` that went unnoticed for a long time: the texts 'Small text' and 'negative offsetX' are aligned at the wrong end.
+",2.4 Incorrect output,[https://raw.githubusercontent.com/openlayers/openlayers/1280ef38d998a97b6563f0cf2ed894b651afc500/test/rendering/cases/text-style-linestring-nice/expected.png],Miscellaneous,Program Output,
+openlayers__openlayers-10478,https://github.com/openlayers/openlayers/issues/10465,"Pieces of map do not appear when a tile layer is being reprojected.
+**Describe the bug**
+
+When zooming in and out on a map with a reprojected Tile layer, sometimes there are white areas. This turns out to be because the underlying Tile object has been disposed and is therefore excluded from the stitching process to make the source canvas for the reprojection.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to https://pskreporter.info/testaeqd.html
+2. Zoom in and out a bunch and pan around
+3. See error -- example below
+
+![image](https://user-images.githubusercontent.com/1508813/71559283-3be3cf80-2a2a-11ea-8cb7-93085d4596e1.png)
+
+
+**Expected behavior**
+No white area.
+
+It seems that just modifying the loop in ol.reproj.Tile to include tiles in the ABORT state doesn't actually work -- that causes problems later on. I suspect that these tiles should not be disposed, or that some piece of code should refetch them...
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/1508813/71559283-3be3cf80-2a2a-11ea-8cb7-93085d4596e1.png'],Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-13547,https://github.com/openlayers/openlayers/issues/13543,"Gutter (aka buffer) option for more tile sources
+**Is your feature request related to a problem? Please describe.**
+Currently a gutter option is supported only by TileWMS.  However Nextzen https://tile.nextzen.org/tilezen/terrain/v1/{tilesize}/terrarium/{z}/{x}/{y}.png?api_key=your-nextzen-api-key` supports tiles sizes of 260 and 516 with a gutter of 2.  Some Mapbox tiles also have a 1 pixel buffer although I cannot find an example which does not need a SKU token. This is intended to avoid tile edge effects when interpolating, which can be seen in some OpenLayers examples: 
+
+![image](https://user-images.githubusercontent.com/49240900/162012609-a49c5f87-0efe-4832-8e24-05dd0993291d.png)
+
+**Describe the solution you'd like**
+Make the gutter option available to more tile sources (e.g. XYZ and DataTile).  Also revise how the gutter is handled for WebGL tile layers.  Currently when rendering with WebGL the TileWMS gutter is removed before creating the texture, which does not prevent an edge effect.  It would be better to handle the gutter in the same way as a layer extent - here https://codesandbox.io/s/simple-forked-r14u0q the edge effect can be seen where datatiles join, but not where the layer extents meet.
+
+
+
+
+
+",4 Perfective Maintenance,"['https://tile.nextzen.org/tilezen/terrain/v1/{tilesize}/terrarium/{z}/{x}/{y}.png', 'https://user-images.githubusercontent.com/49240900/162012609-a49c5f87-0efe-4832-8e24-05dd0993291d.png']",Map/Geospatial Visualization,Program Output,
+openlayers__openlayers-14100,https://github.com/openlayers/openlayers/issues/14098,"Tile request timing changed for layers in a LayerGroup
+I am not sure that this is necessarily a bug rather than just a change in expected behavior but, after perusing the release notes a few times I wasn't able to determine which particular change would have caused this behavior.  We recently upgraded from version 6.1 => 7.0 and noticed a change in tile loading behavior for layers within a LayerGroup.  In this example, we have 20 TileLayers that belong to a single LayerGroup.  In version 6.1 you can see that the requests get sent concurrently, causing imagery to show quite quickly 👍🏻 
+
+![Screen Shot 2022-09-07 at 10 22 35 AM](https://user-images.githubusercontent.com/1480000/188934201-16966b56-90f6-4c8c-beff-572c223f0828.png)
+
+After upgrading to version 7.0 it appears that each TileLayer in the LayerGroup requests imagery one at a time, causing the requests to be sent sequentially which has a very visible impact on imagery load times 🤔 
+
+![Screen Shot 2022-09-07 at 10 26 43 AM](https://user-images.githubusercontent.com/1480000/188934422-bdf819a3-4a04-41ea-99ac-61d6c2ec1fb0.png)
+
+The only differences in code between the two examples above were changes to the ol and ol-mapbox-style package versions.  I am hoping someone can help point me in the right direction towards how to get the loading behavior we see in the first screenshot.  
+
+Also, thanks to everyone who contributes to this project and helps keep it alive.  We depend on it quite heavily in our application and so, appreciate the continued support 👏🏻 
+
+
+",2.7 Performance,"['https://user-images.githubusercontent.com/1480000/188934201-16966b56-90f6-4c8c-beff-572c223f0828.png', 'https://user-images.githubusercontent.com/1480000/188934422-bdf819a3-4a04-41ea-99ac-61d6c2ec1fb0.png']",Web Interface (UI/UX Element),CPU/GPU Performance,
+PrismJS__prism-1853,https://github.com/PrismJS/prism/issues/1852,"/* breaks JSON tokenization
+**Information**
+- Language: [JSON]
+- Plugins: [none]
+
+Does the problem still occur in the latest version of Prism? Yes
+
+**Description**
+I'm logging server response as JSON. The HTTP header `Accept: */*` triggers this problem.
+
+![broken_tokenization](https://user-images.githubusercontent.com/24775744/55315159-55a5b580-549e-11e9-9789-1c0e7ac3356f.png)
+
+
+**Code snippet**
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```
+{
+  ""A"": ""/*"",
+  ""B"": ""B"",
+  ""C"": ""C""
+}
+```
+
+</details>
+
+",1.2.5 Missing handling of special characters,['https://user-images.githubusercontent.com/24775744/55315159-55a5b580-549e-11e9-9789-1c0e7ac3356f.png'],Code Snippet Screenshot,Code,
+PrismJS__prism-1895,https://github.com/PrismJS/prism/issues/1893,"JavaScript numeric separators
+**Information**
+- Language: JavaScript
+- Plugins: none
+
+Does the problem still occur in the latest version of Prism? You can check using the [test page](https://prismjs.com/test.html) or get the latest version at the [download page](https://prismjs.com/download.html).
+
+Yes
+
+**Description**
+A clear and concise description of what is being highlighted incorrectly and how it should be highlighted instead. Add screenshots to illustrate the problem.
+
+The use of [numeric separators](https://github.com/tc39/proposal-numeric-separator) causes numeric literals to be highlighted incorrectly.
+
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```
+1_000_000_000_000
+    1_019_436_871.42
+```
+
+</details>
+
+Screenshot from <https://v8.dev/blog/v8-release-75#numeric-separators>:
+
+![](https://user-images.githubusercontent.com/81942/57871547-eed72400-77df-11e9-9ccd-cde8ce4b32f8.png)
+
+",1.1 Incomplete data processing,['https://user-images.githubusercontent.com/81942/57871547-eed72400-77df-11e9-9ccd-cde8ce4b32f8.png'],Web Interface (UI/UX Element),Program Output,
+PrismJS__prism-2182,https://github.com/PrismJS/prism/issues/2181,"[elixir] attr-name is missing attributes ending with `?`
+**Information**
+- Language: elixir
+- Plugins: none
+
+**Description**
+Attributes in elixir are allowed to end with a `?`, the regex pattern to identify these attributes as tokens is missing the optional question mark at the end.  See screenshot below taken from prismjs test website.
+
+![Screenshot_from_2020-01-15_00-34-37](https://user-images.githubusercontent.com/8953691/72411369-53140400-3730-11ea-98b7-d91696a997d5.png)
+
+Github syntax highlighting does support this as you can see in the code snippit below.
+
+I think this could be easily fixed by changing this line:
+
+https://github.com/PrismJS/prism/blob/6fd5c96b90a7724b8b1dbad1c44c0ee70068f4f3/components/prism-elixir.js#L40
+
+to this:
+`'attr-name': /\w+?\?:(?!:)/,`
+
+**Code snippet**
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```elixir
+defmodule Contrived do
+  def question(%{attribute: a, attribute?: b}) do
+    [a, b]
+  end
+end
+```
+
+</details>
+
+",1.2.5 Missing handling of special characters,['https://user-images.githubusercontent.com/8953691/72411369-53140400-3730-11ea-98b7-d91696a997d5.png'],Code Snippet Screenshot,Code,
+PrismJS__prism-1602,https://github.com/PrismJS/prism/issues/1601,"YAML strings fail with trailing comments
+# Summary
+
+YAML string highlighting does not work when a string has a comment on the same line.
+
+# Example
+
+Using the following example:
+
+```html
+<html>
+    <head>
+        <link href=""prism.css"" rel=""stylesheet"" />
+    </head>
+    <body>
+        <script src=""prism.js""></script>
+        <pre>
+            <code class=""language-yaml"">
+hello:
+    - ""world"" # test
+    - ""world""
+            </code>
+        </pre>
+    </body>
+</html>
+```
+
+<img src=""https://user-images.githubusercontent.com/16418643/47632225-75f3d180-db06-11e8-8038-9f2d8ed3fa29.png"" width=""300px"" />
+
+I'm testing this using version 1.15.0, from this link: https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript+yaml
+YAML strings fail with trailing comments
+# Summary
+
+YAML string highlighting does not work when a string has a comment on the same line.
+
+# Example
+
+Using the following example:
+
+```html
+<html>
+    <head>
+        <link href=""prism.css"" rel=""stylesheet"" />
+    </head>
+    <body>
+        <script src=""prism.js""></script>
+        <pre>
+            <code class=""language-yaml"">
+hello:
+    - ""world"" # test
+    - ""world""
+            </code>
+        </pre>
+    </body>
+</html>
+```
+
+<img src=""https://user-images.githubusercontent.com/16418643/47632225-75f3d180-db06-11e8-8038-9f2d8ed3fa29.png"" width=""300px"" />
+
+I'm testing this using version 1.15.0, from this link: https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript+yaml
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/16418643/47632225-75f3d180-db06-11e8-8038-9f2d8ed3fa29.png', 'https://user-images.githubusercontent.com/16418643/47632225-75f3d180-db06-11e8-8038-9f2d8ed3fa29.png']",Code Snippet Screenshot,Code,
+PrismJS__prism-1887,https://github.com/PrismJS/prism/issues/1886,"Support separating single quotes in C++ floating point and integer literals
+**Information**
+- Language: C++
+- Plugins: none
+
+Does the problem still occur in the latest version of Prism? Yes.
+
+**Description**
+C++ supports separating single quotes in its [floating point](http://eel.is/c++draft/lex.fcon) and [integer](http://eel.is/c++draft/lex.icon) literals – e.g. `1'000'000` is equivalent to `1000000`.
+
+In this screenshot, top is current highlight and bottom is the correct highlight:
+![good/wrong SS](https://user-images.githubusercontent.com/6709544/57575047-635a3d80-7443-11e9-91ec-335cf7ac33b5.png).
+
+The problem gets more exacerbated for numbers with multiple quotes (values are examples from The International Standard), current on the left and correct on the right:
+![good/even worse SS](https://user-images.githubusercontent.com/6709544/57575060-e085b280-7443-11e9-8361-dbc70ce965fd.png)
+
+**Code snippet**
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```cpp
+auto i = 1'048'576;
+auto j = 0x10'0000;
+auto k = 0'004'000'000;
+auto l = 1.602'176'565e-19;
+```
+
+</details>
+
+**What I tried**
+
+Adding the following to `components/prism-cpp.js`'	`extend('c')` call:
+
+```js
+'number': /(?:\b0x(?:[\da-f']+\.?[\da-f']*|\.[\da-f']+)(?:p[+-]?[\d']+)?|(?:\b[\d']+\.?[\d']*|\B\.[\d']+)(?:e[+-]?[\d']+)?)[ful]*/i
+```
+
+The regex is a the one from `components/prism-c.js`, modified to include `'` in every place where a digit could also be matched.
+
+And adding `tests/languages/cpp/separating_single_quotes_feature.test`, containing:
+
+```
+1'048'576
+0x10'0000
+0'004'000'000
+1.602'176'565e-19
+
+----------------------------------------------------
+
+[
+	[""number"", ""1'048'576""],
+	[""number"", ""0x10'0000""],
+	[""number"", ""0'004'000'000""],
+	[""number"", ""1.602'176'565e-19""]
+]
+
+----------------------------------------------------
+
+Checks for the C++ feature of separating single quotes in literals (http://eel.is/c++draft/lex.icon and http://eel.is/c++draft/lex.fcon).
+```
+
+Which, sadly, fails, due to the parts of the numbers being forcibly interpreted as strings, and I don't know how to make it not do that, hence why I'm opening an issue instead of a PR.
+",1.2.5 Missing handling of special characters,"['https://user-images.githubusercontent.com/6709544/57575047-635a3d80-7443-11e9-91ec-335cf7ac33b5.png', 'https://user-images.githubusercontent.com/6709544/57575060-e085b280-7443-11e9-8361-dbc70ce965fd.png']",Code Snippet Screenshot,Code,
+PrismJS__prism-2946,https://github.com/PrismJS/prism/issues/2940,"reST links and verbatim highlighting bug
+**Information**
+- Language: reST (reStructuredText)
+- Plugins: none
+
+**Description**
+
+The link element and verbatim elements are not detected, but instead it is rendered as whole text being italic:
+
+![image](https://user-images.githubusercontent.com/212189/121644702-a14b4500-ca93-11eb-9bd5-263d53fbbf31.png)
+
+When split into two lines, it does render correctly:
+
+![image](https://user-images.githubusercontent.com/212189/121644736-ad370700-ca93-11eb-97ec-4fd68aeeb9f1.png)
+
+
+**Code snippet**
+
+[Test page](https://prismjs.com/test.html#language=rest&text=%60ALTER%20ROLE%20%3Chttps%3A%2F%2Fwww.postgresql.org%2Fdocs%2F12%2Fsql-alterrole.html%3E%60_%20or%20%60%60ALTER_ROLE%60%60%0A)
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```rst
+`ALTER ROLE <https://www.postgresql.org/docs/12/sql-alterrole.html>`_ or ``ALTER_ROLE``
+```
+
+</details>
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/212189/121644702-a14b4500-ca93-11eb-9bd5-263d53fbbf31.png', 'https://user-images.githubusercontent.com/212189/121644736-ad370700-ca93-11eb-97ec-4fd68aeeb9f1.png']",Code Snippet Screenshot,Code,
+PrismJS__prism-2195,https://github.com/PrismJS/prism/issues/2194,"Visual Basic: Comments not highlighting with line continuation
+Tested in test drive as well. Is it possible to catch the underline at the end of the commented line and treat all as a single token? Thanks.
+
+<img width=""925"" alt=""Screen Shot 2020-01-29 at 5 40 55 PM"" src=""https://user-images.githubusercontent.com/7944159/73404109-e6b40b80-42be-11ea-9b84-bf192c365522.png"">
+
+",1.1 Incomplete data processing,['https://user-images.githubusercontent.com/7944159/73404109-e6b40b80-42be-11ea-9b84-bf192c365522.png'],Code Snippet Screenshot,"Code, Program Output",
+PrismJS__prism-2705,https://github.com/PrismJS/prism/issues/2694,"Javascript family leaving 'template' span open after particular earlier syntax
+**Information**
+- Language: Javascript, also Typescript
+- Plugins: Whatever the test page uses, presumably none
+
+**Description**
+
+I found a highlighting bug in this source code: https://deno.land/std@0.79.0/encoding/toml.ts and when the latest version of PrismJS was tested it showed a different bug. So I'm reporting the bug from latest here, from copying the whole file into Prism's test page.
+
+It seems like particular template literal usage is getting parsed correctly earlier in the file, and then breaking other template tags later in the file. The affected line has its first template tag token ignored which then causes template tag parsing to be inverted for the rest of the file.
+
+It seems there's two different setup lines for this bug that both need to be in a particular order:
+
+1. One line with a regex containing a single quote, and then a single quote in template quotes. This renders fine.
+2. Anywhere after that, a comment with a template literal in it. This renders fine.
+3. Anywhere after that, a normal basic template literal. This breaks for the rest of the file
+
+
+**Code snippet**
+
+![Screenshot 2021-01-03 at 18 52 50](https://user-images.githubusercontent.com/40628/103485196-f4d6aa00-4df4-11eb-8cfd-cd59e9995bd7.png)
+
+[Test page](https://prismjs.com/test.html#language=javascript&text=replace(%2F'%2F%2C%20%60'%60)%0A%0Aconst%20var1%20%3D%20%60this%20is%20fine%60%3B%0Aconst%20var2%20%3D%20%60this%20is%20fine%60%3B%0A%0A%2F%2F%20%60load%20bearing%20comment%60%0A%0Aconst%20var3%20%3D%20%60break%20starts%20here%60%3B%0Aconst%20var4%20%3D%20%60break%20ends%20here%60%3B)
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```javascript
+// One line with a pattern containing single quote, and then a single quote in template quotes
+replace(/'/, `'`)
+
+// Anywhere after that, a comment with template tags in it:
+// `load bearing comment`
+
+// Anywhere after that, normal basic template tags are broken
+const var3 = `break starts here`;
+const var4 = `break ends here`;
+```
+
+</details>
+
+",2.1 Incorrect data processing,['https://user-images.githubusercontent.com/40628/103485196-f4d6aa00-4df4-11eb-8cfd-cd59e9995bd7.png'],Code Snippet Screenshot,Code,
+PrismJS__prism-2703,https://github.com/PrismJS/prism/issues/2696,"F~ Comment Highlight bug
+**Information:**
+-latest version of testdrive 
+https://prismjs.com/test.html#language=fsharp
+
+**Description**
+n F#, it is idiomatic to convert the multiplier operator to a function (*)
+
+This causes a problem with the F# syntax highlighter, which sees `(*... ..*)` as a muilti-line comment, but it is is not when using `(*)` as seen in this screenshot from my solution. 
+
+
+
+**Example**
+When I post this into  testdrive:
+```
+let score category (dice:Die list) = 
+    let iDice = dice |> List.map int |> List.sortDescending
+    let diced = iDice |> List.countBy id |> List.sortByDescending snd 
+    let countScore cat = dice |> List.filter (fun d -> d=cat) |> List.length |> (*) (int cat)
+    let isStraight = iDice.[0] - iDice.[4] = 4
+
+    match category  , List.map snd diced  with
+    | Yacht         , [5]         -> 50
+    | Ones          , _           -> countScore Die.One  
+    | Twos          , _           -> countScore Die.Two  
+    | Threes        , _           -> countScore Die.Three 
+    | Fours         , _           -> countScore Die.Four 
+    | Fives         , _           -> countScore Die.Five 
+    | Sixes         , _           -> countScore Die.Six       
+    | FourOfAKind   , [4;1]       
+    | FourOfAKind   , [5]         -> iDice |> List.head |> (*) 4
+    | LittleStraight, [1;1;1;1;1] when isStraight && iDice.[0] = 5 -> 30 
+    | BigStraight   , [1;1;1;1;1] when isStraight && iDice.[0] = 6 -> 30
+    | FullHouse     , [3;2]           
+    | Choice        , _           -> iDice |> List.sum           
+    | _             , _           -> 0
+```
+ the screenshot is:
+
+![image](https://user-images.githubusercontent.com/9550055/103657670-15704280-4f62-11eb-889d-36421b9f7b2d.png)
+
+
+
+",1.2.5 Missing handling of special characters,['https://user-images.githubusercontent.com/9550055/103657670-15704280-4f62-11eb-889d-36421b9f7b2d.png'],Code Snippet Screenshot,"Code, Program Output",
+PrismJS__prism-3174,https://github.com/PrismJS/prism/issues/3171,"Update highlighting for Swift
+**Information**
+- Language: Swift
+- Plugins: 'none'
+
+**Description**
+https://github.com/PrismJS/prism/pull/3022 was a great improvement for Swift, but there are simply more keywords we can support.
+
+- [ ] Keywords in front of function body parameter types. See `isolated` in the following image which should've been a keyword (taken from https://www.avanderlee.com/swift/nonisolated-isolated/)
+
+![image](https://user-images.githubusercontent.com/4329185/139298088-e2e754b8-d2d2-4aed-9594-167f51a9dfe6.png)
+
+
+That's actually all I kind find right now, so we're in a good spot!!
+",4 Perfective Maintenance,['https://user-images.githubusercontent.com/4329185/139298088-e2e754b8-d2d2-4aed-9594-167f51a9dfe6.png'],Code Snippet Screenshot,"Code, Program Output",
+PrismJS__prism-1585,https://github.com/PrismJS/prism/issues/1584,"css token important
+if you specify together css value and statement,
+the flag is not recognized as token `important`
+
+![image](https://user-images.githubusercontent.com/16334642/47180907-4dabec00-d32a-11e8-950a-98f6243ec8e7.png)
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/16334642/47180907-4dabec00-d32a-11e8-950a-98f6243ec8e7.png'],Code Snippet Screenshot,"Code, Steps and Processes",
+PrismJS__prism-3438,https://github.com/PrismJS/prism/issues/3437,"Bug: Broken URL string
+**Information**
+- Language: CSS
+- Plugins: none
+
+**Description**
+The URL string is highlighted incorrectly.
+
+Expected behavior:
+
+<img width=""946"" alt=""Screen Shot 2022-04-19 at 11 57 05 AM"" src=""https://user-images.githubusercontent.com/34835685/163968386-f18a0208-60d1-4db4-8aef-f9ec7ddb5d19.png"">
+
+Actual behavior:
+
+<img width=""985"" alt=""Screen Shot 2022-04-19 at 11 56 10 AM"" src=""https://user-images.githubusercontent.com/34835685/163968970-c53ae8a2-2c70-4021-a7b0-9f9e19cf39a3.png"">
+
+**Code snippet**
+
+[Test page](https://prismjs.com/test.html#language=css&text=%40import%20url('https%3A%2F%2Ffonts.googleapis.com%2Fcss2%3Ffamily%3DInter%3Awght%40300%3B400%3B500%3B600%3B700%26display%3Dswap')%3B%0A)
+
+<details>
+<summary>The code being highlighted incorrectly.</summary>
+
+```
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+```
+
+</details>
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/34835685/163968386-f18a0208-60d1-4db4-8aef-f9ec7ddb5d19.png', 'https://user-images.githubusercontent.com/34835685/163968970-c53ae8a2-2c70-4021-a7b0-9f9e19cf39a3.png']",Code Snippet Screenshot,"Code, Desired Output, Program Output",
+PrismJS__prism-2861,https://github.com/PrismJS/prism/issues/2860,"Typescript: Incorrectly identifying attributes as keywords
+**Information:**
+- Prism version: 1.23.0
+- Plugins: none
+- Environment: Browser
+
+**Description**
+Incorrectly identifying attributes as keywords
+
+**Example**
+
+the ""type"" attribute
+
+render by github:
+```typescript
+export interface R<T> {
+  data: T;
+  total: number;
+  type?: string;
+}
+```
+
+render by prismjs:
+![Screenshot from 2021-04-18 00-33-40](https://user-images.githubusercontent.com/50064165/115120019-c49acc00-9fdd-11eb-81b3-aa0260fcec2d.png)
+
+
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/50064165/115120019-c49acc00-9fdd-11eb-81b3-aa0260fcec2d.png'],Code Snippet Screenshot,"Code, Program Output",
+highlightjs__highlight.js-2958,https://github.com/highlightjs/highlight.js/issues/2957,"(xml) line with single letter namespace prefix not highlighted since 10.4.0
+**Are you using `highlight` or `highlightAuto`?**
+`highlight`
+
+**Sample Code to Reproduce**
+
+```none
+<abc:OK xmlns:abc=""..."" />
+<ab:OK xmlns:ab=""..."" />
+<a:FAIL xmlns:a=""..."" /> 
+<OK xmlns=""..."" />
+```
+
+https://jsbin.com/gexeyen/edit?html,js,output
+
+![output jsbin com_gexeyen(Moto G4)](https://user-images.githubusercontent.com/12143247/104169888-8d29eb80-5400-11eb-941d-d6c09069e805.png)  
+![output jsbin com_gexeyen(Moto G4) (2)](https://user-images.githubusercontent.com/12143247/104172642-e136cf00-5404-11eb-94b2-a1bcf93f7f34.png)
+
+
+
+**Expected behavior**
+
+```xml
+<abc:OK xmlns:abc=""..."" />
+<ab:OK xmlns:ab=""..."" />
+<a:OK xmlns:a=""..."" />
+<OK xmlns=""..."" />
+```
+```xml
+<abc:OK xmlns:abc=""..."" />
+<ab:OK xmlns:ab=""..."" />
+<a:OK xmlns:a=""..."">
+  <AllOK xmlns=""..."" />
+</a:Ok>
+<OK xmlns=""..."" />
+```
+
+**Additional context**
+* Reproducible since version 10.4.0.
+* Initially [reported on Stack Exchange](https://meta.stackexchange.com/q/359456/394472) (now moved to this issue).
+* Same behavior on Stack Overflow:  https://stackoverflow.com/a/48559689/5846045 (See `<f:FlexibleColumnLayout>`).
+",1.2.5 Missing handling of special characters,"['https://user-images.githubusercontent.com/12143247/104169888-8d29eb80-5400-11eb-941d-d6c09069e805.png', 'https://user-images.githubusercontent.com/12143247/104172642-e136cf00-5404-11eb-94b2-a1bcf93f7f34.png']",Code Snippet Screenshot,"Code, Program Output",
+highlightjs__highlight.js-3018,https://github.com/highlightjs/highlight.js/issues/2992,"(ecmascript) Missing BigInt type
+**Describe the issue**
+`BigInt` is not highlighted as type the same way `Number` is.
+![Actual: BitInt not recognized](https://user-images.githubusercontent.com/2564094/107255765-81c0e480-69ed-11eb-9366-65953663ae66.png)
+
+**Which language seems to have the issue?**
+`ecmascript` and therefore also `javascript`
+
+**Sample Code to Reproduce**
+```js
+let bi = BigInt('1');
+```
+
+**Expected behavior**
+![Expected: BitInt recognized](https://user-images.githubusercontent.com/2564094/107255874-9ef5b300-69ed-11eb-9c2f-5bc43dfc0245.png)
+
+**Additional context**
+Also seems to be missing `BigInt64Array` and `BigUint64Array`.
+See [List of built-ins](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects).
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/2564094/107255765-81c0e480-69ed-11eb-9366-65953663ae66.png', 'https://user-images.githubusercontent.com/2564094/107255874-9ef5b300-69ed-11eb-9c2f-5bc43dfc0245.png']",Code Snippet Screenshot,"Code, Desired Output",
+highlightjs__highlight.js-3381,https://github.com/highlightjs/highlight.js/issues/3378,"(Python) Part of an identifier is highlighted as a keyword
+**Describe the issue**
+
+Syntax highlighting changes halfway through a Python identifier `_undef` to look like the `def` keyword.
+
+**Which language seems to have the issue?**
+
+`python`
+
+**Are you using `highlight` or `highlightAuto`?**
+I don't know what that means. I assume it's about how highlight.js is deployed, but I'm an end user, not a Stack Exchange dev.
+
+**Sample Code to Reproduce**
+
+
+```py
+foo = _undef
+bar
+```
+
+https://jsfiddle.net/td6a2fhg/
+
+Screenshot of fiddle:
+![screenshot of fiddle showing the issue](https://user-images.githubusercontent.com/22385371/139559037-be27321d-2749-412b-bbe8-88cdf3e12965.png)
+
+**Expected behavior**
+
+GitHub gets it right.
+
+All other syntax highlighters I checked don't seem to highlight anything.
+
+**Additional context**
+
+- This issue started with 11.0.0 and does not exist in 10.7.3
+- I noticed the problem ""in the wild"" on [this Stack Overflow answer](https://stackoverflow.com/a/7642235/4518341).
+- The HTML output from the fiddle:
+    ```html
+    <code class=""python lang-python hljs language-python"">foo = _un<span class=""hljs-keyword"">def</span>
+    <span class=""hljs-title function_"">bar</span>
+    </code>
+    ```
+- The issue doesn't occur when the identifier is followed by a different token, like a literal:  
+    ```py
+    foo = _undef
+    []
+    ```
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/22385371/139559037-be27321d-2749-412b-bbe8-88cdf3e12965.png'],Code Snippet Screenshot,"Code, Program Output",
+highlightjs__highlight.js-3644,https://github.com/highlightjs/highlight.js/issues/3591,"(CMake) Multi-line comments aren't supported properly
+**Describe the issue**
+Multi-line comments aren't supported properly, highlight.js seems to treat them like single-line comments which start similarly (`#`)
+
+**Which language seems to have the issue?**
+CMake
+
+**Are you using `highlight` or `highlightAuto`?**
+
+highlight
+
+**Sample Code to Reproduce**
+```html
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel=""stylesheet"" href=""https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/default.min.css"">
+		<script type=""module"">
+			import hljs from 'https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/highlight.min.js';
+			import cmake from 'https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/languages/cmake.min.js';
+
+			hljs.registerLanguage('cmake', cmake);
+			hljs.highlightAll();
+		</script>
+	</head>
+
+	<body>
+		<pre>
+			<code class=""language-cmake"">
+				#[[test
+				test
+				test]]
+			</code>
+		</pre>
+	</body>
+</html>
+```
+
+
+**Expected behavior**
+Everything from `#[[` to `]]` is treated like a multi-line comment and grayed out
+
+**Additional context**
+![image](https://user-images.githubusercontent.com/13699966/182623099-978c96c2-671e-4d6f-ae85-099db66f2561.png)
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/13699966/182623099-978c96c2-671e-4d6f-ae85-099db66f2561.png'],Code Snippet Screenshot,"Code, Program Output",
+highlightjs__highlight.js-3312,https://github.com/highlightjs/highlight.js/issues/3311,"(cpp) Switch statement is not highlighted correctly (regression between 10.6.0 and 10.7.0)
+**Describe the issue**
+
+Starting from hljs 10.7.0, `switch` statement is highlighted differently from other statements (`if`, `while`, `for`).
+
+**Which language seems to have the issue?**
+
+C++
+
+**Are you using `highlight` or `highlightAuto`?**
+
+`highlightAll`
+
+**Sample Code to Reproduce**
+
+Version 11.2.0:
+https://jsfiddle.net/exypdun8/
+
+Version 10.7.0:
+https://jsfiddle.net/skwoep65/
+
+Version 10.6.0:
+https://jsfiddle.net/2hLpg9b6/
+
+**Expected behavior**
+
+![expected](https://user-images.githubusercontent.com/15797194/130073202-de5aec1a-bae5-48e6-a08e-f58786757b11.png)
+
+**Actual behavior**
+
+![actual](https://user-images.githubusercontent.com/15797194/130074035-d9d25aa4-4528-4ad9-a2f2-db2b45a96a6a.png)
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/15797194/130073202-de5aec1a-bae5-48e6-a08e-f58786757b11.png', 'https://user-images.githubusercontent.com/15797194/130074035-d9d25aa4-4528-4ad9-a2f2-db2b45a96a6a.png']",Code Snippet Screenshot,"Code, Desired Output, Program Output",
+GoogleChrome__lighthouse-5011,https://github.com/GoogleChrome/lighthouse/issues/4702,"Critical Request Chains with Rel=Preload
+This page uses `link[rel=preload]` to fetch a stylesheet asynchronously, then apply the stylesheet after loading via `onload=""this.rel='stylesheet'; this.onload=null;""`. 
+
+https://264-origin-loadcss.fgview.com/test/preload-control.html
+
+Lighthouse flags that stylesheet as part of a ""critical request chain,"" even though it loads without blocking page rendering, and in this test case even happens to contain no CSS styles, so it doesn't impact page layout in any way that would seem critical.
+
+![image](https://user-images.githubusercontent.com/214783/37062228-728cdb78-215b-11e8-93f9-614f424b7d1b.png)
+
+We are wondering about the criteria that deems this a ""critical request"" from Lighthouse's perspective. Is it the priority for `rel=preload` itself that happens to trigger it? Is Lighthouse advocating against this pattern or merely noting it as part of the feedback about page load?
+
+_Note: the stylesheet has a 5 second server timeout to make visual testing easier._
+
+Thanks! Related issue is here https://github.com/filamentgroup/loadCSS/issues/264
+",2.5 Incorrect configuration processing,['https://user-images.githubusercontent.com/214783/37062228-728cdb78-215b-11e8-93f9-614f424b7d1b.png'],"Miscellaneous, Web Interface (UI/UX Element)",CPU/GPU Performance,
+GoogleChrome__lighthouse-12067,https://github.com/GoogleChrome/lighthouse/issues/12060,"minification-estimator reports incorrect results 
+
+
+
+
+#### Provide the steps to reproduce
+
+Use the following javascript code and run lighthouse, it will report that javascript is not minified.
+
+```
+switch(true){case/^hello!/.test(""hello!""):document.write(""///<any content>"");}
+```
+  
+
+
+#### What is the current behavior?
+
+The javascript is minified.
+
+#### What is the expected behavior?
+<img width=""723"" alt=""图片"" src=""https://user-images.githubusercontent.com/13579374/107198291-e309a780-6a2f-11eb-9f07-37c232294188.png"">
+
+
+#### Environment Information
+* Affected Channels:  DevTools
+* Lighthouse version: 87.0.4280.88
+
+#### Reason
+
+In `lighthouse/lighthouse-core/lib/minification-estimator.js` the function named `hasPunctuatorBefore`.
+https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/lib/minification-estimator.js#L21-L35
+
+`hasPunctuatorBefore` function incorrectly identifies the ""/"" after ""case"" as a division, not a regular expression. Then the first ""/"" in the string as the end of the regular expression, and the next ""//"" as the beginning of the comment , causing all the code after that to be treated as a comment.
+
+#### Possible Solution
+
+Add keyword `case` to the `PUNCTUATOR_REGEX`
+
+https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/lib/minification-estimator.js
+```diff
+// https://www.ecma-international.org/ecma-262/9.0/index.html#sec-punctuators
+// eslint-disable-next-line max-len
+- const PUNCTUATOR_REGEX = /(return|{|\(|\[|\.\.\.|;|,|<|>|<=|>=|==|!=|===|!==|\+|-|\*|%|\*\*|\+\+|--|<<|>>|>>>|&|\||\^|!|~|&&|\|\||\?|:|=|\+=|-=|\*=|%=|\*\*=|<<=|>>=|>>>=|&=|\|=|\^=|=>|\/|\/=|\})$/;
++ const PUNCTUATOR_REGEX = /(return|case|{|\(|\[|\.\.\.|;|,|<|>|<=|>=|==|!=|===|!==|\+|-|\*|%|\*\*|\+\+|--|<<|>>|>>>|&|\||\^|!|~|&&|\|\||\?|:|=|\+=|-=|\*=|%=|\*\*=|<<=|>>=|>>>=|&=|\|=|\^=|=>|\/|\/=|\})$/;
+const WHITESPACE_REGEX = /( |\n|\t)+$/;
+
+/**
+ * Look backwards from `startPosition` in `content` for an ECMAScript punctuator.
+ * This is used to differentiate a RegExp from a divide statement.
+ * If a punctuator immediately precedes a lone `/`, the `/` must be the start of a RegExp.
+ *
+ * @param {string} content
+ * @param {number} startPosition
+ */
+function hasPunctuatorBefore(content, startPosition) {
+  for (let i = startPosition; i > 0; i--) {
+    // Try to grab at least 6 characters so we can check for `return`
+    const sliceStart = Math.max(0, i - 6);
+    const precedingCharacters = content.slice(sliceStart, i);
+    // Skip over any ending whitespace
+    if (WHITESPACE_REGEX.test(precedingCharacters)) continue;
+    // Check if it's a punctuator
+    return PUNCTUATOR_REGEX.test(precedingCharacters);
+  }
+
+  // The beginning of the content counts too for our purposes.
+  // i.e. a script can't start with a divide symbol
+  return true;
+}
+```
+",2.1 Incorrect data processing,['https://user-images.githubusercontent.com/13579374/107198291-e309a780-6a2f-11eb-9f07-37c232294188.png'],"Miscellaneous, Web Interface (UI/UX Element)",Desired Output,
+GoogleChrome__lighthouse-5688,https://github.com/GoogleChrome/lighthouse/issues/5687,"x-ms-bmp should be flagged under ""serve images under next gen formats""
+Discovered this while testing the `legacy-image-formats"" feature policy, which warns developers about using legacy image formats like BMP. 
+
+#### Provide the steps to reproduce
+1. Run LH on https://feature-policy-demos.appspot.com/test
+
+#### What is the current behavior?
+
+LH does not recommend that a BMP image be served in another format.
+
+#### What is the expected behavior?
+
+There's a bmp image on that page (https://homepages.cae.wisc.edu/~ece533/images/sails.bmp) that should be flagged under the ""serve images under next gen formats"" audit:
+
+<img width=""774"" alt=""screen shot 2018-07-18 at 4 27 29 pm"" src=""https://user-images.githubusercontent.com/238208/42913040-82e056d4-8aa7-11e8-8a1c-f68f861101c1.png"">
+
+#### Environment Information
+* Affected Channels: DevTools / all
+* Lighthouse version: 3
+* Node.js version: n/a
+* Operating System: Mac os, canary 69.0.3495.0
+
+
+",1.1 Incomplete data processing,['https://user-images.githubusercontent.com/238208/42913040-82e056d4-8aa7-11e8-8a1c-f68f861101c1.png'],"Miscellaneous, Web Interface (UI/UX Element)",Desired Output,
+GoogleChrome__lighthouse-2016,https://github.com/GoogleChrome/lighthouse/issues/2015,"Report v2: 0 passing audits should not show details dropdown
+![screen shot 2017-04-14 at 4 21 08 pm](https://cloud.githubusercontent.com/assets/238208/25058456/6b68916c-212e-11e7-93f4-048e67f9723d.png)
+
+",2.4 Incorrect output,['https://cloud.githubusercontent.com/assets/238208/25058456/6b68916c-212e-11e7-93f4-048e67f9723d.png'],Error Message,"Run Time Error, Program Output",
+GoogleChrome__lighthouse-2610,https://github.com/GoogleChrome/lighthouse/issues/2597,"Critical Request Chain size info is incorrect
+There seems to be some issue with the sizes listed under Critical Request Chain. They are all listed as having the same size, and don't seem to match any of the actual sizes. 
+
+Issue found in the built-in Lighthouse in Chrome Canary 61.0.3141.0  (64 bits) on Windows. Also found in Chrome Canary on OSX, but not sure which exact version.
+
+Issue also exists in the Chrome Extension of Lighthouse (Version: 2.1.0). 
+
+Seems to have been working properly back in February at least as can be seen in https://github.com/GoogleChrome/lighthouse/issues/1729
+
+![screen shot 2017-06-22 at 10 35 29](https://user-images.githubusercontent.com/447959/27434151-fd654ae2-5757-11e7-8cb9-44e39ba2949d.png)
+![screen shot 2017-06-22 at 11 01 41](https://user-images.githubusercontent.com/447959/27434150-fd6466a4-5757-11e7-8e5c-d6ac73fc44d9.png)
+
+
+",2.4 Incorrect output,"['https://user-images.githubusercontent.com/447959/27434151-fd654ae2-5757-11e7-8cb9-44e39ba2949d.png', 'https://user-images.githubusercontent.com/447959/27434150-fd6466a4-5757-11e7-8e5c-d6ac73fc44d9.png']",Miscellaneous,Program Output,
+bpmn-io__bpmn-js-1330,https://github.com/bpmn-io/bpmn-js/issues/1300,"Boundary events must not be message flow targets
+__Describe the Bug__
+
+It is impossible to connect a message flow to a boundary event, it should not be possible with regards to BPMN semantics:
+
+![capture VaMUrO_optimized](https://user-images.githubusercontent.com/58601/77896278-52433680-7278-11ea-85d1-d841f8191154.gif)
+
+
+__Steps to Reproduce__
+
+* Open [boundary-message-flow-target.bpmn](https://github.com/bpmn-io/bpmn-js/files/4401830/boundary-message-flow-target.bpmn.txt) diagram
+* Connect participant `B` to boundary event
+* __Connection should be disallowed__
+
+(Connection is in fact disallowed for typed boundary events).
+
+__Expected Behavior__
+
+* [ ] Connection to any boundary event as a message flow source or target should be forbidden by rules
+
+__Environment__
+
+ - Browser: Any
+ - OS: Any
+ - Library version: v6.3.4
+Boundary events must not be message flow targets
+__Describe the Bug__
+
+It is impossible to connect a message flow to a boundary event, it should not be possible with regards to BPMN semantics:
+
+![capture VaMUrO_optimized](https://user-images.githubusercontent.com/58601/77896278-52433680-7278-11ea-85d1-d841f8191154.gif)
+
+
+__Steps to Reproduce__
+
+* Open [boundary-message-flow-target.bpmn](https://github.com/bpmn-io/bpmn-js/files/4401830/boundary-message-flow-target.bpmn.txt) diagram
+* Connect participant `B` to boundary event
+* __Connection should be disallowed__
+
+(Connection is in fact disallowed for typed boundary events).
+
+__Expected Behavior__
+
+* [ ] Connection to any boundary event as a message flow source or target should be forbidden by rules
+
+__Environment__
+
+ - Browser: Any
+ - OS: Any
+ - Library version: v6.3.4
+",2.5 Incorrect configuration processing,"['https://user-images.githubusercontent.com/58601/77896278-52433680-7278-11ea-85d1-d841f8191154.gif', 'https://user-images.githubusercontent.com/58601/77896278-52433680-7278-11ea-85d1-d841f8191154.gif']","Diagram, Web Interface (UI/UX Element)","Program Output, Menus and Preference",
+bpmn-io__bpmn-js-1348,https://github.com/bpmn-io/bpmn-js/issues/1346,"Intermediate message catch boundary events shall be allowed targets for message flows
+__Describe the Bug__
+
+Message flows targeting **intermediate message catch boundary events** are disallowed but shall be allowed according to BPMN 2.0 spec.
+
+This issue was first raised in Camunda Modeler: https://github.com/camunda/camunda-modeler/issues/1919.
+
+__Steps to Reproduce__
+
+1. Try to connect a message flow from an activity in one participant to an intermediate message catch boundary event
+2. Modeler disallows the connection
+
+![messageFlowWithMessageCatchTarget](https://user-images.githubusercontent.com/42800119/91721650-65e12900-eb99-11ea-9152-2e1ce15134f5.gif)
+
+
+
+__Expected Behavior__
+
+Modeler shall allow to have a message flow target an intermediate message catch boundary event.
+
+**Note that in general boundary events shall not be allowed targets for message flows. Message catch events are a special case (also see below)**
+
+Relevant parts in BPMN 2.0 spec.:
+
+ [BPMN 2.0 spec](https://www.omg.org/spec/BPMN/2.0/PDF) page 254, table 10.90, row 1 talks about message boundary events:
+> **Intermediate Event Types Attached to an Activity Boundary**
+> 
+> A Message arrives from a participant and triggers the Event. If a
+> Message Event is attached to the boundary of an Activity, it will change
+> the normal flow into an exception flow upon being triggered.
+> For a Message Event that interrupts the Activity to which it is attached,
+> the boundary of the Event is solid (see upper figure on the right). Note
+> that if using this notation, the attribute cancelActivity of the Activity
+> to which the Event is attached is implicitly set to true.
+> For a Message Event that does not interrupt the Activity to which it is
+> attached, the boundary of the Event is dashed (see lower figure on the
+> right). Note that if using this notation, the attribute cancelActivity of
+> the Activity to which the Event is attached is implicitly set to false.
+> **The actual Participant from which the Message is received can be**
+> **identified by connecting the Event to a Participant using a Message Flow**
+> **within the definitional Collaboration of the Process – see Table 10.1.**
+
+According to page 44, table 7.4. this shall only be valid for intermediate boundary catch events with a message event definition:
+![Screenshot_20200831_145509](https://user-images.githubusercontent.com/42800119/91722034-f91a5e80-eb99-11ea-891e-835d14dca192.png)
+
+Also see issue #1300 which introduced a code change directly in the rules affected by this ticket.
+
+__Environment__
+
+ - Library version v7.3.0
+
+",1 Incomplete feature implementation,"['https://user-images.githubusercontent.com/42800119/91721650-65e12900-eb99-11ea-9152-2e1ce15134f5.gif', 'https://user-images.githubusercontent.com/42800119/91722034-f91a5e80-eb99-11ea-891e-835d14dca192.png']","Diagram, Web Interface (UI/UX Element)","Program Output, Menus and Preference",
+bpmn-io__bpmn-js-1198,https://github.com/bpmn-io/bpmn-js/issues/1197,"""Timer Intermediate Catch Event"" removes ""default"" attribute from exclusive gateways
+__Describe the Bug__
+
+Having an exclusive gateway with 2 output sequence flows, one of them set as _Default Flow_. Adding a _Timer Intermediate Catch Event_ to the non Default Flow, removes the _default_ attribute on gateway and keeps the default flow rendered.
+
+This is happening with other types of catch events too. Haven't verified them all.
+
+
+__Steps to Reproduce__
+
+See attached GIF.
+![Default sequence flow issue](https://user-images.githubusercontent.com/8074799/65500496-0f1e9a00-dec8-11e9-889c-bff0582f1c6f.gif)
+
+
+__Expected Behavior__
+
+Don't remove the _default_ attribute on gateway.
+
+
+__Environment__
+
+ - Browser: Chrome Version 76.0.3809.132 (Official Build) (64-bit)
+ - Library version: 5.0.4 and before
+
+",2.5 Incorrect configuration processing,['https://user-images.githubusercontent.com/8074799/65500496-0f1e9a00-dec8-11e9-889c-bff0582f1c6f.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot, Error Message","Run Time Error, Steps and Processes, Menus and Preference, Program Output",
+bpmn-io__bpmn-js-1567,https://github.com/bpmn-io/bpmn-js/issues/1566,"Cannot drill out after root change
+__Describe the Bug__
+
+Once I wrapped the process with a pool, moved into a sub-process and drill out an error is thrown:
+
+```
+Canvas.js?c639:626 Uncaught Error: rootElement required
+    at Canvas.setRootElement (Canvas.js?c639:626:1)
+    at HTMLLIElement.eval (DrilldownBreadcrumbs.js?6780:32:1)
+```
+
+As it looks like the drilldown overlay is not aware of root changes going on.
+
+![capture 4HeFbO_optimized](https://user-images.githubusercontent.com/58601/149093282-c547ec1f-6c9e-4e1d-9d5e-11e98953225d.gif)
+
+
+
+__Steps to Reproduce__
+
+1. wrap collapsed sub-process with pool
+2. navigate into collapsed sub-process
+3. try move back to parent process
+4. __Error is emitted__
+
+
+__Expected Behavior__
+
+Drilldown is fully aware of root element changes; I am able to move back up.
+
+__Environment__
+
+ - Browser: Any
+ - OS: Any
+ - Library version: `bpmn-js@develop`
+
+",1.3 Error handling,['https://user-images.githubusercontent.com/58601/149093282-c547ec1f-6c9e-4e1d-9d5e-11e98953225d.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot, Error Message","Run Time Error, Steps and Processes, Menus and Preference, Program Output",
+bpmn-io__bpmn-js-1382,https://github.com/bpmn-io/bpmn-js/issues/1372,"Add DataStoreReference to DataObjectReference replace menu and vice-versa
+__Is your feature request related to a problem? Please describe.__
+
+In its current state of the DataObjectReference replace menu only contains the collection marker.
+It feels empty and out of place.
+![image](https://user-images.githubusercontent.com/42282939/99405680-4ed6eb00-28ed-11eb-9c3d-e67679bf3d69.png)
+
+
+As discussed with @andreasgeier, it has been suggested to make it possible for a DataObjectReference to be switched to a DataStoreReference, and vice-versa.
+This will ensure that the menu is always populated with something, at least until the DataObjectInputs/Outputs are handled.
+",4 Perfective Maintenance,['https://user-images.githubusercontent.com/42282939/99405680-4ed6eb00-28ed-11eb-9c3d-e67679bf3d69.png'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot",Program Output,
+bpmn-io__bpmn-js-1719,https://github.com/bpmn-io/bpmn-js/issues/1695,"Sub process: visible label(s) after changing to collapsed sub process
+Visible label(s) after changing to collapsed sub process with start, task and end event inside. 
+The label of the start event is even moving far more outside.
+
+This issue occures only by clicking the steps through. Import and Export of the diagram works proberly.
+It is tricky to reproduce. See the uploaded gif animation for detailed steps.
+
+__Steps to Reproduce__
+
+1. append task and end event
+2. change task to sub process (expanded)
+3. append task and end event in the sub process
+4. Add labels to start, task and end event
+5. Click on collapsed sub process
+
+Hint: Its not quite clear if the start event inside the sub process may or may not be moved in order to reproduce the error.
+
+![bpmn-io-subprocess](https://user-images.githubusercontent.com/33545902/178237778-960903e0-70dd-41d2-adb8-362360785914.gif)
+
+
+
+__Expected Behavior__
+
+Hide the label inside the sub process.
+
+
+__Environment__
+
+ - Browser: [Chrome 69 103.0.5060.66 (Offizieller Build) (64-Bit), Edge 103.0.1264.49 (Offizielles Build) (64-Bit)]
+ - OS: [e.g. Windows 10]
+
+",2.4 Incorrect output,['https://user-images.githubusercontent.com/33545902/178237778-960903e0-70dd-41d2-adb8-362360785914.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
+bpmn-io__bpmn-js-1442,https://github.com/bpmn-io/bpmn-js/issues/1440,"Pasting Multiple Shapes Onto Connection Results In Unexpected Connections
+__Describe the Bug__
+
+![J8DRVppIr9](https://user-images.githubusercontent.com/7633572/116668611-de54ef80-a99d-11eb-9654-e34dae31b255.gif)
+
+
+
+__Steps to Reproduce__
+
+1. Copy two tasks
+2. Paste the tasks onto a sequence flow
+
+__Expected Behavior__
+
+
+
+The [behavior](https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/modeling/behavior/DropOnFlowBehavior.js) doesn't kick in for multiple shapes __or__ it connects them in a way that _makes sense_.
+
+__Environment__
+
+ - Library version: 8.3.1
+
+",2.1 Incorrect data processing,['https://user-images.githubusercontent.com/7633572/116668611-de54ef80-a99d-11eb-9654-e34dae31b255.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
+bpmn-io__bpmn-js-1542,https://github.com/bpmn-io/bpmn-js/issues/1541,"Inserting gateway fails with `Cannot read properties of undefined (reading 'segmentIndex')`
+__Describe the Bug__
+
+When dropping a gateway onto a flow the editor may blow up with the following error:
+
+```
+TypeError: Cannot read properties of undefined (reading 'segmentIndex')
+    at LabelLayoutUtil.js:116
+    at LabelBehavior.js:205
+    at LabelBehavior.js:232
+    at EventBus.js:519
+    at Bn._invokeListener (EventBus.js:371)
+    at Bn._invokeListeners (EventBus.js:352)
+    at Bn.fire (EventBus.js:313)
+    at Kd._fire (CommandStack.js:356)
+    at Kd._internalExecute (CommandStack.js:425)
+    at Kd.execute (CommandStack.js:153)
+    at Uf.Cf.layoutConnection (Modeling.js:206)
+    at sf.postExecute (ReconnectConnectionHandler.js:76)
+    at Kd._internalExecute (CommandStack.js:428)
+    at Kd.execute (CommandStack.js:153)
+    at Uf.Cf.reconnect (Modeling.js:479)
+    at Uf.Cf.reconnectEnd (Modeling.js:497)
+    at i (DropOnFlowBehavior.js:78)
+    at DropOnFlowBehavior.js:182
+    at CommandInterceptor.js:43
+    at EventBus.js:519
+    at Bn._invokeListener (EventBus.js:371)
+    at Bn._invokeListeners (EventBus.js:352)
+    at Bn.fire (EventBus.js:313)
+    at Kd._fire (CommandStack.js:356)
+    at Kd._internalExecute (CommandStack.js:431)
+    at Kd.execute (CommandStack.js:153)
+    at Uf.Cf.createShape (Modeling.js:291)
+    at zh.preExecute (AppendShapeHandler.js:44)
+    at Kd._internalExecute (CommandStack.js:401)
+    at Kd.execute (CommandStack.js:153)
+    at Uf.Cf.appendShape (Modeling.js:371)
+    at Create.js:208
+    at EventBus.js:519
+    at Bn._invokeListener (EventBus.js:371)
+    at Bn._invokeListeners (EventBus.js:352)
+    at Bn.fire (EventBus.js:313)
+    at s (Dragging.js:169)
+    at l (Dragging.js:265)
+    at HTMLDocument.u (Dragging.js:314)
+    at HTMLDocument.i (helpers.ts:87)
+(anonymous) @ instrument.ts:129
+Bn._invokeListener @ EventBus.js:385
+Bn._invokeListeners @ EventBus.js:352
+Bn.fire @ EventBus.js:313
+s @ Dragging.js:169
+l @ Dragging.js:265
+u @ Dragging.js:314
+i @ helpers.ts:87
+```
+
+Attached a screen capture of the interaction:
+
+![capture zTuwVn_optimized](https://user-images.githubusercontent.com/58601/144435022-881cace6-c2d4-45bc-b2b2-08118f04a74e.gif)
+
+
+__Steps to Reproduce__
+
+1. Open [test diagram](https://github.com/bpmn-io/bpmn-js/files/7642424/test.bpmn.txt)
+2. Insert Gateway on green flow, before _NO_ label
+3. See editor blowing up with error message
+4. __Editor state is now broken (cannot be interacted with anymore)__
+
+__Expected Behavior__
+
+* [ ] Operation can be carried out safely
+
+
+__Environment__
+
+ - Browser: Chrome 95
+ - OS: any
+ - Library version: v8.8.0 (reproducible on demo.bpmn.io, too)
+
+---
+
+Reported [via forum](https://forum.bpmn.io/t/cannot-read-properties-of-undefined-reading-segmentindex/6992).
+
+Tracked via [crash reporting](https://sentry.io/organizations/camunda-modeling/issues/?project=5223041&query=segmentIndex), [too](https://sentry.io/organizations/camunda-modeling/issues/?project=5218065&query=segmentIndex).
+",1.3 Error handling,['https://user-images.githubusercontent.com/58601/144435022-881cace6-c2d4-45bc-b2b2-08118f04a74e.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
+bpmn-io__bpmn-js-1636,https://github.com/bpmn-io/bpmn-js/issues/1631,"Morphing a `call activity` to an expanded `sub-process` should add a start event
+__Describe the Bug__
+
+When morphing a call activity to a subprocess, it creates a tiny subprocess which looks just like a task, this is confusing UX wise and a first step to fix this would be for the morphing behavior to match that of tasks and include a start event.
+
+![image](https://user-images.githubusercontent.com/17801113/162180984-929e1805-31a8-49bd-80c0-04dd7e2f7b57.png)
+
+
+__Steps to Reproduce__
+
+1. create a C7 BPMN diagram
+2. create a Task
+3. morph it to a call activity
+4. morph it to an expanded subprocess
+
+
+__Expected Behavior__
+
+Expanded sub process should be created with an event like it is done when morphing from a task:
+
+![image](https://user-images.githubusercontent.com/17801113/162181264-a657a496-2e5d-41db-b763-276ca333906a.png)
+
+",1 Incomplete feature implementation,"['https://user-images.githubusercontent.com/17801113/162180984-929e1805-31a8-49bd-80c0-04dd7e2f7b57.png', 'https://user-images.githubusercontent.com/17801113/162181264-a657a496-2e5d-41db-b763-276ca333906a.png']","Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
+bpmn-io__bpmn-js-1677,https://github.com/bpmn-io/bpmn-js/issues/1664,"Error: illegal invocation in <execute> or <revert> phase (action: element.updateLabel)
+__Describe the bug__
+
+Deleting an element while direct editing is active triggers an `illegal invocation` exception:
+
+![capture NIAb89_optimized](https://user-images.githubusercontent.com/58601/170051640-9f96fea5-5cea-45e8-87d7-c68db5b06438.gif)
+
+
+Sentry Issue: [BPMN-IO-DEMO-2QV](https://sentry.io/organizations/camunda-modeling/issues/3288709673/?referrer=github_integration)
+
+```
+Error: illegal invocation in <execute> or <revert> phase (action: element.updateLabel)
+  at _pushAction (./node_modules/diagram-js/lib/command/CommandStack.js:446:11)
+  at execute (./node_modules/diagram-js/lib/command/CommandStack.js:152:8)
+  at updateLabel (./node_modules/bpmn-js/lib/features/modeling/Modeling.js:64:22)
+  at update (./node_modules/bpmn-js/lib/features/label-editing/LabelEditingProvider.js:411:18)
+  at complete (./node_modules/diagram-js-direct-editing/lib/DirectEditing.js:103:21)
+...
+(30 additional frame(s) were not displayed)
+```
+
+__Steps to reproduce__
+
+* Select element
+* Directly remove via context pad
+* See editor blow up with abov exception
+",1.3 Error handling,['https://user-images.githubusercontent.com/58601/170051640-9f96fea5-5cea-45e8-87d7-c68db5b06438.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
+bpmn-io__bpmn-js-1607,https://github.com/bpmn-io/bpmn-js/issues/1606,"Creating groups inside collapsed sub-processes breaks BPMN export
+__Describe the Bug__
+
+If I create a group inside a collapsed sub-process and save the result a warning shows on re-import:
+
+```
+unresolved reference <CategoryValue_01k5toe>
+```
+
+__Steps to Reproduce__
+
+1. Model an embedded, collapsed sub-process and navigate to it
+2. Add a group to the collapsed sub-process
+3. Save the diagram
+4. Re-import the diagram
+5. __See the warning above `unresolved reference <CategoryValue_01k5toe>`__
+
+
+__Expected Behavior__
+
+Modeling groups does work without warnings.
+
+
+__Environment__
+
+ - Browser: Any
+ - OS: Any
+ - Library version: v9.0.1
+
+----
+
+![image](https://user-images.githubusercontent.com/58601/154928284-a2c61a19-dd32-44d0-82b0-ac4c9b9534a0.png)
+
+![image](https://user-images.githubusercontent.com/58601/154928464-2b3838de-133c-4a9c-9f6f-73226211a050.png)
+
+",2.5 Incorrect configuration processing,"['https://user-images.githubusercontent.com/58601/154928284-a2c61a19-dd32-44d0-82b0-ac4c9b9534a0.png', 'https://user-images.githubusercontent.com/58601/154928464-2b3838de-133c-4a9c-9f6f-73226211a050.png']","Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot, Error Message","Menus and Preference, Program Output, Steps and Processes, Run Time Error",
+bpmn-io__bpmn-js-1623,https://github.com/bpmn-io/bpmn-js/issues/1622,"Synergic use of deep linking with multi-diagram plugin
+__Is your feature request related to a problem? Please describe__
+
+Good morning. I developed years ago a multi-diagram plugin which creates ""global subprocesses"" (as defined on ""Fundamentals of Business Process Management"" book, p. 101) and allows to navigate between them. Now i saw, with the next release of bpmn-js and  Camunda Modeler 5.0, that you worked on deep linking for subprocesses, which is strictly connected (but different) to my work.
+
+I made a picture of what is working now.
+
+As you see at the end of the animation, the deep linking overlay for the subprocess is lost, and I don't understand why.
+
+
+__Describe the solution you'd like__
+
+What I want is that these functionalities could work together, navigating between multiple processes AND subprocesses inside the same BPMN.
+
+
+__Describe alternatives you've considered__
+
+Another consideration would be to integrate my work on bpmn-js. My old pull request about this work was not accepted years ago.
+
+
+__Additional context__
+![DeepLinking MultiD](https://user-images.githubusercontent.com/27808087/158993088-cd5dab32-1bf0-40b2-afab-3adde3d3d7fc.gif)
+
+
+You can check my plugin, updated for the latest modeler alpha 5.0, on [this branch](https://github.com/sharedchains/camunda-modeler-plugin-multidiagram/tree/feature/modeler-5.0), you can clone the branch in the resources/plugins directory of your Camunda Modeler 5.0 instance.
+
+Here is the BPMN of the animation, so you can use it.
+[TestMultidiagram.bpmn.txt](https://github.com/bpmn-io/bpmn-js-examples/files/8304021/TestMultidiagram.bpmn.txt)
+
+
+",4 Perfective Maintenance,['https://user-images.githubusercontent.com/27808087/158993088-cd5dab32-1bf0-40b2-afab-3adde3d3d7fc.gif'],"Diagram, Web Interface (UI/UX Element), Code Snippet Screenshot","Menus and Preference, Program Output, Steps and Processes",
