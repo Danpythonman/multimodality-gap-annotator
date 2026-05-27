@@ -215,6 +215,7 @@ def home_screen():
     image_assets = df['image_assets'].unique().tolist()
 
     for image_asset in image_assets:
+        row = df.query(f'image_assets == "{image_asset}"').iloc[0]
 
         if pd.isna(image_asset) or not image_asset:
             st.warning("No image available for this instance.")
@@ -240,10 +241,10 @@ def home_screen():
                 append_annotation(AnnotationRow(
                     name=session_state.user,
                     instance_id=instance_id,
-                    issue_link=...,
-                    problem_statement=...,
-                    image_assets=...,
-                    key='image_category_2',
+                    issue_link=row['issue_link'],
+                    problem_statement=row['problem_statement'],
+                    image_assets=image_asset,
+                    key='issue_category',
                     value=issue_category
                 ))
                 st.success("Saved.")
@@ -260,9 +261,9 @@ def home_screen():
                 append_annotation(AnnotationRow(
                     name=session_state.user,
                     instance_id=instance_id,
-                    issue_link=...,
-                    problem_statement=...,
-                    image_assets=...,
+                    issue_link=row['issue_link'],
+                    problem_statement=row['problem_statement'],
+                    image_assets=image_asset,
                     key='image_category_1',
                     value=cat1
                 ))
@@ -280,9 +281,9 @@ def home_screen():
                 append_annotation(AnnotationRow(
                     name=session_state.user,
                     instance_id=instance_id,
-                    issue_link=...,
-                    problem_statement=...,
-                    image_assets=...,
+                    issue_link=row['issue_link'],
+                    problem_statement=row['problem_statement'],
+                    image_assets=image_asset,
                     key='image_category_2',
                     value=cat2
                 ))
