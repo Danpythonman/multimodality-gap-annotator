@@ -3,7 +3,7 @@ FROM python:3.13-slim
 WORKDIR /app
 
 COPY pyproject.toml .
-RUN pip install -e .
+RUN pip install .
 
 COPY . .
 
