@@ -135,6 +135,29 @@ def get_existing_value(df: pd.DataFrame, user: str, instance_id: str, key: str) 
     return row.iloc[-1]['value'] if not row.empty else None
 
 
+def get_next_incomplete(df: pd.DataFrame, user: str, current_instance_id: str) -> str | None:
+    all_ids = sorted(df['instance_id'].unique().tolist())
+    current_index = all_ids.index(current_instance_id)
+    # Search from current position forward, then wrap around
+    search_order = all_ids[current_index + 1:] + all_ids[:current_index]
+    for iid in search_order:
+        assets = df[df['instance_id'] == iid]['image_assets'].unique().tolist()
+        if get_instance_status(df, iid, assets, user) != 'complete':
+            return iid
+    return None
+
+
+def get_previous_incomplete(df: pd.DataFrame, user: str, current_instance_id: str) -> str | None:
+    all_ids = sorted(df['instance_id'].unique().tolist())
+    current_index = all_ids.index(current_instance_id)
+    search_order = all_ids[:current_index][::-1] + all_ids[current_index + 1:][::-1]
+    for iid in search_order:
+        assets = df[df['instance_id'] == iid]['image_assets'].unique().tolist()
+        if get_instance_status(df, iid, assets, user) != 'complete':
+            return iid
+    return None
+
+
 ISSUE_CATEGORIES = [
     '1.1 Incomplete data processing',
     '1.2 Missing input validation',
@@ -191,11 +214,15 @@ def login_screen():
 
 
 def home_screen():
-    st.title(f'Welcome, {session_state.user}')
-    st.write('This is the home page.')
-
     df_full = pd.read_csv(CSV_PATH)
+
+    if 'selected_instance' not in session_state:
+        session_state['selected_instance'] = sorted(df_full['instance_id'].unique())[0]
+
     labels = build_sidebar_labels(df_full, df_full, session_state.user)
+
+    current_label = next((k for k, v in labels.items() if v == session_state['selected_instance']), list(labels.keys())[0])
+    default_index = list(labels.keys()).index(current_label)
 
     with st.sidebar:
         st.title("Navigation")
@@ -203,103 +230,131 @@ def home_screen():
             "Menu",
             list(labels.keys()),
             icons=None,
+            default_index=default_index,
             styles={
                 "nav-link": {"font-size": "12px", "padding": "4px 8px"},
                 "nav-link-selected": {"font-size": "12px"},
                 "icon": {"display": "none"},
             },
         )
+        session_state['selected_instance'] = labels[selected_label]
 
-    instance_id = labels[selected_label]
+    instance_id = session_state['selected_instance']
     df = df_full.query(f'instance_id == "{instance_id}"').copy()
     image_assets = df['image_assets'].unique().tolist()
+    issue_link = df.iloc[0]['issue_link']
+    problem_statement = df.iloc[0]['problem_statement']
 
-    for image_asset in image_assets:
-        row = df.query(f'image_assets == "{image_asset}"').iloc[0]
+    with st.container(border=True):
+        st.caption(f"Current user: {session_state.user}")
+        st.header(instance_id)
+        st.markdown(f"🔗 [View Issue]({issue_link})")
+        st.text_area("Problem Statement", value=problem_statement, disabled=True, height=300)
+    st.divider()
 
-        if pd.isna(image_asset) or not image_asset:
-            st.warning("No image available for this instance.")
-            continue
+    for i, image_asset in enumerate(image_assets):
+        with st.container(border=True):
+            if pd.isna(image_asset) or not image_asset:
+                st.warning("No image available for this instance.")
+                continue
 
-        st.image(image_asset, use_container_width=True)
+            row = df.query(f'image_assets == "{image_asset}"').iloc[0]
 
-        # Before the form:
-        existing_issue_cat = get_existing_value(df_full, session_state.user, instance_id, 'issue_category')
-        default_issue_cat = ISSUE_CATEGORIES.index(existing_issue_cat) if existing_issue_cat in ISSUE_CATEGORIES else 0
+            st.subheader(f'Image {i+1}/{len(image_assets)}')
+            st.markdown(f"🔗 [View Image]({image_asset})")
 
-        with st.form("issue_category"):
-            st.subheader("Issue Category")
-            if existing_issue_cat:
-                st.info(f"Previously submitted: {existing_issue_cat}")
-            issue_category = st.selectbox(
-                "Issue Category",
-                ISSUE_CATEGORIES,
-                index=default_issue_cat,
-            )
-            submitted = st.form_submit_button("Submit")
-            if submitted:
-                append_annotation(AnnotationRow(
-                    name=session_state.user,
-                    instance_id=instance_id,
-                    issue_link=row['issue_link'],
-                    problem_statement=row['problem_statement'],
-                    image_assets=image_asset,
-                    key='issue_category',
-                    value=issue_category
-                ))
-                st.success("Saved.")
+            st.image(image_asset, width='stretch')
 
-        existing_cat1 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_1')
-        default_cat1 = CAT1_OPTIONS.index(existing_cat1) if existing_cat1 in CAT1_OPTIONS else 0
-        with st.form("category_1"):
-            st.subheader("Category 1")
-            if existing_cat1:
-                st.info(f"Previously submitted: {existing_cat1}")
-            cat1 = st.selectbox("Image cat 1", CAT1_OPTIONS, index=default_cat1)
-            submitted = st.form_submit_button("Submit")
-            if submitted:
-                append_annotation(AnnotationRow(
-                    name=session_state.user,
-                    instance_id=instance_id,
-                    issue_link=row['issue_link'],
-                    problem_statement=row['problem_statement'],
-                    image_assets=image_asset,
-                    key='image_category_1',
-                    value=cat1
-                ))
-                st.success("Saved.")
+            existing_issue_cat = get_existing_value(df_full, session_state.user, instance_id, 'issue_category')
+            default_issue_cat = ISSUE_CATEGORIES.index(existing_issue_cat) if existing_issue_cat in ISSUE_CATEGORIES else 0
 
-        existing_cat2 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_2')
-        default_cat2 = CAT2_OPTIONS.index(existing_cat2) if existing_cat2 in CAT2_OPTIONS else 0
-        with st.form("category_2"):
-            st.subheader("Category 2")
-            if existing_cat2:
-                st.info(f"Previously submitted: {existing_cat2}")
-            cat2 = st.selectbox("Image cat 2", CAT2_OPTIONS, index=default_cat2)
-            submitted = st.form_submit_button("Submit")
-            if submitted:
-                append_annotation(AnnotationRow(
-                    name=session_state.user,
-                    instance_id=instance_id,
-                    issue_link=row['issue_link'],
-                    problem_statement=row['problem_statement'],
-                    image_assets=image_asset,
-                    key='image_category_2',
-                    value=cat2
-                ))
-                st.success("Saved.")
+            with st.form(f"issue_category-{i}"):
+                st.subheader("Issue Category")
+                if existing_issue_cat:
+                    st.info(f"Previously submitted: {existing_issue_cat}")
+                issue_category = st.selectbox(
+                    "Issue Category",
+                    ISSUE_CATEGORIES,
+                    index=default_issue_cat,
+                )
+                submitted = st.form_submit_button("Submit")
+                if submitted:
+                    append_annotation(AnnotationRow(
+                        name=session_state.user,
+                        instance_id=instance_id,
+                        issue_link=row['issue_link'],
+                        problem_statement=row['problem_statement'],
+                        image_assets=image_asset,
+                        key='issue_category',
+                        value=issue_category
+                    ))
+                    st.success("Saved.")
 
-        with st.form("image_quality"):
-            st.selectbox("Rating", ["Excellent", "Good", "Fair", "Poor"])
-            st.form_submit_button("Submit")
+            existing_cat1 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_1')
+            default_cat1 = CAT1_OPTIONS.index(existing_cat1) if existing_cat1 in CAT1_OPTIONS else 0
+            with st.form(f"category_1-{i}"):
+                st.subheader("Category 1")
+                if existing_cat1:
+                    st.info(f"Previously submitted: {existing_cat1}")
+                cat1 = st.selectbox("Image cat 1", CAT1_OPTIONS, index=default_cat1)
+                submitted = st.form_submit_button("Submit")
+                if submitted:
+                    append_annotation(AnnotationRow(
+                        name=session_state.user,
+                        instance_id=instance_id,
+                        issue_link=row['issue_link'],
+                        problem_statement=row['problem_statement'],
+                        image_assets=image_asset,
+                        key='image_category_1',
+                        value=cat1
+                    ))
+                    st.success("Saved.")
 
-    if st.button("Log out"):
-        del session_state.user
-        st.rerun()
+            existing_cat2 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_2')
+            default_cat2 = CAT2_OPTIONS.index(existing_cat2) if existing_cat2 in CAT2_OPTIONS else 0
+            with st.form(f"category_2-{i}"):
+                st.subheader("Category 2")
+                if existing_cat2:
+                    st.info(f"Previously submitted: {existing_cat2}")
+                cat2 = st.selectbox("Image cat 2", CAT2_OPTIONS, index=default_cat2)
+                submitted = st.form_submit_button("Submit")
+                if submitted:
+                    append_annotation(AnnotationRow(
+                        name=session_state.user,
+                        instance_id=instance_id,
+                        issue_link=row['issue_link'],
+                        problem_statement=row['problem_statement'],
+                        image_assets=image_asset,
+                        key='image_category_2',
+                        value=cat2
+                    ))
+                    st.success("Saved.")
 
+            with st.form(f"image_quality-{i}"):
+                st.selectbox("Rating", ["Excellent", "Good", "Fair", "Poor"])
+                st.form_submit_button("Submit")
+
+        st.divider()
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("Log out", width='stretch'):
+            del session_state.user
+            st.rerun()
+    prev_id = get_previous_incomplete(df_full, session_state.user, instance_id)
+    with col2:
+        if prev_id:
+            if st.button("← Previous incomplete", width='stretch'):
+                session_state['selected_instance'] = prev_id
+                st.rerun()
+    next_id = get_next_incomplete(df_full, session_state.user, instance_id)
+    with col3:
+        if next_id:
+            if st.button("Next incomplete →", width='stretch'):
+                session_state['selected_instance'] = next_id
+                st.rerun()
 
 if 'user' not in session_state:
     login_screen()
 else:
-    st.caption(f'Current user: {session_state.user}')
     home_screen()
