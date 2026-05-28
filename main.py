@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import os
 import json
 import requests
@@ -100,6 +101,9 @@ class SessionState:
     @user.deleter
     def user(self) -> None:
         del self['user']
+
+    def get(self, key: str, default=None):
+        return self[key] if key in self else default
 
 
 session_state = SessionState.get_session_state()
@@ -209,6 +213,13 @@ CAT2_OPTIONS = [
     'Algorithm/Concept Description'
 ]
 
+IMAGE_QUALITY_OPTIONS = [
+    'Not applicable',
+    'Not helpful',
+    'Somewhat helpful',
+    'Highly helpful',
+]
+
 
 def draw_box(img, box):
     overlay = img.copy()
@@ -216,6 +227,17 @@ def draw_box(img, box):
     x, y, w, h = box["x"], box["y"], box["w"], box["h"]
     draw.rectangle([x, y, x + w, y + h], outline="red", width=2)
     return overlay
+
+
+@st.cache_data
+def fetch_image_bytes(url: str) -> bytes:
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return response.content
+
+
+def load_image(url: str) -> Image.Image:
+    return Image.open(BytesIO(fetch_image_bytes(url))).convert("RGB")
 
 
 def login_screen():
@@ -351,49 +373,64 @@ def home_screen():
                     st.success("Saved.")
 
             with st.form(f"image_quality-{i}"):
-                st.selectbox("Rating", ["Excellent", "Good", "Fair", "Poor"])
+                st.selectbox(
+                    "Rating",
+                    IMAGE_QUALITY_OPTIONS
+                )
                 st.form_submit_button("Submit")
 
-            response = requests.get(image_asset)
-            img = Image.open(BytesIO(response.content))
+            with st.container(border=True):
+                st.subheader('Important part(s) of image')
+                st.write(
+                    'Draw a rectangle around the important part(s) of the '
+                    'image, then click submit.'
+                )
 
-            display_width = 700
-            scale = display_width / img.width
-            display_height = int(img.height * scale)
-            img_resized = img.resize((display_width, display_height))
+                try:
+                    img = load_image(image_asset)
+                except Exception as e:
+                    st.error(f"Failed to load image: {e}")
+                    continue
 
-            canvas_result = st_canvas(
-                background_image=img_resized,
-                drawing_mode="rect",
-                stroke_width=2,
-                stroke_color="#ff0000",
-                fill_color="rgba(255, 0, 0, 0.1)",
-                height=display_height,
-                width=display_width,
-                key=f"canvas-{i}",
-            )
+                display_width = min(900, img.width)
+                scale = display_width / img.width
+                display_height = int(img.height * scale)
+                img_resized = img.resize((display_width, display_height))
 
-            if canvas_result.json_data:
-                rects = [o for o in canvas_result.json_data["objects"] if o["type"] == "rect"]
-                if rects:
-                    last = rects[-1]
-                    box = {
-                        "x": int(last["left"] / scale),
-                        "y": int(last["top"] / scale),
-                        "w": int(last["width"] / scale),
-                        "h": int(last["height"] / scale),
-                    }
-                    if st.button("Save bounding box", key=f"save_bbox_{i}"):
-                        append_annotation(AnnotationRow(
-                            name=session_state.user,
-                            instance_id=instance_id,
-                            issue_link=row['issue_link'],
-                            problem_statement=row['problem_statement'],
-                            image_assets=image_asset,
-                            key='bounding_box',
-                            value=json.dumps(box)  # e.g. '{"x": 10, "y": 20, "w": 100, "h": 50}'
-                        ))
-                        st.success(f"Saved: {box}")
+                v = session_state.get('canvas_version', 0)
+
+                canvas_result = st_canvas(
+                    background_image=img_resized,
+                    drawing_mode="rect",
+                    stroke_width=2,
+                    stroke_color="#ff0000",
+                    fill_color="rgba(255, 0, 0, 0.1)",
+                    height=display_height,
+                    width=display_width,
+                    key=f"canvas-{instance_id}-{i}-{v}",
+                )
+
+                if canvas_result.json_data:
+                    rects = [o for o in canvas_result.json_data["objects"] if o["type"] == "rect"]
+                    if rects:
+                        last = rects[-1]
+                        box = {
+                            "x": int(last["left"] / scale),
+                            "y": int(last["top"] / scale),
+                            "w": int(last["width"] / scale),
+                            "h": int(last["height"] / scale),
+                        }
+                        if st.button("Save bounding box", key=f"save_bbox_{i}"):
+                            append_annotation(AnnotationRow(
+                                name=session_state.user,
+                                instance_id=instance_id,
+                                issue_link=row['issue_link'],
+                                problem_statement=row['problem_statement'],
+                                image_assets=image_asset,
+                                key='bounding_box',
+                                value=json.dumps(box)
+                            ))
+                            st.success(f"Saved: {box}")
 
         st.divider()
 
@@ -407,14 +444,21 @@ def home_screen():
         if prev_id:
             if st.button("← Previous incomplete", width='stretch'):
                 session_state['selected_instance'] = prev_id
+                session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
                 st.rerun()
     next_id = get_next_incomplete(df_full, session_state.user, instance_id)
     with col3:
         if next_id:
             if st.button("Next incomplete →", width='stretch'):
                 session_state['selected_instance'] = next_id
+                session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
                 st.rerun()
 
+    if st.button("🔄 Refresh"):
+        session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
+        st.rerun()
+
+st.set_page_config(layout="wide")
 if 'user' not in session_state:
     login_screen()
 else:
