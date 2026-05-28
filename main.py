@@ -57,7 +57,7 @@ def append_annotation(row: AnnotationRow, path: str = CSV_PATH) -> None:
             fcntl.flock(f, fcntl.LOCK_UN)
 
 
-KNOWN_USERS = ['mahnsi', 'tan', 'daniel', 'yaseen', 'kumar', 'maleknaz']
+KNOWN_USERS = ['mahnsi', 'tan', 'daniel', 'yaseen', 'kumar', 'parsa', 'maleknaz']
 
 
 class UserNotInStateException(Exception): pass
@@ -119,6 +119,8 @@ def get_instance_status(df: pd.DataFrame, instance_id: str, image_assets: list, 
         len(set(user_rows[user_rows['image_assets'] == asset]['key'].unique()) & REQUIRED_KEYS)
         for asset in image_assets
     )
+    if completed == 0:
+        return 'none'
     return 'complete' if completed >= total_required else 'partial'
 
 
@@ -228,7 +230,11 @@ def login_screen():
 
 
 def home_screen():
+    if not session_state.user:
+        raise Exception('user not logged in!')
+
     df_full = pd.read_csv(CSV_PATH)
+    df_full = df_full.query(f'name == "{session_state.user}"').copy()
 
     if 'selected_instance' not in session_state:
         session_state['selected_instance'] = sorted(df_full['instance_id'].unique())[0]
