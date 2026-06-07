@@ -1,0 +1,19 @@
+{
+    "include": [
+        "main.py"
+    ],
+    "exclude": [
+        "**/.*",
+        "**/node_modules",
+        "**/__pycache__",
+        "/home/daniel/miniconda3/envs/ml_cuda12.2"
+    ],
+    "typeCheckingMode": "strict",
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "reportUnknownMemberType": "none",
+    "useLibraryCodeForTypes": true,
+    "pythonVersion": "3.13",
+    "venvPath": "/home/daniel/miniconda3/envs/",
+    "venv": "ml_cuda12.2"
+}

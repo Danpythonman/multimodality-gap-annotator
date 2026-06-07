@@ -1,27 +1,33 @@
 from __future__ import annotations
 
 import fcntl
-import hashlib
-import os
 import json
-import requests
+import os
 import tempfile
 from dataclasses import dataclass, fields
-from pathlib import Path
 from io import BytesIO
-from typing import Optional
+from typing import Literal, TypedDict, cast
 
 import pandas as pd
+import requests
 import streamlit as st
-import streamlit.components.v1 as components
-from streamlit_option_menu import option_menu
-from streamlit_drawable_canvas import st_canvas
-from PIL import Image, ImageDraw
+from PIL import Image
+from streamlit_drawable_canvas import st_canvas  # pyright: ignore
+from streamlit_option_menu import option_menu  # pyright: ignore
 
 CSV_PATH = 'running_log.csv'
-FIELDNAMES = ['name', 'instance_id', 'issue_link', 'problem_statement', 'image_assets', 'key', 'value']
+FIELDNAMES = [
+    'name',
+    'instance_id',
+    'issue_link',
+    'problem_statement',
+    'image_assets',
+    'key',
+    'value',
+]
 
-@dataclass
+
+@dataclass(kw_only=True)
 class AnnotationRow:
     name: str
     instance_id: str
@@ -31,7 +37,7 @@ class AnnotationRow:
     key: str
     value: str
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, str]:
         return {f.name: getattr(self, f.name) for f in fields(self)}
 
 
@@ -41,32 +47,74 @@ def append_annotation(row: AnnotationRow, path: str = CSV_PATH) -> None:
 
     with open(path, 'a', newline='', encoding='utf-8') as f:
         fcntl.flock(f, fcntl.LOCK_EX)
+        tmp_path: str | None = None
         try:
-            existing = pd.read_csv(path) if os.path.getsize(path) > 0 else pd.DataFrame(columns=FIELDNAMES)
+            existing = (
+                pd.read_csv(path)
+                if os.path.getsize(path) > 0
+                else pd.DataFrame(columns=FIELDNAMES)
+            )
             updated = pd.concat([existing, new_row], ignore_index=True)
 
-            with tempfile.NamedTemporaryFile(mode='w', dir=dir_, delete=False, suffix='.tmp') as tmp:
+            with tempfile.NamedTemporaryFile(
+                mode='w', dir=dir_, delete=False, suffix='.tmp'
+            ) as tmp:
                 tmp_path = tmp.name
                 updated.to_csv(tmp, index=False)
 
             os.replace(tmp_path, path)
         except Exception:
-            if os.path.exists(tmp_path):
+            if tmp_path and os.path.exists(tmp_path):
                 os.remove(tmp_path)
             raise
         finally:
             fcntl.flock(f, fcntl.LOCK_UN)
 
 
-KNOWN_USERS = ['mahnsi', 'tan', 'daniel', 'yaseen', 'kumar', 'parsa', 'maleknaz']
+KNOWN_USERS = [
+    'mahnsi',
+    'tan',
+    'daniel',
+    'yaseen',
+    'kumar',
+    'parsa',
+    'maleknaz',
+]
 
 
-class UserNotInStateException(Exception): pass
+class Rect(TypedDict):
+    left: float
+    top: float
+    width: float
+    height: float
+    type: Literal['rect']
+
+
+class UserNotInStateException(Exception):
+    pass
+
+
+class InvalidUserException(Exception):
+    pass
+
+
+class SelectedInstanceNotInStateException(Exception):
+    pass
+
+
+class InvalidSelectedInstanceException(Exception):
+    pass
+
+
+class InvalidCanvasVersionException(Exception):
+    pass
+
+
+type SessionStateValue = str | int | None
 
 
 class SessionState:
-
-    session_state: Optional[SessionState] = None
+    session_state: SessionState | None = None
 
     @staticmethod
     def get_session_state() -> SessionState:
@@ -74,24 +122,33 @@ class SessionState:
             SessionState.session_state = SessionState()
         return SessionState.session_state
 
-    def __getitem__(self, key: str) -> Optional[str]:
+    def __getitem__(self, key: str) -> SessionStateValue:
         if hasattr(st.session_state, key):
             return getattr(st.session_state, key)
+        return None
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: SessionStateValue):
         setattr(st.session_state, key, value)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str):
         if hasattr(st.session_state, key):
             delattr(st.session_state, key)
 
     def __contains__(self, key: str) -> bool:
         return hasattr(st.session_state, key)
 
+    def get(
+        self, key: str, default: SessionStateValue = None
+    ) -> SessionStateValue:
+        return self[key] if key in self else default
+
     @property
     def user(self) -> str:
-        if 'user' in self:
-            return self['user']
+        value = self.get('user')
+        if not isinstance(value, str):
+            raise InvalidUserException('user is not a string')
+        if value:
+            return value
         raise UserNotInStateException('user not in state')
 
     @user.setter
@@ -102,25 +159,68 @@ class SessionState:
     def user(self) -> None:
         del self['user']
 
-    def get(self, key: str, default=None):
-        return self[key] if key in self else default
+    @property
+    def selected_instance(self) -> str:
+        value = self.get('selected_instance')
+        if not isinstance(value, str):
+            raise InvalidSelectedInstanceException(
+                'selected_instance is not a string'
+            )
+        if value:
+            return value
+        raise SelectedInstanceNotInStateException(
+            'selected_instance not in state'
+        )
+
+    @selected_instance.setter
+    def selected_instance(self, value: str) -> None:
+        self['selected_instance'] = value
+
+    @selected_instance.deleter
+    def selected_instance(self) -> None:
+        del self['selected_instance']
+
+    @property
+    def canvas_version(self) -> int:
+        value = self.get('canvas_version')
+        if value and not isinstance(value, int):
+            raise InvalidCanvasVersionException('canvas_version is not an int')
+        if value:
+            return value
+        self['canvas_version'] = 0
+        return 0
+
+    @canvas_version.setter
+    def canvas_version(self, value: int) -> None:
+        self['canvas_version'] = value
+
+    @canvas_version.deleter
+    def canvas_version(self) -> None:
+        del self['canvas_version']
 
 
 session_state = SessionState.get_session_state()
 
-REQUIRED_KEYS = {'issue_category', 'image_category_1', 'image_category_2',}
+REQUIRED_KEYS = {
+    'issue_category',
+    'image_category_1',
+    'image_category_2',
+}
 STATUS_ICON = {'complete': '🟢', 'partial': '🟡', 'none': '🔴'}
 
-def get_instance_status(df: pd.DataFrame, instance_id: str, image_assets: list, user: str) -> str:
-    user_rows = df[
-        (df['instance_id'] == instance_id) &
-        (df['name'] == user)
-    ]
+
+def get_instance_status(
+    df: pd.DataFrame, instance_id: str, image_assets: list[str], user: str
+) -> str:
+    user_rows = df[(df['instance_id'] == instance_id) & (df['name'] == user)]
     if user_rows.empty:
         return 'none'
     total_required = len(image_assets) * len(REQUIRED_KEYS)
     completed = sum(
-        len(set(user_rows[user_rows['image_assets'] == asset]['key'].unique()) & REQUIRED_KEYS)
+        len(
+            set(user_rows[user_rows['image_assets'] == asset]['key'].unique())
+            & REQUIRED_KEYS
+        )
         for asset in image_assets
     )
     if completed == 0:
@@ -128,43 +228,72 @@ def get_instance_status(df: pd.DataFrame, instance_id: str, image_assets: list, 
     return 'complete' if completed >= total_required else 'partial'
 
 
-def build_sidebar_labels(df_full: pd.DataFrame, df_annotations: pd.DataFrame, user: str) -> dict[str, str]:
+def build_sidebar_labels(
+    df_full: pd.DataFrame, df_annotations: pd.DataFrame, user: str
+) -> dict[str, str]:
     """Returns a mapping of display label -> instance_id."""
-    labels = {}
-    for iid in sorted(df_full['instance_id'].unique()):
-        assets = df_full[df_full['instance_id'] == iid]['image_assets'].unique().tolist()
+    labels: dict[str, str] = {}
+    for iid in sorted(cast('pd.Series[str]', df_full['instance_id']).unique()):
+        assets = (
+            cast(
+                'pd.Series[str]',
+                df_full[df_full['instance_id'] == iid]['image_assets'],
+            )
+            .unique()
+            .tolist()
+        )
         status = get_instance_status(df_annotations, iid, assets, user)
-        labels[f"{STATUS_ICON[status]} {iid}"] = iid
+        labels[f'{STATUS_ICON[status]} {iid}'] = iid
     return labels
 
 
-def get_existing_value(df: pd.DataFrame, user: str, instance_id: str, key: str) -> str | None:
+def get_existing_value(
+    df: pd.DataFrame, user: str, instance_id: str, key: str
+) -> str | None:
     row = df[
-        (df['name'] == user) &
-        (df['instance_id'] == instance_id) &
-        (df['key'] == key)
+        (df['name'] == user)
+        & (df['instance_id'] == instance_id)
+        & (df['key'] == key)
     ]
     return row.iloc[-1]['value'] if not row.empty else None
 
 
-def get_next_incomplete(df: pd.DataFrame, user: str, current_instance_id: str) -> str | None:
+def get_next_incomplete(
+    df: pd.DataFrame, user: str, current_instance_id: str
+) -> str | None:
     all_ids = sorted(df['instance_id'].unique().tolist())
     current_index = all_ids.index(current_instance_id)
     # Search from current position forward, then wrap around
-    search_order = all_ids[current_index + 1:] + all_ids[:current_index]
+    search_order = all_ids[current_index + 1 :] + all_ids[:current_index]
     for iid in search_order:
-        assets = df[df['instance_id'] == iid]['image_assets'].unique().tolist()
+        assets = (
+            cast(
+                'pd.Series[str]', df[df['instance_id'] == iid]['image_assets']
+            )
+            .unique()
+            .tolist()
+        )
         if get_instance_status(df, iid, assets, user) != 'complete':
             return iid
     return None
 
 
-def get_previous_incomplete(df: pd.DataFrame, user: str, current_instance_id: str) -> str | None:
+def get_previous_incomplete(
+    df: pd.DataFrame, user: str, current_instance_id: str
+) -> str | None:
     all_ids = sorted(df['instance_id'].unique().tolist())
     current_index = all_ids.index(current_instance_id)
-    search_order = all_ids[:current_index][::-1] + all_ids[current_index + 1:][::-1]
+    search_order = (
+        all_ids[:current_index][::-1] + all_ids[current_index + 1 :][::-1]
+    )
     for iid in search_order:
-        assets = df[df['instance_id'] == iid]['image_assets'].unique().tolist()
+        assets = (
+            cast(
+                'pd.Series[str]', df[df['instance_id'] == iid]['image_assets']
+            )
+            .unique()
+            .tolist()
+        )
         if get_instance_status(df, iid, assets, user) != 'complete':
             return iid
     return None
@@ -190,19 +319,19 @@ ISSUE_CATEGORIES = [
 ]
 
 CAT1_OPTIONS = [
-    "Code Snippet Screenshot",
-    "Web Interface (UI/UX Element)",
+    'Code Snippet Screenshot',
+    'Web Interface (UI/UX Element)',
     'Map/Geospatial Visualization',
     'Diagram',
     'Data Visualization',
     'Artwork / Photography',
     'Error Message',
-    'Miscellaneous'
+    'Miscellaneous',
 ]
 
 CAT2_OPTIONS = [
-    "Code",
-    "Run Time Error",
+    'Code',
+    'Run Time Error',
     'Menus and Preference',
     'Dialog Box',
     'Steps and Processes',
@@ -210,7 +339,7 @@ CAT2_OPTIONS = [
     'Desired Output',
     'Program Output',
     'CPU/GPU Performance',
-    'Algorithm/Concept Description'
+    'Algorithm/Concept Description',
 ]
 
 IMAGE_QUALITY_OPTIONS = [
@@ -221,14 +350,6 @@ IMAGE_QUALITY_OPTIONS = [
 ]
 
 
-def draw_box(img, box):
-    overlay = img.copy()
-    draw = ImageDraw.Draw(overlay)
-    x, y, w, h = box["x"], box["y"], box["w"], box["h"]
-    draw.rectangle([x, y, x + w, y + h], outline="red", width=2)
-    return overlay
-
-
 @st.cache_data
 def fetch_image_bytes(url: str) -> bytes:
     response = requests.get(url, timeout=10)
@@ -237,7 +358,7 @@ def fetch_image_bytes(url: str) -> bytes:
 
 
 def load_image(url: str) -> Image.Image:
-    return Image.open(BytesIO(fetch_image_bytes(url))).convert("RGB")
+    return Image.open(BytesIO(fetch_image_bytes(url))).convert('RGB')
 
 
 def login_screen():
@@ -259,125 +380,160 @@ def home_screen():
     df_full = df_full.query(f'name == "{session_state.user}"').copy()
 
     if 'selected_instance' not in session_state:
-        session_state['selected_instance'] = sorted(df_full['instance_id'].unique())[0]
+        session_state.selected_instance = sorted(
+            df_full['instance_id'].unique()
+        )[0]
 
     labels = build_sidebar_labels(df_full, df_full, session_state.user)
 
-    current_label = next((k for k, v in labels.items() if v == session_state['selected_instance']), list(labels.keys())[0])
+    current_label = next(
+        (k for k, v in labels.items() if v == session_state.selected_instance),
+        list(labels.keys())[0],
+    )
     default_index = list(labels.keys()).index(current_label)
 
     with st.sidebar:
-        st.title("Navigation")
+        st.title('Navigation')
         selected_label = option_menu(
-            "Menu",
+            'Menu',
             list(labels.keys()),
             icons=None,
             default_index=default_index,
             styles={
-                "nav-link": {"font-size": "12px", "padding": "4px 8px"},
-                "nav-link-selected": {"font-size": "12px"},
-                "icon": {"display": "none"},
+                'nav-link': {'font-size': '12px', 'padding': '4px 8px'},
+                'nav-link-selected': {'font-size': '12px'},
+                'icon': {'display': 'none'},
             },
         )
-        session_state['selected_instance'] = labels[selected_label]
+        session_state.selected_instance = labels[selected_label]
 
-    instance_id = session_state['selected_instance']
+    instance_id = session_state.selected_instance
     df = df_full.query(f'instance_id == "{instance_id}"').copy()
     image_assets = df['image_assets'].unique().tolist()
     issue_link = df.iloc[0]['issue_link']
     problem_statement = df.iloc[0]['problem_statement']
 
     with st.container(border=True):
-        st.caption(f"Current user: {session_state.user}")
+        st.caption(f'Current user: {session_state.user}')
         st.header(instance_id)
-        st.markdown(f"🔗 [View Issue]({issue_link})")
-        st.text_area("Problem Statement", value=problem_statement, disabled=True, height=300)
+        st.markdown(f'🔗 [View Issue]({issue_link})')
+        st.text_area(
+            'Problem Statement',
+            value=problem_statement,
+            disabled=True,
+            height=300,
+        )
     st.divider()
 
     for i, image_asset in enumerate(image_assets):
         with st.container(border=True):
             if pd.isna(image_asset) or not image_asset:
-                st.warning("No image available for this instance.")
+                st.warning('No image available for this instance.')
                 continue
 
             row = df.query(f'image_assets == "{image_asset}"').iloc[0]
 
-            st.subheader(f'Image {i+1}/{len(image_assets)}')
-            st.markdown(f"🔗 [View Image]({image_asset})")
+            st.subheader(f'Image {i + 1}/{len(image_assets)}')
+            st.markdown(f'🔗 [View Image]({image_asset})')
 
             st.image(image_asset, width='stretch')
 
-            existing_issue_cat = get_existing_value(df_full, session_state.user, instance_id, 'issue_category')
-            default_issue_cat = ISSUE_CATEGORIES.index(existing_issue_cat) if existing_issue_cat in ISSUE_CATEGORIES else 0
+            existing_issue_cat = get_existing_value(
+                df_full, session_state.user, instance_id, 'issue_category'
+            )
+            default_issue_cat = (
+                ISSUE_CATEGORIES.index(existing_issue_cat)
+                if existing_issue_cat in ISSUE_CATEGORIES
+                else 0
+            )
 
-            with st.form(f"issue_category-{i}"):
-                st.subheader("Issue Category")
+            with st.form(f'issue_category-{i}'):
+                st.subheader('Issue Category')
                 if existing_issue_cat:
-                    st.info(f"Previously submitted: {existing_issue_cat}")
+                    st.info(f'Previously submitted: {existing_issue_cat}')
                 issue_category = st.selectbox(
-                    "Issue Category",
+                    'Issue Category',
                     ISSUE_CATEGORIES,
                     index=default_issue_cat,
                 )
-                submitted = st.form_submit_button("Submit")
+                submitted = st.form_submit_button('Submit')
                 if submitted:
-                    append_annotation(AnnotationRow(
-                        name=session_state.user,
-                        instance_id=instance_id,
-                        issue_link=row['issue_link'],
-                        problem_statement=row['problem_statement'],
-                        image_assets=image_asset,
-                        key='issue_category',
-                        value=issue_category
-                    ))
-                    st.success("Saved.")
+                    append_annotation(
+                        AnnotationRow(
+                            name=session_state.user,
+                            instance_id=instance_id,
+                            issue_link=row['issue_link'],
+                            problem_statement=row['problem_statement'],
+                            image_assets=image_asset,
+                            key='issue_category',
+                            value=issue_category,
+                        )
+                    )
+                    st.success('Saved.')
 
-            existing_cat1 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_1')
-            default_cat1 = CAT1_OPTIONS.index(existing_cat1) if existing_cat1 in CAT1_OPTIONS else 0
-            with st.form(f"category_1-{i}"):
-                st.subheader("Category 1")
+            existing_cat1 = get_existing_value(
+                df_full, session_state.user, instance_id, 'image_category_1'
+            )
+            default_cat1 = (
+                CAT1_OPTIONS.index(existing_cat1)
+                if existing_cat1 in CAT1_OPTIONS
+                else 0
+            )
+            with st.form(f'category_1-{i}'):
+                st.subheader('Category 1')
                 if existing_cat1:
-                    st.info(f"Previously submitted: {existing_cat1}")
-                cat1 = st.selectbox("Image cat 1", CAT1_OPTIONS, index=default_cat1)
-                submitted = st.form_submit_button("Submit")
-                if submitted:
-                    append_annotation(AnnotationRow(
-                        name=session_state.user,
-                        instance_id=instance_id,
-                        issue_link=row['issue_link'],
-                        problem_statement=row['problem_statement'],
-                        image_assets=image_asset,
-                        key='image_category_1',
-                        value=cat1
-                    ))
-                    st.success("Saved.")
-
-            existing_cat2 = get_existing_value(df_full, session_state.user, instance_id, 'image_category_2')
-            default_cat2 = CAT2_OPTIONS.index(existing_cat2) if existing_cat2 in CAT2_OPTIONS else 0
-            with st.form(f"category_2-{i}"):
-                st.subheader("Category 2")
-                if existing_cat2:
-                    st.info(f"Previously submitted: {existing_cat2}")
-                cat2 = st.selectbox("Image cat 2", CAT2_OPTIONS, index=default_cat2)
-                submitted = st.form_submit_button("Submit")
-                if submitted:
-                    append_annotation(AnnotationRow(
-                        name=session_state.user,
-                        instance_id=instance_id,
-                        issue_link=row['issue_link'],
-                        problem_statement=row['problem_statement'],
-                        image_assets=image_asset,
-                        key='image_category_2',
-                        value=cat2
-                    ))
-                    st.success("Saved.")
-
-            with st.form(f"image_quality-{i}"):
-                st.selectbox(
-                    "Rating",
-                    IMAGE_QUALITY_OPTIONS
+                    st.info(f'Previously submitted: {existing_cat1}')
+                cat1 = st.selectbox(
+                    'Image cat 1', CAT1_OPTIONS, index=default_cat1
                 )
-                st.form_submit_button("Submit")
+                submitted = st.form_submit_button('Submit')
+                if submitted:
+                    append_annotation(
+                        AnnotationRow(
+                            name=session_state.user,
+                            instance_id=instance_id,
+                            issue_link=row['issue_link'],
+                            problem_statement=row['problem_statement'],
+                            image_assets=image_asset,
+                            key='image_category_1',
+                            value=cat1,
+                        )
+                    )
+                    st.success('Saved.')
+
+            existing_cat2 = get_existing_value(
+                df_full, session_state.user, instance_id, 'image_category_2'
+            )
+            default_cat2 = (
+                CAT2_OPTIONS.index(existing_cat2)
+                if existing_cat2 in CAT2_OPTIONS
+                else 0
+            )
+            with st.form(f'category_2-{i}'):
+                st.subheader('Category 2')
+                if existing_cat2:
+                    st.info(f'Previously submitted: {existing_cat2}')
+                cat2 = st.selectbox(
+                    'Image cat 2', CAT2_OPTIONS, index=default_cat2
+                )
+                submitted = st.form_submit_button('Submit')
+                if submitted:
+                    append_annotation(
+                        AnnotationRow(
+                            name=session_state.user,
+                            instance_id=instance_id,
+                            issue_link=row['issue_link'],
+                            problem_statement=row['problem_statement'],
+                            image_assets=image_asset,
+                            key='image_category_2',
+                            value=cat2,
+                        )
+                    )
+                    st.success('Saved.')
+
+            with st.form(f'image_quality-{i}'):
+                st.selectbox('Rating', IMAGE_QUALITY_OPTIONS)
+                st.form_submit_button('Submit')
 
             with st.container(border=True):
                 st.subheader('Important part(s) of image')
@@ -389,7 +545,7 @@ def home_screen():
                 try:
                     img = load_image(image_asset)
                 except Exception as e:
-                    st.error(f"Failed to load image: {e}")
+                    st.error(f'Failed to load image: {e}')
                     continue
 
                 display_width = min(900, img.width)
@@ -400,65 +556,78 @@ def home_screen():
                 v = session_state.get('canvas_version', 0)
 
                 canvas_result = st_canvas(
-                    background_image=img_resized,
-                    drawing_mode="rect",
+                    background_image=img_resized,  # pyright: ignore
+                    drawing_mode='rect',
                     stroke_width=2,
-                    stroke_color="#ff0000",
-                    fill_color="rgba(255, 0, 0, 0.1)",
+                    stroke_color='#ff0000',
+                    fill_color='rgba(255, 0, 0, 0.1)',
                     height=display_height,
                     width=display_width,
-                    key=f"canvas-{instance_id}-{i}-{v}",
+                    key=f'canvas-{instance_id}-{i}-{v}',
                 )
 
                 if canvas_result.json_data:
-                    rects = [o for o in canvas_result.json_data["objects"] if o["type"] == "rect"]
+                    rects = [
+                        o
+                        for o in cast(
+                            list[Rect], canvas_result.json_data['objects']
+                        )
+                        if o['type'] == 'rect'
+                    ]
                     if rects:
                         last = rects[-1]
                         box = {
-                            "x": int(last["left"] / scale),
-                            "y": int(last["top"] / scale),
-                            "w": int(last["width"] / scale),
-                            "h": int(last["height"] / scale),
+                            'x': int(last['left'] / scale),
+                            'y': int(last['top'] / scale),
+                            'w': int(last['width'] / scale),
+                            'h': int(last['height'] / scale),
                         }
-                        if st.button("Save bounding box", key=f"save_bbox_{i}"):
-                            append_annotation(AnnotationRow(
-                                name=session_state.user,
-                                instance_id=instance_id,
-                                issue_link=row['issue_link'],
-                                problem_statement=row['problem_statement'],
-                                image_assets=image_asset,
-                                key='bounding_box',
-                                value=json.dumps(box)
-                            ))
-                            st.success(f"Saved: {box}")
+                        if st.button(
+                            'Save bounding box', key=f'save_bbox_{i}'
+                        ):
+                            append_annotation(
+                                AnnotationRow(
+                                    name=session_state.user,
+                                    instance_id=instance_id,
+                                    issue_link=row['issue_link'],
+                                    problem_statement=row['problem_statement'],
+                                    image_assets=image_asset,
+                                    key='bounding_box',
+                                    value=json.dumps(box),
+                                )
+                            )
+                            st.success(f'Saved: {box}')
 
         st.divider()
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        if st.button("Log out", width='stretch'):
+        if st.button('Log out', width='stretch'):
             del session_state.user
             st.rerun()
     prev_id = get_previous_incomplete(df_full, session_state.user, instance_id)
     with col2:
         if prev_id:
-            if st.button("← Previous incomplete", width='stretch'):
-                session_state['selected_instance'] = prev_id
-                session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
+            if st.button('← Previous incomplete', width='stretch'):
+                session_state.selected_instance = prev_id
+                session_state.canvas_version = session_state.canvas_version + 1
                 st.rerun()
     next_id = get_next_incomplete(df_full, session_state.user, instance_id)
     with col3:
         if next_id:
-            if st.button("Next incomplete →", width='stretch'):
+            if st.button('Next incomplete →', width='stretch'):
                 session_state['selected_instance'] = next_id
-                session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
+                session_state['canvas_version'] = (
+                    session_state.canvas_version + 1
+                )
                 st.rerun()
 
-    if st.button("🔄 Refresh"):
-        session_state['canvas_version'] = session_state.get('canvas_version', 0) + 1
+    if st.button('🔄 Refresh'):
+        session_state['canvas_version'] = session_state.canvas_version + 1
         st.rerun()
 
-st.set_page_config(layout="wide")
+
+st.set_page_config(layout='wide')
 if 'user' not in session_state:
     login_screen()
 else:

@@ -12,3 +12,14 @@ dependencies = [
     "streamlit-drawable-canvas-fix",
     "pandas"
 ]
+
+[tool.ruff]
+line-length = 79
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]  # pycodestyle, pyflakes, isort, pyupgrade, bugbear
+ignore = []
+
+[tool.ruff.format]
+quote-style = "single"
