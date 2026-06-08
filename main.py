@@ -227,6 +227,8 @@ REQUIRED_KEYS = {
     'issue_category',
     'image_category_1',
     'image_category_2',
+    'image_quality',
+    'bounding_box',
 }
 STATUS_ICON = {'complete': '🟢', 'partial': '🟡', 'none': '🔴'}
 
