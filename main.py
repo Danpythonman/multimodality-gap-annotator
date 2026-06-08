@@ -11,7 +11,7 @@ from typing import Literal, TypedDict, cast
 import pandas as pd
 import requests
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageDraw
 from streamlit_drawable_canvas import st_canvas  # pyright: ignore
 from streamlit_option_menu import option_menu  # pyright: ignore
 
@@ -83,11 +83,33 @@ KNOWN_USERS = [
 
 
 class Rect(TypedDict):
+    """Streamlit canvas rect."""
+
     left: float
     top: float
     width: float
     height: float
     type: Literal['rect']
+
+
+class Box(TypedDict):
+    """My saved boxes from the Streamlit canvas"""
+
+    x: float
+    y: float
+    w: float
+    h: float
+
+
+def draw_boxes(
+    img: Image.Image, boxes: list[Box], color: str = 'blue', width: int = 3
+) -> Image.Image:
+    draw = ImageDraw.Draw(img)
+    for box in boxes:
+        x0, y0 = box['x'], box['y']
+        x1, y1 = x0 + box['w'], y0 + box['h']
+        draw.rectangle([x0, y0, x1, y1], outline=color, width=width)
+    return img
 
 
 class UserNotInStateException(Exception):
@@ -543,7 +565,7 @@ def home_screen():
             existing_image_qualitys = get_existing_value(
                 df_full, session_state.user, instance_id, 'image_quality'
             )
-            default_cat2 = (
+            default_image_quality = (
                 IMAGE_QUALITY_OPTIONS.index(existing_image_qualitys[-1])
                 if existing_image_qualitys
                 and len(existing_image_qualitys) > 0
@@ -553,8 +575,14 @@ def home_screen():
             with st.form(f'image_quality-{i}'):
                 if existing_image_qualitys:
                     for existing_image_quality in existing_image_qualitys:
-                        st.info(f'Previously submitted: {existing_image_quality}')
-                image_quality = st.selectbox('Image Quality Rating', IMAGE_QUALITY_OPTIONS)
+                        st.info(
+                            f'Previously submitted: {existing_image_quality}'
+                        )
+                image_quality = st.selectbox(
+                    'Image Quality Rating',
+                    IMAGE_QUALITY_OPTIONS,
+                    index=default_image_quality,
+                )
                 submitted = st.form_submit_button('Submit')
                 if submitted:
                     append_annotation(
@@ -588,6 +616,15 @@ def home_screen():
                 display_height = int(img.height * scale)
                 img_resized = img.resize((display_width, display_height))
 
+                existing_bounding_boxes = get_existing_value(
+                    df_full, session_state.user, instance_id, 'bounding_box'
+                )
+                if existing_bounding_boxes:
+                    boxes: list[Box] = [
+                        json.loads(box) for box in existing_bounding_boxes
+                    ]
+                    img_resized = draw_boxes(img_resized, boxes)
+
                 v = session_state.get('canvas_version', 0)
 
                 canvas_result = st_canvas(
@@ -610,28 +647,33 @@ def home_screen():
                         if o['type'] == 'rect'
                     ]
                     if rects:
-                        last = rects[-1]
-                        box = {
-                            'x': int(last['left'] / scale),
-                            'y': int(last['top'] / scale),
-                            'w': int(last['width'] / scale),
-                            'h': int(last['height'] / scale),
-                        }
+                        boxes: list[Box] = [
+                            {
+                                'x': int(rect['left'] / scale),
+                                'y': int(rect['top'] / scale),
+                                'w': int(rect['width'] / scale),
+                                'h': int(rect['height'] / scale),
+                            }
+                            for rect in rects
+                        ]
                         if st.button(
                             'Save bounding box', key=f'save_bbox_{i}'
                         ):
-                            append_annotation(
-                                AnnotationRow(
-                                    name=session_state.user,
-                                    instance_id=instance_id,
-                                    issue_link=row['issue_link'],
-                                    problem_statement=row['problem_statement'],
-                                    image_assets=image_asset,
-                                    key='bounding_box',
-                                    value=json.dumps(box),
+                            for box in boxes:
+                                append_annotation(
+                                    AnnotationRow(
+                                        name=session_state.user,
+                                        instance_id=instance_id,
+                                        issue_link=row['issue_link'],
+                                        problem_statement=row[
+                                            'problem_statement'
+                                        ],
+                                        image_assets=image_asset,
+                                        key='bounding_box',
+                                        value=json.dumps(box),
+                                    )
                                 )
-                            )
-                            st.success(f'Saved: {box}')
+                                st.success(f'Saved: {box}')
 
         st.divider()
 
