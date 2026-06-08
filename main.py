@@ -625,7 +625,16 @@ def home_screen():
                     boxes: list[Box] = [
                         json.loads(box) for box in existing_bounding_boxes
                     ]
-                    img_resized = draw_boxes(img_resized, boxes)
+                    display_boxes: list[Box] = [
+                        {
+                            'x': box['x'] * scale,
+                            'y': box['y'] * scale,
+                            'w': box['w'] * scale,
+                            'h': box['h'] * scale,
+                        }
+                        for box in boxes
+                    ]
+                    img_resized = draw_boxes(img_resized, display_boxes)
 
                 v = session_state.get('canvas_version', 0)
 
