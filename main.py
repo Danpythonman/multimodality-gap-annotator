@@ -249,13 +249,13 @@ def build_sidebar_labels(
 
 def get_existing_value(
     df: pd.DataFrame, user: str, instance_id: str, key: str
-) -> str | None:
-    row = df[
+) -> list[str] | None:
+    rows = df[
         (df['name'] == user)
         & (df['instance_id'] == instance_id)
         & (df['key'] == key)
     ]
-    return row.iloc[-1]['value'] if not row.empty else None
+    return rows['value'].tolist() if not rows.empty else None
 
 
 def get_next_incomplete(
@@ -438,19 +438,22 @@ def home_screen():
 
             st.image(image_asset, width='stretch')
 
-            existing_issue_cat = get_existing_value(
+            existing_issue_cats = get_existing_value(
                 df_full, session_state.user, instance_id, 'issue_category'
             )
             default_issue_cat = (
-                ISSUE_CATEGORIES.index(existing_issue_cat)
-                if existing_issue_cat in ISSUE_CATEGORIES
+                ISSUE_CATEGORIES.index(existing_issue_cats[-1])
+                if existing_issue_cats
+                and len(existing_issue_cats) > 0
+                and existing_issue_cats[-1] in ISSUE_CATEGORIES
                 else 0
             )
 
             with st.form(f'issue_category-{i}'):
                 st.subheader('Issue Category')
-                if existing_issue_cat:
-                    st.info(f'Previously submitted: {existing_issue_cat}')
+                if existing_issue_cats:
+                    for existing_issue_cat in existing_issue_cats:
+                        st.info(f'Previously submitted: {existing_issue_cat}')
                 issue_category = st.selectbox(
                     'Issue Category',
                     ISSUE_CATEGORIES,
@@ -471,18 +474,21 @@ def home_screen():
                     )
                     st.success('Saved.')
 
-            existing_cat1 = get_existing_value(
+            existing_cat1s = get_existing_value(
                 df_full, session_state.user, instance_id, 'image_category_1'
             )
             default_cat1 = (
-                CAT1_OPTIONS.index(existing_cat1)
-                if existing_cat1 in CAT1_OPTIONS
+                CAT1_OPTIONS.index(existing_cat1s[-1])
+                if existing_cat1s
+                and len(existing_cat1s) > 0
+                and existing_cat1s[-1] in CAT1_OPTIONS
                 else 0
             )
             with st.form(f'category_1-{i}'):
                 st.subheader('Category 1')
-                if existing_cat1:
-                    st.info(f'Previously submitted: {existing_cat1}')
+                if existing_cat1s:
+                    for existing_cat1 in existing_cat1s:
+                        st.info(f'Previously submitted: {existing_cat1}')
                 cat1 = st.selectbox(
                     'Image cat 1', CAT1_OPTIONS, index=default_cat1
                 )
@@ -501,18 +507,21 @@ def home_screen():
                     )
                     st.success('Saved.')
 
-            existing_cat2 = get_existing_value(
+            existing_cat2s = get_existing_value(
                 df_full, session_state.user, instance_id, 'image_category_2'
             )
             default_cat2 = (
-                CAT2_OPTIONS.index(existing_cat2)
-                if existing_cat2 in CAT2_OPTIONS
+                CAT2_OPTIONS.index(existing_cat2s[-1])
+                if existing_cat2s
+                and len(existing_cat2s) > 0
+                and existing_cat2s[-1] in CAT2_OPTIONS
                 else 0
             )
             with st.form(f'category_2-{i}'):
                 st.subheader('Category 2')
-                if existing_cat2:
-                    st.info(f'Previously submitted: {existing_cat2}')
+                if existing_cat2s:
+                    for existing_cat2 in existing_cat2s:
+                        st.info(f'Previously submitted: {existing_cat2}')
                 cat2 = st.selectbox(
                     'Image cat 2', CAT2_OPTIONS, index=default_cat2
                 )
@@ -531,9 +540,35 @@ def home_screen():
                     )
                     st.success('Saved.')
 
+            existing_image_qualitys = get_existing_value(
+                df_full, session_state.user, instance_id, 'image_quality'
+            )
+            default_cat2 = (
+                IMAGE_QUALITY_OPTIONS.index(existing_image_qualitys[-1])
+                if existing_image_qualitys
+                and len(existing_image_qualitys) > 0
+                and existing_image_qualitys[-1] in CAT2_OPTIONS
+                else 0
+            )
             with st.form(f'image_quality-{i}'):
-                st.selectbox('Rating', IMAGE_QUALITY_OPTIONS)
-                st.form_submit_button('Submit')
+                if existing_image_qualitys:
+                    for existing_image_quality in existing_image_qualitys:
+                        st.info(f'Previously submitted: {existing_image_quality}')
+                image_quality = st.selectbox('Image Quality Rating', IMAGE_QUALITY_OPTIONS)
+                submitted = st.form_submit_button('Submit')
+                if submitted:
+                    append_annotation(
+                        AnnotationRow(
+                            name=session_state.user,
+                            instance_id=instance_id,
+                            issue_link=row['issue_link'],
+                            problem_statement=row['problem_statement'],
+                            image_assets=image_asset,
+                            key='image_quality',
+                            value=image_quality,
+                        )
+                    )
+                    st.success('Saved.')
 
             with st.container(border=True):
                 st.subheader('Important part(s) of image')
