@@ -6,6 +6,7 @@ import os
 import tempfile
 from dataclasses import dataclass, fields
 from io import BytesIO
+from pathlib import Path
 from typing import Literal, TypedDict, cast
 
 import pandas as pd
@@ -15,7 +16,8 @@ from PIL import Image, ImageDraw
 from streamlit_drawable_canvas import st_canvas  # pyright: ignore
 from streamlit_option_menu import option_menu  # pyright: ignore
 
-CSV_PATH = 'running_log.csv'
+CSV_BASE = Path(__file__).parent / 'csv'
+CSV_PATH = CSV_BASE / 'running_log.csv'
 FIELDNAMES = [
     'name',
     'instance_id',
@@ -41,7 +43,7 @@ class AnnotationRow:
         return {f.name: getattr(self, f.name) for f in fields(self)}
 
 
-def append_annotation(row: AnnotationRow, path: str = CSV_PATH) -> None:
+def append_annotation(row: AnnotationRow, path: Path = CSV_PATH) -> None:
     dir_ = os.path.dirname(os.path.abspath(path))
     new_row = pd.DataFrame([row.to_dict()])
 
@@ -272,11 +274,12 @@ def build_sidebar_labels(
 
 
 def get_existing_value(
-    df: pd.DataFrame, user: str, instance_id: str, key: str
+    df: pd.DataFrame, user: str, instance_id: str, image_asset: str, key: str
 ) -> list[str] | None:
     rows = df[
         (df['name'] == user)
         & (df['instance_id'] == instance_id)
+        & (df['image_assets'] == image_asset)
         & (df['key'] == key)
     ]
     return rows['value'].tolist() if not rows.empty else None
@@ -463,7 +466,11 @@ def home_screen():
             st.image(image_asset, width='stretch')
 
             existing_issue_cats = get_existing_value(
-                df_full, session_state.user, instance_id, 'issue_category'
+                df_full,
+                session_state.user,
+                instance_id,
+                image_asset,
+                'issue_category',
             )
             default_issue_cat = (
                 ISSUE_CATEGORIES.index(existing_issue_cats[-1])
@@ -499,7 +506,11 @@ def home_screen():
                     st.success('Saved.')
 
             existing_cat1s = get_existing_value(
-                df_full, session_state.user, instance_id, 'image_category_1'
+                df_full,
+                session_state.user,
+                instance_id,
+                image_asset,
+                'image_category_1',
             )
             default_cat1 = (
                 CAT1_OPTIONS.index(existing_cat1s[-1])
@@ -532,7 +543,11 @@ def home_screen():
                     st.success('Saved.')
 
             existing_cat2s = get_existing_value(
-                df_full, session_state.user, instance_id, 'image_category_2'
+                df_full,
+                session_state.user,
+                instance_id,
+                image_asset,
+                'image_category_2',
             )
             default_cat2 = (
                 CAT2_OPTIONS.index(existing_cat2s[-1])
@@ -565,7 +580,11 @@ def home_screen():
                     st.success('Saved.')
 
             existing_image_qualitys = get_existing_value(
-                df_full, session_state.user, instance_id, 'image_quality'
+                df_full,
+                session_state.user,
+                instance_id,
+                image_asset,
+                'image_quality',
             )
             default_image_quality = (
                 IMAGE_QUALITY_OPTIONS.index(existing_image_qualitys[-1])
@@ -619,7 +638,11 @@ def home_screen():
                 img_resized = img.resize((display_width, display_height))
 
                 existing_bounding_boxes = get_existing_value(
-                    df_full, session_state.user, instance_id, 'bounding_box'
+                    df_full,
+                    session_state.user,
+                    instance_id,
+                    image_asset,
+                    'bounding_box',
                 )
                 if existing_bounding_boxes:
                     boxes: list[Box] = [
