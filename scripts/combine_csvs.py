@@ -4,14 +4,12 @@ from pathlib import Path
 
 import pandas as pd
 
+CSV_BASE = Path('').resolve().parent / 'csv'
 
 columns: set[str] | None = None
 dfs: list[pd.DataFrame] = []
 
-# df = pd.read_csv('swe_m_manual_annotation - For Tan.csv')
-# print(df['Unnamed: 7'].tolist())
-
-for path in Path.cwd().glob('*.csv'):
+for path in CSV_BASE.glob('*.csv'):
     if path.name == 'blackboard.csv':
         continue
 
@@ -28,15 +26,17 @@ for path in Path.cwd().glob('*.csv'):
     df = df.dropna(axis=1, how='all')
     if 'Unnamed: 7' in df.columns:
         df = df.drop(columns='Unnamed: 7')
-    df = df.rename(columns={
-        'instance_id (PR_ID)': 'instance_id',
-        'issue_link (we need to find!)': 'issue_link',
-        'problem_statement': 'problem_statement',
-        'issue_cat': 'issue_category',
-        'image_assets': 'image_assets',
-        'img_cat_1': 'image_category_1',
-        'img_cat_2': 'image_category_2',
-    })
+    df = df.rename(
+        columns={
+            'instance_id (PR_ID)': 'instance_id',
+            'issue_link (we need to find!)': 'issue_link',
+            'problem_statement': 'problem_statement',
+            'issue_cat': 'issue_category',
+            'image_assets': 'image_assets',
+            'img_cat_1': 'image_category_1',
+            'img_cat_2': 'image_category_2',
+        }
+    )
     df['name'] = name
     df = df.copy()
 
@@ -52,4 +52,4 @@ for path in Path.cwd().glob('*.csv'):
     dfs.append(df)
 
 full_df = pd.concat(dfs)
-full_df.to_csv('blackboard.csv', index=False)
+full_df.to_csv(CSV_BASE / 'blackboard.csv', index=False)
